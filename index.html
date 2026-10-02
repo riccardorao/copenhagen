@@ -8,39 +8,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: sticky inputs column on the left, dashboard on the right; stacks with an Inputs/Dashboard switch on phones. */
+/* Layout: inputs on the left, one verdict + one chart + one table on the right; stacks with an Inputs/Results switch on phones. */
 :root {
   --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  --bg: #f2f1ed;
-  --surface: #fcfcfb;
-  --surface-2: #f5f4f0;
-  --line: #e4e2dc;
-  --line-2: #c9c6be;
-  --ink: #161615;
-  --ink-2: #52514e;
-  --ink-3: #6b6a65;
-  --accent: #256abf;
-  --accent-hover: #184f95;
-  --on-accent: #ffffff;
-  --accent-soft: #e3eefb;
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
-  --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
-  --gray: #8f8d86;
-  --track: #e6e4de;
+  --bg: #f2f1ed; --surface: #fcfcfb; --surface-2: #f5f4f0; --line: #e4e2dc; --line-2: #c9c6be;
+  --ink: #161615; --ink-2: #52514e; --ink-3: #6b6a65;
+  --accent: #256abf; --accent-hover: #184f95; --on-accent: #ffffff; --accent-soft: #e3eefb;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
   --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
-  --heat-lo: #f1f0ec; --heat-hi: #104281; --heat-text: #161615;
-  --shadow: 0 1px 2px rgba(22, 22, 21, .06);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #121211; --surface: #1a1a19; --surface-2: #222220; --line: #2d2d2b; --line-2: #46463f;
     --ink: #f4f4f1; --ink-2: #c3c2b7; --ink-3: #9a998f;
     --accent: #3987e5; --accent-hover: #6da7ec; --on-accent: #0b0b0b; --accent-soft: #1d2b3f;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-    --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
-    --gray: #7b7a72; --track: #2b2b29;
-    --heat-lo: #242422; --heat-hi: #2a78d6; --heat-text: #f4f4f1;
-    --shadow: none;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
     color-scheme: dark;
   }
 }
@@ -48,53 +30,29 @@
   --bg: #121211; --surface: #1a1a19; --surface-2: #222220; --line: #2d2d2b; --line-2: #46463f;
   --ink: #f4f4f1; --ink-2: #c3c2b7; --ink-3: #9a998f;
   --accent: #3987e5; --accent-hover: #6da7ec; --on-accent: #0b0b0b; --accent-soft: #1d2b3f;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-  --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
-  --gray: #7b7a72; --track: #2b2b29;
-  --heat-lo: #242422; --heat-hi: #2a78d6; --heat-text: #f4f4f1;
-  --shadow: none;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
   color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font: 400 14px/1.45 var(--font);
-  -webkit-font-smoothing: antialiased;
-}
-button, input, select, textarea { font: inherit; color: inherit; }
-h1, h2, h3, p { margin: 0; }
-h2, h3 { text-wrap: balance; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 14px/1.45 var(--font); -webkit-font-smoothing: antialiased; }
+button, input, select { font: inherit; color: inherit; }
+h1, h2, p { margin: 0; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-.num { font-variant-numeric: tabular-nums; }
 
-/* ---------- top bar ---------- */
-.topbar {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-.topbar-in {
-  max-width: 1520px; margin: 0 auto; padding: 10px 16px;
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-}
-.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex: 1 1 auto; }
-.brand h1 { font-size: 17px; font-weight: 650; letter-spacing: -.01em; white-space: nowrap; }
-.brand .sub { color: var(--ink-3); font-size: 12px; }
+/* top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line); }
+.topbar-in { max-width: 1240px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { flex: 1 1 260px; min-width: 0; }
+.brand h1 { font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+.brand p { color: var(--ink-3); font-size: 12.5px; }
 .top-actions { display: flex; gap: 8px; align-items: center; }
 .viewtabs { display: none; width: 100%; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 8px; border: 1px solid var(--line); }
 .viewtabs button { flex: 1; border: 0; background: transparent; padding: 7px; border-radius: 6px; font-weight: 500; color: var(--ink-2); cursor: pointer; }
-.viewtabs button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
-
-.btn {
-  display: inline-flex; align-items: center; gap: 6px; justify-content: center;
-  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
-  padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; line-height: 1.3;
-}
+.viewtabs button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; line-height: 1.3; }
 .btn:hover { border-color: var(--ink-3); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
@@ -102,207 +60,123 @@ h2, h3 { text-wrap: balance; }
 .btn.ghost:hover { background: var(--surface-2); color: var(--ink); }
 .btn.danger { color: var(--crit); }
 .btn.sm { padding: 3px 8px; font-size: 12px; }
-.btn.icon { padding: 6px 8px; }
-
-.sample-note {
-  max-width: 1520px; margin: 0 auto; padding: 0 16px 10px;
-  display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 12.5px;
-}
+.btn { white-space: nowrap; flex: none; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.sample-note { max-width: 1240px; margin: 0 auto; padding: 0 16px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ink-2); font-size: 12.5px; }
 .sample-note .pill { background: var(--accent-soft); color: var(--ink); border-radius: 99px; padding: 2px 10px; font-weight: 500; }
 
-/* ---------- layout ---------- */
-.shell { max-width: 1520px; margin: 0 auto; padding: 16px 16px 56px; }
-.cols { display: grid; grid-template-columns: minmax(340px, 440px) minmax(0, 1fr); gap: 20px; align-items: start; }
-.inputs { position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); max-height: calc(100dvh - 80px); overflow-y: auto; padding-right: 4px; scrollbar-gutter: stable; }
+/* layout */
+.shell { max-width: 1240px; margin: 0 auto; padding: 16px 16px 56px; }
+.cols { display: grid; grid-template-columns: minmax(320px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.inputs { position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); max-height: calc(100dvh - 80px); overflow-y: auto; scrollbar-gutter: stable; padding-right: 4px; }
 .stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .results { min-width: 0; }
-@media (max-width: 1000px) {
+@media (max-width: 960px) {
   .cols { grid-template-columns: minmax(0, 1fr); }
   .inputs { position: static; max-height: none; overflow: visible; padding-right: 0; }
   .viewtabs { display: flex; }
   .shell[data-view="results"] .inputs { display: none; }
   .shell[data-view="inputs"] .results { display: none; }
 }
-
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
-.card > h2 { font-size: 15px; font-weight: 650; letter-spacing: -.005em; }
-.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-.card-head .desc { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; max-width: 62ch; }
+.card h2 { font-size: 15px; font-weight: 650; }
+.card .desc { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
+.card-head { margin-bottom: 14px; }
 .eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; font-weight: 600; color: var(--ink-3); }
 
-/* ---------- input panel ---------- */
-details.sec { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-details.sec > summary {
-  list-style: none; cursor: pointer; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  font-weight: 650; font-size: 14px;
-}
-details.sec > summary::-webkit-details-marker { display: none; }
-details.sec > summary .meta { color: var(--ink-3); font-weight: 400; font-size: 12px; }
-details.sec > summary::after { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--ink-3); border-bottom: 2px solid var(--ink-3); transform: rotate(45deg); margin: -3px 2px 0 6px; transition: transform .15s; flex: none; }
-details.sec[open] > summary::after { transform: rotate(-135deg); margin-top: 3px; }
-.sec-body { padding: 2px 16px 16px; display: flex; flex-direction: column; gap: 14px; }
-.fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px 12px; }
+/* inputs */
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
 .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .field.wide { grid-column: 1 / -1; }
-.field > label, .group-title { font-size: 12px; color: var(--ink-2); font-weight: 500; }
-.group-title { text-transform: uppercase; letter-spacing: .05em; font-size: 11px; color: var(--ink-3); font-weight: 600; padding-top: 4px; }
+.field > label { font-size: 12px; color: var(--ink-2); font-weight: 500; }
 .hint { font-size: 11.5px; color: var(--ink-3); line-height: 1.35; }
 .inp { position: relative; display: flex; }
-.inp input, select, textarea {
-  width: 100%; min-width: 0; height: 34px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: 6px;
-  background: var(--surface); color: var(--ink);
-}
-textarea { height: 64px; padding: 8px 10px; resize: vertical; }
+.inp input, select { width: 100%; min-width: 0; height: 34px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--surface); color: var(--ink); }
 .inp input[type="number"] { font-variant-numeric: tabular-nums; }
 .inp .unit { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); color: var(--ink-3); font-size: 12px; pointer-events: none; }
-.inp.has-unit input { padding-right: 38px; }
-.inp input:hover, select:hover, textarea:hover { border-color: var(--ink-3); }
-.check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
-.check input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; flex: none; }
-.inline-btn { align-self: flex-start; }
+.inp.has-unit input { padding-right: 40px; }
+.inp input:hover, select:hover { border-color: var(--ink-3); }
+.sec-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+details.fine { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+details.fine > summary { cursor: pointer; font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
+details.fine .fields { margin-top: 12px; }
 
-.svc-row { display: grid; grid-template-columns: minmax(0, 1fr) 86px auto auto; gap: 8px; align-items: center; }
-.svc-row .check { white-space: nowrap; font-size: 12px; color: var(--ink-2); }
-.svc-head { display: grid; grid-template-columns: minmax(0, 1fr) 86px auto auto; gap: 8px; font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
-
-.weight-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) 44px; gap: 10px; align-items: center; font-size: 12.5px; }
-.weight-row input[type="range"] { width: 100%; accent-color: var(--accent); }
-.weight-row .w-val { text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-
-.opt-list { display: flex; flex-direction: column; gap: 10px; }
-.opt { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.opt[data-open="true"] { border-color: var(--line-2); }
-.opt-head { width: 100%; background: transparent; border: 0; cursor: pointer; padding: 12px 14px; display: flex; gap: 10px; align-items: center; text-align: left; }
-.opt-head .sw { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.opt-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.opt { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; }
+.opt[data-open="true"] { background: var(--surface); border-color: var(--line-2); }
+.opt-head { width: 100%; background: transparent; border: 0; cursor: pointer; padding: 10px 12px; display: flex; gap: 10px; align-items: center; text-align: left; }
 .opt-head .t { min-width: 0; flex: 1; }
 .opt-head .t b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .opt-head .t span { color: var(--ink-3); font-size: 12px; }
-.opt-head .score { font-weight: 650; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--ink-2); }
-.opt-body { padding: 4px 14px 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); margin-top: 0; padding-top: 14px; }
-.opt-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip-check { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); border-radius: 99px; padding: 3px 10px 3px 8px; font-size: 12.5px; cursor: pointer; background: var(--surface); }
-.chip-check input { margin: 0; accent-color: var(--accent); }
-.chip-check:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); }
-.listing-link { font-size: 12px; color: var(--accent); }
+.opt-head .chev { width: 7px; height: 7px; border-right: 2px solid var(--ink-3); border-bottom: 2px solid var(--ink-3); transform: rotate(45deg); flex: none; margin-right: 4px; }
+.opt[data-open="true"] .chev { transform: rotate(-135deg); }
+.opt-body { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
+.opt-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-/* ---------- status chips ---------- */
+/* status chips */
 .status { --c: var(--good); display: inline-flex; align-items: center; gap: 5px; border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: color-mix(in srgb, var(--c) 12%, var(--surface)); color: var(--ink); border-radius: 99px; padding: 1px 9px 1px 7px; font-size: 12px; font-weight: 550; white-space: nowrap; }
 .status i { font-style: normal; color: var(--c); font-weight: 800; }
 .status.warn { --c: var(--warn); }
 .status.bad { --c: var(--crit); }
 
-/* ---------- verdict ---------- */
-.verdict { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 24px; align-items: center; }
-.verdict .v-name { font-size: 26px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; margin: 4px 0 2px; overflow-wrap: anywhere; }
-.verdict .v-sub { color: var(--ink-2); }
-.verdict .v-why { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
-.verdict .v-why .tag { font-size: 12.5px; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+/* verdict */
+.verdict { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: center; }
+.v-name { font-size: 26px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; margin: 4px 0 6px; overflow-wrap: anywhere; }
+.v-line { color: var(--ink-2); display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
 .hero { text-align: right; line-height: 1; }
-.hero .n { font-size: 64px; font-weight: 700; letter-spacing: -.04em; }
-.hero .of { font-size: 16px; color: var(--ink-3); margin-left: 4px; font-weight: 500; }
+.hero .n { font-size: 56px; font-weight: 700; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
 .hero .cap { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
 @media (max-width: 560px) { .verdict { grid-template-columns: minmax(0, 1fr); } .hero { text-align: left; } }
 
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tile .lbl { font-size: 12.5px; color: var(--ink-2); }
-.tile .val { font-size: 24px; font-weight: 650; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.tile .val small { font-size: 13px; color: var(--ink-3); font-weight: 500; letter-spacing: 0; margin-left: 3px; }
-.tile .who { font-size: 12.5px; font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tile .delta { font-size: 12px; color: var(--ink-3); }
-
-.alerts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.alerts li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--ink); }
-.alerts .status { margin-top: 1px; flex: none; }
-.alerts details > summary { cursor: pointer; color: var(--accent); font-size: 12.5px; margin-top: 4px; }
-
-/* ---------- charts ---------- */
-.seg-toggle { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; flex: none; }
-.seg-toggle button { border: 0; background: var(--surface); padding: 4px 11px; font-size: 12.5px; cursor: pointer; color: var(--ink-2); }
-.seg-toggle button + button { border-left: 1px solid var(--line-2); }
-.seg-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+/* chart */
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 14px; font-size: 12.5px; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
-.legend i.ln { height: 3px; width: 14px; border-radius: 2px; }
-.chart-opts { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
-.note { font-size: 12px; color: var(--ink-3); margin-top: 12px; max-width: 80ch; }
-
-.hbar { display: grid; grid-template-columns: minmax(92px, 170px) minmax(0, 1fr); column-gap: 14px; row-gap: 14px; position: relative; }
-.hb-label { grid-column: 1; align-self: center; min-width: 0; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
-.hb-label b { font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
-.hb-label small { color: var(--ink-3); font-size: 11.5px; }
-.hb-grid { grid-column: 2; position: relative; pointer-events: none; z-index: 0; }
+.hbar { display: grid; grid-template-columns: minmax(84px, 170px) minmax(0, 1fr); column-gap: 14px; row-gap: 14px; position: relative; }
+.hb-label { grid-column: 1; align-self: center; min-width: 0; font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hb-grid { grid-column: 2; position: relative; pointer-events: none; }
 .hb-grid .gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
-.hb-grid .gl.ref { background: var(--ink-3); }
-.hb-grid .gl-lbl { position: absolute; top: -17px; transform: translateX(-50%); font-size: 11px; color: var(--ink-2); white-space: nowrap; }
 .hb-bar { grid-column: 2; display: flex; align-items: center; position: relative; z-index: 1; min-height: 24px; }
 .bar { display: flex; gap: 2px; height: 22px; flex: none; }
-.bar .seg { height: 100%; min-width: 2px; cursor: default; }
+.bar .seg { height: 100%; min-width: 2px; }
 .bar .seg:last-child { border-radius: 0 4px 4px 0; }
-.bar .seg:hover, .bar .seg:focus-visible { filter: brightness(1.12); outline-offset: 1px; }
+.bar .seg:hover, .bar .seg:focus-visible { filter: brightness(1.12); }
 .bar-total { margin-left: 8px; font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.hb-grid .gl-lbl.end { transform: translateX(-100%); }
 .hb-axis { grid-column: 2; position: relative; height: 16px; margin-top: -6px; }
 .hb-axis span { position: absolute; font-size: 11px; color: var(--ink-3); transform: translateX(-50%); font-variant-numeric: tabular-nums; }
 .hb-axis span:first-child { transform: none; }
 .hb-axis span:last-child { transform: translateX(-100%); }
-.hbar.with-top { margin-top: 18px; }
-
-.line-wrap { position: relative; width: 100%; }
-.line-wrap svg { display: block; width: 100%; overflow: visible; touch-action: pan-y; }
-.line-wrap svg text { font-family: var(--font); }
-
 .tip { position: fixed; z-index: 60; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; box-shadow: 0 6px 20px rgba(0,0,0,.18); font-size: 12.5px; min-width: 150px; max-width: 280px; }
 .tip .th { font-weight: 600; margin-bottom: 4px; }
-.tip .tr { display: grid; grid-template-columns: 14px auto minmax(0, 1fr); gap: 7px; align-items: center; padding: 1px 0; }
-.tip .tr .k { height: 3px; border-radius: 2px; }
-.tip .tr .k.sq { height: 10px; width: 10px; border-radius: 2px; }
+.tip .tr { display: grid; grid-template-columns: 10px auto minmax(0, 1fr); gap: 7px; align-items: center; padding: 1px 0; }
+.tip .tr .k { height: 10px; width: 10px; border-radius: 2px; }
 .tip .tr strong { font-variant-numeric: tabular-nums; }
-.tip .tr span.l { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tip .tr .l { color: var(--ink-2); }
 .tip .tn { color: var(--ink-3); margin-top: 4px; font-size: 11.5px; }
+details.breakdown { margin-top: 14px; }
+details.breakdown > summary { cursor: pointer; font-size: 12.5px; color: var(--accent); }
 
-/* ---------- tables ---------- */
+/* tables */
 .scroll { overflow-x: auto; max-width: 100%; }
 table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
-.tbl th, .tbl td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tbl th:first-child, .tbl td:first-child { text-align: left; position: sticky; left: 0; background: var(--surface); z-index: 1; }
-.tbl thead th { color: var(--ink-2); font-weight: 600; font-size: 12px; vertical-align: bottom; border-bottom: 1px solid var(--line-2); }
-.tbl thead th small { display: block; font-weight: 400; color: var(--ink-3); }
-.tbl tr.grp th, .tbl tr.grp td { text-align: left; background: var(--surface-2); color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; font-size: 11px; font-weight: 600; padding-top: 10px; }
+.tbl th, .tbl td { padding: 9px 8px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl th:first-child, .tbl td:first-child { text-align: left; }
+.tbl thead th { color: var(--ink-2); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--line-2); vertical-align: bottom; }
+.tbl tbody th { font-weight: 600; white-space: normal; min-width: 130px; }
 .tbl td.best { font-weight: 650; }
 .tbl td.best::before { content: "●"; color: var(--accent); font-size: 8px; margin-right: 6px; vertical-align: 2px; }
-.tbl td .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 8px; }
-.tbl td.rowname { font-weight: 550; }
-.tbl tbody tr:hover td { background: var(--surface-2); }
-.tbl tbody tr:hover td:first-child { background: var(--surface-2); }
-.heat { background: color-mix(in srgb, var(--heat-hi) calc(var(--p) * 1%), var(--heat-lo)); color: var(--heat-text); font-weight: 600; text-align: center !important; min-width: 62px; }
-.heat.hi { color: #fff; }
-.heat.na { background: transparent; color: var(--ink-3); font-weight: 400; }
-.tbl td.overall { font-weight: 700; font-size: 14px; text-align: center; }
-.tbl.score th:first-child { white-space: normal; min-width: 150px; max-width: 220px; }
-.tbl.score th, .tbl.score td { padding-inline: 6px; }
-.tbl.score .heat { min-width: 50px; }
-.rank { color: var(--ink-3); font-weight: 400; font-size: 11.5px; margin-right: 6px; }
+.tbl td.neg { color: var(--crit); font-weight: 600; }
+.rank { color: var(--ink-3); font-weight: 400; font-size: 12px; margin-right: 6px; }
+.chipcell { margin-left: 6px; }
 
-.empty { padding: 28px 16px; text-align: center; color: var(--ink-2); }
-details.how summary { cursor: pointer; font-weight: 650; font-size: 15px; }
-details.how .how-body { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; color: var(--ink-2); max-width: 78ch; }
-details.how h3 { font-size: 13px; color: var(--ink); margin-top: 6px; }
-details.how ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
-
-/* ---------- dialog ---------- */
-dialog { border: 1px solid var(--line-2); border-radius: 12px; padding: 0; background: var(--surface); color: var(--ink); width: min(640px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); }
-dialog::backdrop { background: rgba(0, 0, 0, .45); }
-.dlg-in { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-.dlg-in h2 { font-size: 16px; }
-.dlg-in textarea { height: 140px; font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
-.dlg-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.err { color: var(--crit); font-size: 12.5px; }
-.ok { color: var(--ink-2); font-size: 12.5px; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-@media (max-width: 560px) { .brand { flex-wrap: wrap; gap: 0 10px; } .brand .sub { display: none; } .brand h1 { white-space: normal; } .sample-note { flex-wrap: wrap; } }
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.notes li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+.notes .status { flex: none; margin-top: 1px; }
+.empty { padding: 24px 16px; text-align: center; color: var(--ink-2); }
+details.how summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink-2); }
+details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); max-width: 78ch; }
+.small-note { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+@media (max-width: 560px) { .brand p { display: none; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
@@ -311,22 +185,23 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
   <div class="topbar-in">
     <div class="brand">
       <h1>Copenhagen Rental Evaluator</h1>
-      <span class="sub">All amounts in DKK per month unless stated</span>
+      <p>Compare the places that already meet your must-haves on what they really cost you.</p>
     </div>
     <div class="top-actions">
-      <button class="btn" id="btn-data" type="button">Save, load &amp; reset</button>
-      <button class="btn icon" id="btn-theme" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+      <button class="btn" id="btn-sample" type="button">Load sample</button>
+      <button class="btn" id="btn-clear" type="button">Clear</button>
+      <button class="btn" id="btn-theme" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
       </button>
     </div>
     <div class="viewtabs" role="group" aria-label="Switch view">
       <button type="button" id="tab-inputs" aria-pressed="false">Inputs</button>
-      <button type="button" id="tab-results" aria-pressed="true">Dashboard</button>
+      <button type="button" id="tab-results" aria-pressed="true">Results</button>
     </div>
   </div>
   <div class="sample-note" id="sample-note" hidden>
     <span class="pill">Sample data</span>
-    <span>These figures are illustrative. Replace them with your own listings, or start blank from the data menu.</span>
+    <span>Illustrative figures. Replace them with your shortlist.</span>
     <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Dismiss</button>
   </div>
 </header>
@@ -337,32 +212,26 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
     <main class="results stack" id="results" aria-live="polite"></main>
   </div>
 </div>
-
 <div id="tip" class="tip" role="tooltip" hidden></div>
-<dialog id="dlg" aria-labelledby="dlg-title"></dialog>
 
 <script>
 (function () {
 'use strict';
 
-/* =====================================================================
-   Helpers
-   ===================================================================== */
-const KEY = 'copenhagen-rental-evaluator-v1';
+/* ---------- helpers ---------- */
+const KEY = 'copenhagen-rental-evaluator-v2';
 const THEME_KEY = 'copenhagen-rental-evaluator-theme';
 const MAX_OPTIONS = 8;
-const PROPS = ['value', 'checked', 'selected', 'disabled', 'readOnly', 'hidden'];
 
 function h(tag, attrs, ...kids) {
   const e = document.createElement(tag);
   if (attrs) for (const [k, v] of Object.entries(attrs)) {
-    if (v == null) continue;
+    if (v == null || v === false) continue;
     if (k === 'class') e.className = v;
-    else if (k === 'text') e.textContent = v;
     else if (k === 'style') e.style.cssText = v;
     else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
-    else if (PROPS.includes(k)) e[k] = v;
-    else if (v !== false) e.setAttribute(k, v === true ? '' : v);
+    else if (['value', 'checked', 'selected', 'disabled'].includes(k)) e[k] = v;
+    else e.setAttribute(k, v === true ? '' : v);
   }
   for (const kid of kids.flat(Infinity)) {
     if (kid == null || kid === false) continue;
@@ -370,271 +239,107 @@ function h(tag, attrs, ...kids) {
   }
   return e;
 }
-const $ = (sel, root = document) => root.querySelector(sel);
+const $ = s => document.querySelector(s);
 const uid = () => 'o' + Math.random().toString(36).slice(2, 8);
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const nf = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 });
 const kr = n => (n < 0 ? '−' : '') + nf.format(Math.abs(Math.round(n)));
 const krc = n => Math.abs(n) >= 1000 ? (Math.round(n / 100) / 10) + 'k' : String(Math.round(n));
-const pct = (x, d = 0) => (x * 100).toFixed(d) + '%';
-const div = (a, b) => (b > 0 ? a / b : null);
+const pct = x => Math.round(x * 100) + '%';
 const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
-const nz = (v, d) => (Number.isFinite(+v) && v !== '' && v !== null ? +v : d);
+const nz = (v, d) => (v !== '' && v !== null && Number.isFinite(+v) ? +v : d);
 
-/* =====================================================================
-   State
-   ===================================================================== */
-const DEFAULT_SERVICES = [
-  { id: 'internet', name: 'Internet', price: 250, want: true },
-  { id: 'gym', name: 'Gym', price: 350, want: true },
-  { id: 'laundry', name: 'Washing machine or laundry room', price: 150, want: true },
-  { id: 'bike', name: 'Bike parking', price: 80, want: true },
-  { id: 'parking', name: 'Car parking', price: 1200, want: false },
-  { id: 'cleaning', name: 'Cleaning', price: 600, want: false },
-];
-const WEIGHTS = [
-  ['afford', 'Affordability', 8],
-  ['commute', 'Commute', 6],
-  ['flex', 'Lease fit', 3],
-  ['furn', 'Furnishing', 3],
-  ['serv', 'Services', 2],
-  ['upfront', 'Move-in cash', 3],
-  ['fit', 'Personal fit', 5],
-];
-const MODES = ['Bike', 'Walk', 'Metro', 'Train', 'Bus', 'Car', 'Mixed'];
-
-function baseProfile() {
-  return {
-    takeHome: 0, otherIncome: 0, otherFixed: 0, savingsGoal: 0, savings: 0,
-    stay: 12, daysPerWeek: 4, timePct: 50, financeRate: 3,
-    ownsFurniture: false, furnishCost: 30000, resale: 40,
-    comfortPct: 30, maxPct: 40,
-  };
+/* ---------- state ---------- */
+function baseProfile() { return { takeHome: 0, otherCosts: 0, stay: 12, days: 4, timePct: 50, furnCost: 18000, notice: 3 }; }
+function blankOption() {
+  return { id: uid(), name: 'New option', rent: 0, utils: 0, deposit: 0, lease: 12, furnished: true, commuteMin: 20, fare: 0, perks: 0 };
 }
-function baseWeights() { return Object.fromEntries(WEIGHTS.map(([k, , d]) => [k, d])); }
-function blankOption(slot) {
-  return {
-    id: uid(), slot, name: 'New option', area: '', url: '', notes: '', size: 0, fit: 3,
-    rent: 0, heat: 0, elec: 0, otherFees: 0,
-    deposit: 0, prepaid: 0, fees: 0,
-    termType: 'fixed', term: 12, notice: 3,
-    furnished: 'unfurnished',
-    mode: 'Bike', commuteMin: 20, transit: 0,
-    included: [],
-  };
-}
-function blankState() {
-  const o = blankOption(1);
-  o.name = 'Option 1';
-  return {
-    profile: baseProfile(), weights: baseWeights(),
-    services: DEFAULT_SERVICES.map(s => ({ ...s })),
-    options: [o], meta: { sample: false },
-  };
-}
+function blankState() { const o = blankOption(); o.name = 'Option 1'; return { profile: baseProfile(), options: [o], sample: false }; }
 function sampleState() {
-  const p = baseProfile();
-  Object.assign(p, { takeHome: 38000, otherFixed: 5000, savingsGoal: 6000, savings: 90000 });
-  const mk = (slot, o) => ({ ...blankOption(slot), ...o });
+  const mk = o => ({ ...blankOption(), ...o });
   return {
-    profile: p, weights: baseWeights(),
-    services: DEFAULT_SERVICES.map(s => ({ ...s })),
-    meta: { sample: true },
+    sample: true,
+    profile: { ...baseProfile(), takeHome: 38000, otherCosts: 5000 },
     options: [
-      mk(1, { name: 'Nørrebro 2-room', area: 'Nørrebro', size: 58, fit: 4, rent: 11500, heat: 650, elec: 350,
-        deposit: 34500, prepaid: 11500, termType: 'open', notice: 3, furnished: 'unfurnished',
-        mode: 'Bike', commuteMin: 18, transit: 60, included: ['laundry', 'bike'], notes: 'Courtyard side, third floor, no lift.' }),
-      mk(2, { name: 'Østerbro furnished flat', area: 'Østerbro', size: 45, fit: 4, rent: 14800,
-        deposit: 29600, termType: 'fixed', term: 6, notice: 1, furnished: 'furnished',
-        mode: 'Metro', commuteMin: 25, transit: 480, included: ['internet', 'laundry'], notes: 'Utilities and internet are in the rent. Six-month contract.' }),
-      mk(3, { name: 'Ørestad new-build with gym', area: 'Amager', size: 52, fit: 3, rent: 12900, heat: 700, elec: 400,
-        deposit: 38700, prepaid: 12900, fees: 3500, termType: 'fixed', term: 12, notice: 3, furnished: 'unfurnished',
-        mode: 'Metro', commuteMin: 22, transit: 500, included: ['gym', 'laundry', 'bike'], notes: 'Roof terrace. Admin fee of 3,500 at move-in.' }),
-      mk(4, { name: 'Room in Valby shared flat', area: 'Valby', size: 16, fit: 2, rent: 6800, otherFees: 250,
-        deposit: 13600, termType: 'open', notice: 1, furnished: 'partial',
-        mode: 'Mixed', commuteMin: 32, transit: 520, included: ['internet'], notes: 'Three flatmates. Shared kitchen and bathroom.' }),
+      mk({ name: 'Nørrebro 2-room', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230 }),
+      mk({ name: 'Østerbro furnished flat', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400 }),
+      mk({ name: 'Ørestad new-build with gym', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580 }),
     ],
   };
 }
-
 function normalize(raw) {
   const b = blankState();
-  if (!raw || typeof raw !== 'object') throw new Error('The data is not a valid object.');
-  const P = { ...b.profile }, rp = raw.profile || {};
-  for (const k of Object.keys(P)) {
-    if (k === 'ownsFurniture') P[k] = !!rp[k];
-    else P[k] = Math.max(0, nz(rp[k], P[k]));
-  }
+  if (!raw || typeof raw !== 'object') return b;
+  const P = baseProfile(), rp = raw.profile || {};
+  for (const k of Object.keys(P)) P[k] = Math.max(0, nz(rp[k], P[k]));
   P.stay = Math.max(1, P.stay);
-  const W = baseWeights(), rw = raw.weights || {};
-  for (const k of Object.keys(W)) W[k] = clamp(nz(rw[k], W[k]), 0, 10);
-  let services = Array.isArray(raw.services) ? raw.services : DEFAULT_SERVICES;
-  const seen = new Set();
-  services = services.slice(0, 20).map((s, i) => {
-    let id = String((s && s.id) || 's' + i).slice(0, 24);
-    while (seen.has(id)) id += '_';
-    seen.add(id);
-    return { id, name: String((s && s.name) || 'Service').slice(0, 60), price: Math.max(0, nz(s && s.price, 0)), want: !!(s && s.want) };
-  });
-  const svcIds = new Set(services.map(s => s.id));
-  const rawOpts = Array.isArray(raw.options) && raw.options.length ? raw.options : b.options;
-  const ids = new Set(), slots = new Set();
-  const options = rawOpts.slice(0, MAX_OPTIONS).map((r, i) => {
+  const opts = (Array.isArray(raw.options) && raw.options.length ? raw.options : b.options).slice(0, MAX_OPTIONS).map((r, i) => {
     r = r || {};
-    const o = blankOption(1);
-    let id = String(r.id || o.id).slice(0, 20);
-    while (ids.has(id)) id += 'x';
-    ids.add(id);
-    o.id = id;
-    let slot = Math.round(nz(r.slot, 0));
-    if (slot < 1 || slot > 8 || slots.has(slot)) { slot = 1; while (slots.has(slot)) slot++; }
-    slots.add(slot);
-    o.slot = slot;
-    for (const k of ['name', 'area', 'notes']) o[k] = String(r[k] ?? (k === 'name' ? 'Option ' + (i + 1) : '')).slice(0, k === 'notes' ? 400 : 80);
-    o.url = /^https?:\/\//i.test(String(r.url || '')) ? String(r.url).slice(0, 500) : '';
-    for (const k of ['size', 'rent', 'heat', 'elec', 'otherFees', 'deposit', 'prepaid', 'fees', 'term', 'notice', 'commuteMin', 'transit'])
-      o[k] = Math.max(0, nz(r[k], o[k]));
-    o.fit = clamp(Math.round(nz(r.fit, 3)), 1, 5);
-    o.termType = r.termType === 'open' ? 'open' : 'fixed';
-    o.furnished = ['furnished', 'partial', 'unfurnished'].includes(r.furnished) ? r.furnished : 'unfurnished';
-    o.mode = MODES.includes(r.mode) ? r.mode : 'Bike';
-    o.included = Array.isArray(r.included) ? r.included.filter(x => svcIds.has(x)) : [];
+    const o = blankOption();
+    o.id = String(r.id || o.id).slice(0, 20);
+    o.name = String(r.name ?? 'Option ' + (i + 1)).slice(0, 80);
+    for (const k of ['rent', 'utils', 'deposit', 'lease', 'commuteMin', 'fare', 'perks']) o[k] = Math.max(0, nz(r[k], o[k]));
+    o.furnished = r.furnished !== false;
     return o;
   });
-  return { profile: P, weights: W, services, options, meta: { sample: !!(raw.meta && raw.meta.sample) } };
+  const seen = new Set(); opts.forEach(o => { while (seen.has(o.id)) o.id += 'x'; seen.add(o.id); });
+  return { profile: P, options: opts, sample: !!raw.sample };
 }
-
-function load() {
-  try { const t = localStorage.getItem(KEY); if (t) return normalize(JSON.parse(t)); } catch (e) { /* storage unavailable or corrupt */ }
-  return null;
-}
+function load() { try { const t = localStorage.getItem(KEY); if (t) return normalize(JSON.parse(t)); } catch (e) { /* ignore */ } return null; }
 let saveTimer = 0;
-function save() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }, 250);
-}
+function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }, 250); }
 
+window.addEventListener('pagehide', () => { if (saveTimer) { clearTimeout(saveTimer); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } } });
 let S = load() || sampleState();
-const ui = {
-  open: S.options[0] && S.options[0].id,
-  sections: { budget: true, assump: false, services: false, weights: false },
-  mobile: 'results',
-  views: { a: 'chart', b: 'chart', c: 'chart' },
-  includeTime: false,
-};
+const ui = { open: S.options[0] && S.options[0].id };
 
-/* =====================================================================
-   Model
-   ===================================================================== */
-const FURN_FACTOR = { furnished: 0, partial: 0.5, unfurnished: 1 };
-
+/* ---------- model ---------- */
 function compute(o, S) {
-  const P = S.profile;
-  const income = P.takeHome + P.otherIncome;
-  const wanted = S.services.filter(s => s.want);
-  const wantedTotal = wanted.reduce((a, s) => a + s.price, 0);
-  const servicesNeeded = wanted.filter(s => !o.included.includes(s.id)).reduce((a, s) => a + s.price, 0);
-  const servicesCovered = wantedTotal - servicesNeeded;
-
-  const utilities = o.heat + o.elec;
-  const housing = o.rent + utilities + o.otherFees;
-  const extras = o.transit + servicesNeeded;
-  const monthlyCash = housing + extras;
-
+  const P = S.profile, income = P.takeHome;
   const stay = Math.max(1, P.stay);
-  const binding = o.termType === 'fixed' ? Math.max(1, o.term) : Math.max(0, o.notice);
-  const H = Math.max(stay, binding);
-
-  const furnFactor = P.ownsFurniture ? 0 : (FURN_FACTOR[o.furnished] ?? 1);
-  const furnGross = furnFactor * P.furnishCost;
-  const furnNet = furnGross * (1 - P.resale / 100);
-  const upfront = o.deposit + o.prepaid + o.fees + furnGross;
-  const financing = (o.deposit + o.prepaid) * P.financeRate / 100 / 12;
-  const amort = (o.fees + furnNet) / H + financing;
-  const likeForLike = monthlyCash + amort;
-
-  const daysPerMonth = P.daysPerWeek * 52 / 12;
-  const commuteHours = o.commuteMin * 2 / 60 * daysPerMonth;
-  const hourly = P.takeHome > 0 ? P.takeHome / (37 * 52 / 12) : 0;
-  const timeCost = commuteHours * hourly * P.timePct / 100;
-  const trueMonthly = likeForLike + timeCost;
-
-  const housingShare = div(housing, income);
-  const allInShare = div(monthlyCash, income);
-  const surplus = income - monthlyCash - P.otherFixed - P.savingsGoal;
-  const surplusNoSavings = surplus + P.savingsGoal;
-  const savingsGap = P.savings > 0 ? Math.max(0, upfront - P.savings) : null;
-
-  let level = 'good';
-  const reasons = [];
-  if (housingShare != null) {
-    if (housingShare > P.maxPct / 100) { level = 'bad'; reasons.push(`Housing takes ${pct(housingShare)} of income, above your ${P.maxPct}% ceiling.`); }
-    else if (housingShare > P.comfortPct / 100) { level = 'warn'; reasons.push(`Housing takes ${pct(housingShare)} of income, above your ${P.comfortPct}% comfort level.`); }
+  const commit = o.lease > 0 ? o.lease : P.notice;
+  const H = Math.max(stay, commit);
+  const housing = o.rent + o.utils;
+  const housingNet = Math.max(0, housing - o.perks);
+  const furn = o.furnished ? 0 : P.furnCost;
+  const setup = furn / H;
+  const hours = o.commuteMin * 2 / 60 * P.days * 52 / 12;
+  const hourly = income > 0 ? income / (37 * 52 / 12) : 0;
+  const time = hours * hourly * P.timePct / 100;
+  const commute = o.fare + time;
+  const allIn = housingNet + commute + setup;
+  const cash = housing + o.fare;
+  const share = income > 0 ? housing / income : null;
+  const left = income > 0 ? income - P.otherCosts - cash : null;
+  let level = 'good', why = '';
+  if (share != null) {
+    if (left < 0) { level = 'bad'; why = `Monthly costs exceed your take-home by ${kr(-left)} kr.`; }
+    else if (share > 0.4) { level = 'bad'; why = `Rent and utilities take ${pct(share)} of take-home, above 40%.`; }
+    else if (share > 0.3) { level = 'warn'; why = `Rent and utilities take ${pct(share)} of take-home, above 30%.`; }
   }
-  if (income > 0) {
-    if (surplusNoSavings < 0) { level = 'bad'; reasons.push(`Monthly costs exceed income by ${kr(-surplusNoSavings)}, even with no savings.`); }
-    else if (surplus < 0) { if (level === 'good') level = 'warn'; reasons.push(`Leaves you ${kr(-surplus)} short of your savings goal each month.`); }
-  }
-  const status = { level, label: { good: 'Comfortable', warn: 'Stretched', bad: 'Not sustainable' }[level], reasons };
-
-  const cost = { rent: o.rent, utilities, transit: o.transit, feesServices: o.otherFees + servicesNeeded, setup: amort, time: timeCost };
   return {
-    income, utilities, housing, extras, monthlyCash, servicesNeeded, servicesCovered, wantedTotal,
-    stay, binding, H, furnGross, furnNet, upfront, financing, amort, likeForLike,
-    commuteHours, timeCost, trueMonthly, housingShare, allInShare, surplus, surplusNoSavings, savingsGap,
-    perM2: div(housing, o.size), status, cost, o,
-    totalCost: likeForLike * H,
+    o, ready: o.rent > 0, housing, housingNet, commute, time, setup, allIn, cash, share, left,
+    upfront: o.deposit + furn, commit, H, hours,
+    status: { level, why, label: { good: 'Comfortable', warn: 'Stretched', bad: 'Not sustainable' }[level] },
   };
 }
-
-function cashAt(k, c) {
-  const o = c.o;
-  const p = o.rent > 0 ? o.prepaid / o.rent : 0;                       // prepaid rent is credited against the final months
-  const credit = Math.min(p, Math.max(0, k - (c.H - p))) * o.rent;
-  return c.upfront + c.monthlyCash * k - credit;
+function evaluate(S) {
+  const list = S.options.map(o => compute(o, S));
+  const ranked = list.filter(m => m.ready);
+  ranked.sort((a, b) => (a.status.level === 'bad') - (b.status.level === 'bad') || a.allIn - b.allIn);
+  ranked.forEach((m, i) => { m.rank = i + 1; });
+  return { list, ranked };
 }
 
-function scoreAll(S) {
-  const P = S.profile;
-  const list = S.options.map(o => ({ o, m: compute(o, S) }));
-  const costs = list.map(x => x.m.likeForLike);
-  const cmin = Math.min(...costs), cmax = Math.max(...costs);
-  for (const { o, m } of list) {
-    const sc = {};
-    if (m.income > 0) sc.afford = clamp(100 * (0.55 - m.likeForLike / m.income) / (0.55 - 0.20), 0, 100);
-    else sc.afford = cmax > cmin ? 100 * (cmax - m.likeForLike) / (cmax - cmin) : 100;
-    sc.commute = clamp(100 * (60 - o.commuteMin) / 50, 0, 100);
-    if (o.termType === 'fixed') { const T = Math.max(1, o.term); sc.flex = T <= m.stay ? 60 + 40 * T / m.stay : 100 * m.stay / T; }
-    else sc.flex = Math.max(40, 100 - 10 * Math.max(0, o.notice - 1));
-    sc.furn = P.ownsFurniture ? { unfurnished: 100, partial: 80, furnished: 60 }[o.furnished] : { furnished: 100, partial: 60, unfurnished: 20 }[o.furnished];
-    sc.serv = m.wantedTotal > 0 ? 100 * m.servicesCovered / m.wantedTotal : null;
-    if (P.savings > 0) sc.upfront = clamp(100 * (1 - m.upfront / P.savings) / 0.7, 0, 100);
-    else if (m.income > 0) sc.upfront = clamp(100 * (6 - m.upfront / m.income) / 5, 0, 100);
-    else sc.upfront = null;
-    sc.fit = (o.fit - 1) / 4 * 100;
-    let tw = 0, ts = 0;
-    for (const [k] of WEIGHTS) { const w = S.weights[k]; if (sc[k] != null && w > 0) { tw += w; ts += w * sc[k]; } }
-    m.scores = sc;
-    m.overall = tw > 0 ? ts / tw : 0;
-  }
-  const ranked = [...list].sort((a, b) => b.m.overall - a.m.overall || a.m.likeForLike - b.m.likeForLike);
-  ranked.forEach((x, i) => { x.m.rank = i + 1; });
-  return list;
-}
-
-/* =====================================================================
-   Tooltip
-   ===================================================================== */
+/* ---------- tooltip ---------- */
 const tip = $('#tip');
 function showTip(x, y, nodes) {
-  tip.replaceChildren(...nodes);
-  tip.hidden = false;
+  tip.replaceChildren(...nodes); tip.hidden = false;
   const r = tip.getBoundingClientRect();
   let left = x + 14, top = y + 14;
   if (left + r.width > innerWidth - 8) left = x - r.width - 14;
   if (top + r.height > innerHeight - 8) top = y - r.height - 14;
-  tip.style.left = Math.max(8, left) + 'px';
-  tip.style.top = Math.max(8, top) + 'px';
+  tip.style.left = Math.max(8, left) + 'px'; tip.style.top = Math.max(8, top) + 'px';
 }
 function hideTip() { tip.hidden = true; }
 function bindTip(el, build) {
@@ -643,231 +348,83 @@ function bindTip(el, build) {
   el.addEventListener('focus', () => { const r = el.getBoundingClientRect(); showTip(r.left + r.width / 2, r.top, build()); });
   el.addEventListener('blur', hideTip);
 }
-const tipRow = (color, value, label, sq) => h('div', { class: 'tr' },
-  h('span', { class: 'k' + (sq ? ' sq' : ''), style: `background:${color}` }), h('strong', null, value), h('span', { class: 'l' }, label));
 
-/* =====================================================================
-   Input panel
-   ===================================================================== */
+/* ---------- inputs ---------- */
 const inputsEl = $('#inputs');
 let rafId = 0;
-function changed() {
-  save();
-  cancelAnimationFrame(rafId);
-  rafId = requestAnimationFrame(() => { renderResults(); updateSummaries(); });
-}
+function changed() { save(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(() => { renderResults(); updateSummaries(); }); }
 
 function numField(id, label, get, set, o = {}) {
-  const inp = h('input', { id, type: 'number', min: o.min ?? 0, max: o.max, step: o.step ?? 'any', inputmode: 'decimal', value: String(get()) });
+  const inp = h('input', { id, type: 'number', min: 0, step: 'any', inputmode: 'decimal', value: String(get()) });
   inp.addEventListener('input', () => { set(num(inp.value)); changed(); });
   return h('div', { class: 'field' + (o.wide ? ' wide' : '') },
     h('label', { for: id }, label),
     h('div', { class: 'inp' + (o.unit ? ' has-unit' : '') }, inp, o.unit ? h('span', { class: 'unit' }, o.unit) : null),
-    o.extra, o.hint ? h('div', { class: 'hint' }, o.hint) : null);
+    o.hint ? h('div', { class: 'hint' }, o.hint) : null);
 }
-function textField(id, label, get, set, o = {}) {
-  const el = o.area ? h('textarea', { id, maxlength: o.max || 400 }) : h('input', { id, type: o.type || 'text', maxlength: o.max || 80 });
-  el.value = get();
-  el.addEventListener('input', () => { set(el.value); changed(); });
-  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), h('div', { class: 'inp' }, el), o.hint ? h('div', { class: 'hint' }, o.hint) : null);
-}
-function selectField(id, label, get, set, options, o = {}) {
-  const sel = h('select', { id }, options.map(([v, l]) => h('option', { value: v, selected: v === get() }, l)));
-  sel.addEventListener('change', () => { set(sel.value); changed(); if (o.rerender) renderInputs(); });
-  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), sel);
-}
-function checkField(id, label, get, set) {
-  const c = h('input', { id, type: 'checkbox', checked: get() });
-  c.addEventListener('change', () => { set(c.checked); changed(); });
-  return h('label', { class: 'check', for: id }, c, h('span', null, label));
-}
-
-function section(key, title, meta, body) {
-  const d = h('details', { class: 'sec' }, h('summary', null, h('span', null, title), meta ? h('span', { class: 'meta' }, meta) : null), h('div', { class: 'sec-body' }, body));
-  d.open = !!ui.sections[key];
-  d.addEventListener('toggle', () => { ui.sections[key] = d.open; });
-  return d;
-}
-
 function optionCard(o) {
-  const P = S.profile;
-  const open = ui.open === o.id;
-  const rentX3 = (field, id) => h('button', {
-    class: 'btn sm inline-btn', type: 'button',
-    onclick: () => { o[field] = o.rent * 3; const el = document.getElementById(id); if (el) el.value = String(o[field]); changed(); },
-  }, "Set to 3 months' rent");
-  const idf = k => `o-${o.id}-${k}`;
-  const head = h('button', { class: 'opt-head', type: 'button', 'aria-expanded': String(open), 'aria-controls': idf('body'), onclick: () => { ui.open = open ? null : o.id; renderInputs(); } },
-    h('span', { class: 'sw', style: `background:var(--s${o.slot})` }),
-    h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Untitled'), h('span', { 'data-sum': o.id }, '')),
-    h('span', { class: 'score', 'data-score': o.id }, ''));
-  const card = h('div', { class: 'opt', 'data-open': String(open) }, head);
+  const open = ui.open === o.id, f = k => `o-${o.id}-${k}`;
+  const card = h('div', { class: 'opt', 'data-open': String(open) },
+    h('button', { class: 'opt-head', type: 'button', 'aria-expanded': String(open), onclick: () => { ui.open = open ? null : o.id; renderInputs(); updateSummaries(); } },
+      h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Untitled'), h('span', { 'data-sum': o.id })),
+      h('span', { class: 'chev', 'aria-hidden': 'true' })));
   if (!open) return card;
-  const body = h('div', { class: 'opt-body', id: idf('body') },
+  const name = h('input', { id: f('name'), type: 'text', maxlength: 80, value: o.name });
+  name.addEventListener('input', () => { o.name = name.value; changed(); });
+  const furn = h('select', { id: f('furnished') }, h('option', { value: 'yes', selected: o.furnished }, 'Furnished'), h('option', { value: 'no', selected: !o.furnished }, 'Unfurnished'));
+  furn.addEventListener('change', () => { o.furnished = furn.value === 'yes'; changed(); });
+  card.append(h('div', { class: 'opt-body' },
     h('div', { class: 'fields' },
-      textField(idf('name'), 'Name', () => o.name, v => { o.name = v; }, { wide: true }),
-      textField(idf('area'), 'Neighbourhood', () => o.area, v => { o.area = v; }),
-      numField(idf('size'), 'Size', () => o.size, v => { o.size = v; }, { unit: 'm²' }),
-      selectField(idf('fit'), 'Personal fit', () => String(o.fit), v => { o.fit = +v; },
-        [['1', '1 · Poor'], ['2', '2 · Meh'], ['3', '3 · Fine'], ['4', '4 · Good'], ['5', '5 · Love it']]),
-      textField(idf('url'), 'Listing link', () => o.url, v => { o.url = /^https?:\/\//i.test(v.trim()) ? v.trim() : ''; }, { type: 'url', max: 500, hint: 'Optional. Must start with https://' })),
-    h('div', { class: 'group-title' }, 'Monthly costs'),
-    h('div', { class: 'fields' },
-      numField(idf('rent'), 'Rent', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
-      numField(idf('heat'), 'Heating & water', () => o.heat, v => { o.heat = v; }, { unit: 'kr', hint: 'A conto. 0 if in rent.' }),
-      numField(idf('elec'), 'Electricity', () => o.elec, v => { o.elec = v; }, { unit: 'kr', hint: '0 if in rent.' }),
-      numField(idf('otherFees'), 'Other fees', () => o.otherFees, v => { o.otherFees = v; }, { unit: 'kr', hint: 'Building or service charges.' })),
-    h('div', { class: 'group-title' }, 'Move-in costs'),
-    h('div', { class: 'fields' },
-      numField(idf('deposit'), 'Deposit', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr', extra: rentX3('deposit', idf('deposit')) }),
-      numField(idf('prepaid'), 'Prepaid rent', () => o.prepaid, v => { o.prepaid = v; }, { unit: 'kr', extra: rentX3('prepaid', idf('prepaid')) }),
-      numField(idf('fees'), 'One-off fees', () => o.fees, v => { o.fees = v; }, { unit: 'kr', hint: 'Agency, admin, key deposit.' })),
-    h('div', { class: 'group-title' }, 'Lease and furnishing'),
-    h('div', { class: 'fields' },
-      selectField(idf('termType'), 'Lease type', () => o.termType, v => { o.termType = v; }, [['fixed', 'Fixed term'], ['open', 'Open-ended']], { rerender: true }),
-      o.termType === 'fixed'
-        ? numField(idf('term'), 'Term', () => o.term, v => { o.term = v; }, { unit: 'mo', min: 1 })
-        : numField(idf('notice'), 'Your notice period', () => o.notice, v => { o.notice = v; }, { unit: 'mo' }),
-      selectField(idf('furnished'), 'Furnishing', () => o.furnished, v => { o.furnished = v; },
-        [['furnished', 'Fully furnished'], ['partial', 'Partly furnished'], ['unfurnished', 'Unfurnished']])),
-    h('div', { class: 'group-title' }, 'Commute'),
-    h('div', { class: 'fields' },
-      selectField(idf('mode'), 'Mode', () => o.mode, v => { o.mode = v; }, MODES.map(m => [m, m])),
-      numField(idf('commuteMin'), 'One way', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min' }),
-      numField(idf('transit'), 'Transport cost', () => o.transit, v => { o.transit = v; }, { unit: 'kr', hint: 'Monthly pass, Rejsekort or bike upkeep.' })),
-    h('div', { class: 'group-title' }, 'Included services'),
-    S.services.length
-      ? h('div', { class: 'chips' }, S.services.map(s => {
-          const c = h('input', { type: 'checkbox', id: idf('svc-' + s.id), checked: o.included.includes(s.id) });
-          c.addEventListener('change', () => { o.included = c.checked ? [...new Set([...o.included, s.id])] : o.included.filter(x => x !== s.id); changed(); });
-          return h('label', { class: 'chip-check', for: idf('svc-' + s.id) }, c, s.name);
-        }))
-      : h('div', { class: 'hint' }, 'Add services in the "Services you care about" section.'),
-    textField(idf('notes'), 'Notes', () => o.notes, v => { o.notes = v; }, { area: true, wide: true }),
+      h('div', { class: 'field wide' }, h('label', { for: f('name') }, 'Name'), h('div', { class: 'inp' }, name)),
+      numField(f('rent'), 'Rent', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
+      numField(f('utils'), 'Utilities', () => o.utils, v => { o.utils = v; }, { unit: 'kr', hint: 'Heating, water, electricity. 0 if in rent.' }),
+      numField(f('deposit'), 'Deposit', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
+      numField(f('lease'), 'Lease length', () => o.lease, v => { o.lease = v; }, { unit: 'mo', hint: '0 if open-ended.' }),
+      h('div', { class: 'field' }, h('label', { for: f('furnished') }, 'Furnishing'), furn),
+      numField(f('commuteMin'), 'Commute', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min', hint: 'One way.' }),
+      numField(f('fare'), 'Transport cost', () => o.fare, v => { o.fare = v; }, { unit: 'kr', hint: 'Per month. 0 if cycling.' }),
+      numField(f('perks'), 'Perks included', () => o.perks, v => { o.perks = v; }, { unit: 'kr', hint: 'Gym, internet or laundry you would otherwise pay for, per month.' })),
     h('div', { class: 'opt-actions' },
-      o.url ? h('a', { class: 'listing-link', href: o.url, target: '_blank', rel: 'noopener noreferrer' }, 'Open listing ↗') : null,
-      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => duplicateOption(o) }, 'Duplicate'),
-      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => removeOption(o) }, 'Remove')));
-  card.append(body);
+      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copy)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplicate'),
+      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Remove'))));
   return card;
 }
-
-function nextSlot() { const used = new Set(S.options.map(o => o.slot)); for (let i = 1; i <= 8; i++) if (!used.has(i)) return i; return 1; }
-function addOption() {
-  if (S.options.length >= MAX_OPTIONS) return;
-  const o = blankOption(nextSlot());
-  o.name = 'Option ' + (S.options.length + 1);
-  S.options.push(o); ui.open = o.id; save(); renderInputs(); renderResults(); updateSummaries();
-}
-function duplicateOption(src) {
-  if (S.options.length >= MAX_OPTIONS) return;
-  const o = { ...src, id: uid(), slot: nextSlot(), name: src.name + ' (copy)', included: [...src.included] };
-  S.options.splice(S.options.indexOf(src) + 1, 0, o); ui.open = o.id; save(); renderInputs(); renderResults(); updateSummaries();
-}
-function removeOption(o) {
-  if (S.options.length <= 1) return;
-  S.options = S.options.filter(x => x !== o);
-  if (ui.open === o.id) ui.open = null;
-  save(); renderInputs(); renderResults(); updateSummaries();
-}
+function refresh() { save(); renderInputs(); renderResults(); updateSummaries(); }
 
 function renderInputs() {
-  const keep = inputsEl.scrollTop;
-  const P = S.profile;
-  const wsum = Object.values(S.weights).reduce((a, b) => a + b, 0);
-
-  const budget = section('budget', 'Your budget', null, [
+  const keep = inputsEl.scrollTop, P = S.profile;
+  const you = h('section', { class: 'card' },
+    h('div', { class: 'sec-title' }, h('h2', null, 'Your numbers')),
     h('div', { class: 'fields' },
-      numField('p-takeHome', 'Monthly take-home salary', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true, hint: 'Pay after tax and pension, per month.' }),
-      numField('p-otherIncome', 'Other monthly income', () => P.otherIncome, v => { P.otherIncome = v; }, { unit: 'kr', hint: 'Optional.' }),
-      numField('p-otherFixed', 'Other fixed costs', () => P.otherFixed, v => { P.otherFixed = v; }, { unit: 'kr', hint: 'Food, phone, loans, insurance.' }),
-      numField('p-savingsGoal', 'Monthly savings goal', () => P.savingsGoal, v => { P.savingsGoal = v; }, { unit: 'kr' }),
-      numField('p-savings', 'Cash available to move in', () => P.savings, v => { P.savings = v; }, { unit: 'kr', hint: 'Savings you could spend on deposit and set-up.' })),
-  ]);
-
-  const assump = section('assump', 'Assumptions', 'stay, commute, furniture', [
-    h('div', { class: 'fields' },
-      numField('p-stay', 'Planned stay', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mo', min: 1 }),
-      numField('p-days', 'Commute days a week', () => P.daysPerWeek, v => { P.daysPerWeek = clamp(v, 0, 7); }, { max: 7, step: 0.5 }),
-      numField('p-timePct', 'Value of commute time', () => P.timePct, v => { P.timePct = v; }, { unit: '%', hint: 'Share of your hourly take-home.' }),
-      numField('p-finance', 'Return on cash tied up', () => P.financeRate, v => { P.financeRate = v; }, { unit: '%/yr', hint: 'Cost of locking up deposit and prepaid rent.' }),
-      numField('p-comfort', 'Comfortable housing share', () => P.comfortPct, v => { P.comfortPct = v; }, { unit: '%', hint: 'Rent, utilities and fees as a share of income.' }),
-      numField('p-max', 'Housing share ceiling', () => P.maxPct, v => { P.maxPct = v; }, { unit: '%' })),
-    checkField('p-owns', 'I already own furniture', () => P.ownsFurniture, v => { P.ownsFurniture = v; }),
-    h('div', { class: 'fields' },
-      numField('p-furn', 'Cost to furnish a flat', () => P.furnishCost, v => { P.furnishCost = v; }, { unit: 'kr', hint: 'Applies to unfurnished (full) and partly furnished (half).' }),
-      numField('p-resale', 'Resale value', () => P.resale, v => { P.resale = clamp(v, 0, 100); }, { unit: '%', max: 100, hint: 'Recovered when you leave.' })),
-  ]);
-
-  const svcRows = S.services.map((s, i) => {
-    const nm = h('input', { id: `s-${s.id}-name`, type: 'text', value: s.name, maxlength: 60, 'aria-label': 'Service name' });
-    nm.addEventListener('input', () => { s.name = nm.value; changed(); });
-    const pr = h('input', { id: `s-${s.id}-price`, type: 'number', min: 0, step: 'any', inputmode: 'decimal', value: String(s.price), 'aria-label': `${s.name} price per month` });
-    pr.addEventListener('input', () => { s.price = num(pr.value); changed(); });
-    const wn = h('input', { id: `s-${s.id}-want`, type: 'checkbox', checked: s.want });
-    wn.addEventListener('change', () => { s.want = wn.checked; changed(); });
-    return h('div', { class: 'svc-row' },
-      h('div', { class: 'inp' }, nm), h('div', { class: 'inp' }, pr),
-      h('label', { class: 'check', for: `s-${s.id}-want` }, wn, 'Want'),
-      h('button', { class: 'btn ghost sm', type: 'button', 'aria-label': `Remove ${s.name}`, onclick: () => {
-        S.services.splice(i, 1); S.options.forEach(o => { o.included = o.included.filter(x => x !== s.id); }); save(); renderInputs(); renderResults(); updateSummaries();
-      } }, '✕'));
-  });
-  const services = section('services', 'Services you care about', `${S.services.filter(s => s.want).length} wanted`, [
-    h('div', { class: 'hint' }, 'Enter what each service would cost you if you bought it yourself. An option that includes a service you want saves you that amount. Tick "Want" for the ones you would actually use.'),
-    S.services.length ? h('div', { class: 'svc-head' }, h('span', null, 'Service'), h('span', null, 'kr / month'), h('span', null, ''), h('span', null, '')) : null,
-    ...svcRows,
-    h('button', { class: 'btn sm inline-btn', type: 'button', disabled: S.services.length >= 20, onclick: () => {
-      S.services.push({ id: 's' + Math.random().toString(36).slice(2, 7), name: 'New service', price: 0, want: true }); save(); renderInputs(); renderResults();
-    } }, '+ Add service'),
-  ]);
-
-  const weights = section('weights', 'Scoring weights', 'what matters most', [
-    h('div', { class: 'hint' }, 'The overall score is a weighted average of seven criteria, each scored from 0 to 100. Set a weight to 0 to ignore a criterion.'),
-    ...WEIGHTS.map(([k, label]) => {
-      const r = h('input', { id: `w-${k}`, type: 'range', min: 0, max: 10, step: 1, value: String(S.weights[k]) });
-      const val = h('span', { class: 'w-val', 'data-wv': k }, wsum ? pct(S.weights[k] / wsum) : '0%');
-      r.addEventListener('input', () => {
-        S.weights[k] = +r.value;
-        const t = Object.values(S.weights).reduce((a, b) => a + b, 0);
-        inputsEl.querySelectorAll('[data-wv]').forEach(el => { el.textContent = t ? pct(S.weights[el.dataset.wv] / t) : '0%'; });
-        changed();
-      });
-      return h('div', { class: 'weight-row' }, h('label', { for: `w-${k}` }, label), r, val);
-    }),
-  ]);
-
-  const options = h('div', { class: 'stack' },
-    h('div', { class: 'card-head', style: 'margin:0' }, h('h2', { class: 'eyebrow' }, `Rental options (${S.options.length})`),
-      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: addOption }, '+ Add option')),
+      numField('p-takeHome', 'Monthly take-home salary', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true, hint: 'After tax and pension. Used to test whether each option is sustainable.' }),
+      numField('p-other', 'Other monthly costs', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr', hint: 'Food, phone, loans. Optional.' }),
+      numField('p-stay', 'Planned stay', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mo' })),
+    h('details', { class: 'fine' }, h('summary', null, 'Fine-tune (optional)'),
+      h('div', { class: 'fields' },
+        numField('p-days', 'Commute days a week', () => P.days, v => { P.days = clamp(v, 0, 7); }),
+        numField('p-time', 'Value of commute time', () => P.timePct, v => { P.timePct = v; }, { unit: '%', hint: 'Share of your hourly take-home.' }),
+        numField('p-furn', 'Cost to furnish', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr', hint: 'Net of resale. Added to unfurnished options.' }),
+        numField('p-notice', 'Notice, open-ended', () => P.notice, v => { P.notice = v; }, { unit: 'mo' }))));
+  const opts = h('section', { class: 'card' },
+    h('div', { class: 'sec-title' }, h('div', null, h('h2', null, 'Your shortlist'), h('p', { class: 'desc' }, 'Only add places that already meet your must-haves.')),
+      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Option ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Add')),
     h('div', { class: 'opt-list' }, S.options.map(optionCard)));
-
-  inputsEl.replaceChildren(h('div', { class: 'stack' }, budget, options, services, assump, weights));
+  inputsEl.replaceChildren(h('div', { class: 'stack' }, you, opts));
   inputsEl.scrollTop = keep;
 }
-
 function updateSummaries() {
-  const list = scoreAll(S);
-  for (const { o, m } of list) {
-    const a = inputsEl.querySelector(`[data-sum="${o.id}"]`);
-    if (a) a.textContent = `${kr(o.rent)} kr rent · ${o.commuteMin} min commute`;
-    const n = inputsEl.querySelector(`[data-name="${o.id}"]`);
-    if (n) n.textContent = o.name || 'Untitled';
-    const s = inputsEl.querySelector(`[data-score="${o.id}"]`);
-    if (s) s.textContent = Math.round(m.overall);
+  for (const m of evaluate(S).list) {
+    const a = inputsEl.querySelector(`[data-sum="${m.o.id}"]`);
+    if (a) a.textContent = m.ready ? `${kr(m.allIn)} kr a month all-in` : 'Add the rent to include it';
+    const n = inputsEl.querySelector(`[data-name="${m.o.id}"]`);
+    if (n) n.textContent = m.o.name || 'Untitled';
   }
 }
 
-/* =====================================================================
-   Results
-   ===================================================================== */
+/* ---------- results ---------- */
 const resultsEl = $('#results');
-const CRIT = { afford: 'Affordability', commute: 'Commute', flex: 'Lease fit', furn: 'Furnishing', serv: 'Services', upfront: 'Move-in cash', fit: 'Personal fit' };
-
-function statusChip(st) {
-  return h('span', { class: 'status ' + st.level }, h('i', { 'aria-hidden': 'true' }, { good: '✓', warn: '!', bad: '✕' }[st.level]), st.label);
-}
-function niceTicks(max, n = 4) {
+const statusChip = st => h('span', { class: 'status ' + st.level }, h('i', { 'aria-hidden': 'true' }, { good: '✓', warn: '!', bad: '✕' }[st.level]), st.label);
+function niceTicks(max, n) {
   if (!(max > 0)) return { ticks: [0, 1], top: 1 };
   const raw = max / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), nm = raw / mag;
   const step = (nm <= 1 ? 1 : nm <= 2 ? 2 : nm <= 2.5 ? 2.5 : nm <= 5 ? 5 : 10) * mag;
@@ -875,374 +432,112 @@ function niceTicks(max, n = 4) {
   for (let v = 0; v <= top + 1e-9; v += step) ticks.push(+v.toFixed(6));
   return { ticks, top };
 }
-function legend(items) {
-  return h('div', { class: 'legend' }, items.map(([c, l, line]) => h('span', null, h('i', { class: line ? 'ln' : '', style: `background:${c}` }), l)));
-}
-function viewToggle(key) {
-  const mk = (v, label) => h('button', { type: 'button', 'aria-pressed': String(ui.views[key] === v), onclick: () => { ui.views[key] = v; renderResults(); } }, label);
-  return h('div', { class: 'seg-toggle', role: 'group', 'aria-label': 'Chart or table view' }, mk('chart', 'Chart'), mk('table', 'Table'));
-}
-function dataTable(headers, rows) {
+function table(head, rows) {
   return h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
-    h('thead', null, h('tr', null, headers.map(x => h('th', { scope: 'col' }, x)))),
-    h('tbody', null, rows.map(r => h('tr', null, r.map((c, i) => i === 0 ? h('th', { scope: 'row', class: 'rowname' }, c) : h('td', null, c)))))));
-}
-function chartCard(key, title, desc, body, extraHead) {
-  return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('div', null, h('h2', null, title), desc ? h('p', { class: 'desc' }, desc) : null), h('div', { class: 'dlg-row' }, extraHead, viewToggle(key))),
-    body);
+    h('thead', null, h('tr', null, head.map(x => h('th', { scope: 'col' }, x)))),
+    h('tbody', null, rows.map(r => h('tr', null, r.map((c, i) => i === 0 ? h('th', { scope: 'row' }, c) : h('td', null, c)))))));
 }
 
-/* generic horizontal stacked bar */
-function hbar(rows, { top, ticks, fmt, lines = [], withTop = false }) {
-  const root = h('div', { class: 'hbar' + (withTop ? ' with-top' : '') });
-  rows.forEach((r, i) => {
-    root.append(h('div', { class: 'hb-label', style: `grid-row:${i + 1}` }, r.label));
-    const bar = h('div', { class: 'bar', style: `width:${clamp(r.total / top * 100, 0, 100)}%` },
-      r.segs.filter(s => s.v > 0.0001).map(s => {
-        const seg = h('div', { class: 'seg', tabindex: '0', style: `flex:${s.v} 1 0;background:${s.color}`, 'aria-label': `${r.name}, ${s.name}: ${s.text}` });
-        bindTip(seg, () => [h('div', { class: 'th' }, r.name), tipRow(s.color, s.text, s.name, true), s.note ? h('div', { class: 'tn' }, s.note) : null]);
+function verdictCard(E) {
+  const [best, next] = E.ranked;
+  const P = S.profile;
+  const saving = next ? next.allIn - best.allIn : 0;
+  return h('section', { class: 'card verdict' },
+    h('div', null,
+      h('div', { class: 'eyebrow' }, `Best value for a ${P.stay}-month stay`),
+      h('div', { class: 'v-name' }, best.o.name || 'Untitled'),
+      h('div', { class: 'v-line' }, best.share != null ? statusChip(best.status) : null,
+        best.share != null ? h('span', null, `Rent and utilities are ${pct(best.share)} of your take-home`) : h('span', null, 'Add your take-home salary to check sustainability')),
+      next && saving >= 1 ? h('div', { class: 'v-line', style: 'margin-top:4px' }, `${kr(saving)} kr a month less than ${next.o.name}`) : null),
+    h('div', { class: 'hero' }, h('div', { class: 'n' }, kr(best.allIn)), h('div', { class: 'cap' }, 'kr a month, all-in')));
+}
+
+function chartCard(E) {
+  const parts = [
+    ['Rent & utilities', 'var(--s1)', m => m.housingNet, 'After subtracting included perks.'],
+    ['Commute', 'var(--s2)', m => m.commute, 'Transport cost plus the value of your commute time.'],
+    ['Set-up', 'var(--s3)', m => m.setup, 'Furnishing, spread over the months you are committed.'],
+  ];
+  const { ticks, top } = niceTicks(Math.max(...E.ranked.map(m => m.allIn), 1) * (innerWidth < 560 ? 1.32 : 1.18), innerWidth < 560 ? 3 : 4);
+  const root = h('div', { class: 'hbar' });
+  E.ranked.forEach((m, i) => {
+    root.append(h('div', { class: 'hb-label', style: `grid-row:${i + 1}`, title: m.o.name }, m.o.name || 'Untitled'));
+    const bar = h('div', { class: 'bar', style: `width:${clamp(m.allIn / top * 100, 0, 100)}%` },
+      parts.filter(p => p[2](m) > 0.5).map(p => {
+        const seg = h('div', { class: 'seg', tabindex: '0', style: `flex:${p[2](m)} 1 0;background:${p[1]}`, 'aria-label': `${m.o.name}, ${p[0]}: ${kr(p[2](m))} kr a month` });
+        bindTip(seg, () => [h('div', { class: 'th' }, m.o.name), h('div', { class: 'tr' }, h('span', { class: 'k', style: `background:${p[1]}` }), h('strong', null, kr(p[2](m)) + ' kr'), h('span', { class: 'l' }, p[0])), h('div', { class: 'tn' }, p[3])]);
         return seg;
       }));
-    root.append(h('div', { class: 'hb-bar', style: `grid-row:${i + 1}` }, bar, h('span', { class: 'bar-total' }, r.endLabel)));
+    root.append(h('div', { class: 'hb-bar', style: `grid-row:${i + 1}` }, bar, h('span', { class: 'bar-total' }, kr(m.allIn))));
   });
-  const n = rows.length;
-  root.append(h('div', { class: 'hb-grid', style: `grid-row:1 / ${n + 1}` },
-    ticks.map(t => h('i', { class: 'gl', style: `left:${t / top * 100}%` })),
-    lines.map(l => [h('i', { class: 'gl ref', style: `left:${l.at / top * 100}%` }), h('span', { class: 'gl-lbl' + (l.at / top > 0.93 ? ' end' : ''), style: `left:${l.at / top * 100}%` }, l.label)])));
-  root.append(h('div', { class: 'hb-axis', style: `grid-row:${n + 1}` }, ticks.map(t => h('span', { style: `left:${t / top * 100}%` }, fmt(t)))));
-  return root;
-}
-const rowLabel = (name, area, extra) => [h('b', { title: name }, name || 'Untitled'), area ? h('small', null, area) : null, extra];
-
-/* A. monthly cost breakdown */
-function chartA(M) {
-  const parts = [
-    ['Rent', 'var(--s1)', 'rent', 'Base rent.'],
-    ['Utilities', 'var(--s2)', 'utilities', 'Heating, water and electricity.'],
-    ['Commute', 'var(--s3)', 'transit', 'Monthly transport cost.'],
-    ['Fees & services', 'var(--s4)', 'feesServices', 'Building fees plus wanted services the option does not include.'],
-    ['Set-up costs', 'var(--s5)', 'setup', 'One-off fees, furniture net of resale, and the cost of cash tied up, spread over the months you are committed.'],
-  ];
-  if (ui.includeTime) parts.push(['Commute time', 'var(--s6)', 'time', 'Your commute hours valued at the share of hourly take-home set in assumptions. Not a cash cost.']);
-  const tot = m => parts.reduce((a, p) => a + m.cost[p[2]], 0);
-  const body = h('div');
-  const toggle = h('label', { class: 'check', for: 'inc-time' }, (() => {
-    const c = h('input', { id: 'inc-time', type: 'checkbox', checked: ui.includeTime });
-    c.addEventListener('change', () => { ui.includeTime = c.checked; renderResults(); });
-    return c;
-  })(), h('span', null, 'Include value of commute time'));
-  if (ui.views.a === 'table') {
-    body.append(dataTable(['Option', ...parts.map(p => p[0]), 'Total'], M.map(({ o, m }) => [o.name, ...parts.map(p => kr(m.cost[p[2]])), kr(tot(m))])));
-  } else {
-    const max = Math.max(...M.map(x => tot(x.m)), 1);
-    const { ticks, top } = niceTicks(max * 1.18, innerWidth < 560 ? 3 : 4);
-    body.append(legend(parts.map(p => [p[1], p[0]])));
-    body.append(hbar(M.map(({ o, m }) => ({
-      name: o.name, total: tot(m), endLabel: kr(tot(m)),
-      label: rowLabel(o.name, o.area),
-      segs: parts.map(p => ({ v: m.cost[p[2]], color: p[1], name: p[0], text: kr(m.cost[p[2]]) + ' kr', note: p[3] })),
-    })), { top, ticks, fmt: krc }));
-  }
-  return chartCard('a', 'What each option costs per month',
-    'Like-for-like monthly cost. Services you want but the option lacks are added, and one-off costs are spread over the months you are committed.',
-    body, toggle);
-}
-
-/* B. sustainability */
-function chartB(M) {
-  const P = S.profile;
-  const income = P.takeHome + P.otherIncome;
-  if (!(income > 0)) {
-    return chartCard('b', 'Can you sustain it?', null, h('div', { class: 'empty' }, 'Enter your monthly take-home salary in "Your budget" to see how each option fits your income.'));
-  }
-  const segDefs = [
-    ['Housing', 'var(--s1)', m => m.housing, 'Rent, utilities and fees.'],
-    ['Commute & extra services', 'var(--s3)', m => m.extras, 'Transport plus wanted services the option lacks.'],
-    ['Other fixed costs', 'var(--gray)', () => P.otherFixed, 'From your budget.'],
-    ['Savings goal', 'var(--s6)', () => P.savingsGoal, 'From your budget.'],
-    ['Left over', 'var(--track)', m => Math.max(0, m.surplus), 'What remains after everything above.'],
-  ];
-  const body = h('div');
-  if (ui.views.b === 'table') {
-    body.append(dataTable(['Option', 'Housing', 'Commute & extras', 'Other fixed', 'Savings goal', 'Left over', 'Housing % of income', 'Status'],
-      M.map(({ o, m }) => [o.name, kr(m.housing), kr(m.extras), kr(P.otherFixed), kr(P.savingsGoal), kr(m.surplus), pct(m.housingShare, 1), m.status.label])));
-  } else {
-    const totals = M.map(({ m }) => (m.monthlyCash + P.otherFixed + P.savingsGoal) / income);
-    const axisMax = Math.max(1, ...totals) * 100;
-    const { ticks, top } = niceTicks(axisMax, innerWidth < 560 ? 2 : 5);
-    const toPct = v => v / income * 100;
-    body.append(legend(segDefs.map(d => [d[1], d[0]])));
-    body.append(hbar(M.map(({ o, m }, i) => ({
-      name: o.name, total: Math.max(toPct(m.monthlyCash + P.otherFixed + P.savingsGoal + Math.max(0, m.surplus)), 0), endLabel: '',
-      label: rowLabel(o.name, null, statusChip(m.status)),
-      segs: segDefs.map(d => { const v = d[2](m); return { v: toPct(v), color: d[1], name: d[0], text: `${kr(v)} kr · ${pct(v / income)}`, note: d[3] }; }),
-    })), {
-      top, ticks, fmt: v => v + '%', withTop: true,
-      lines: [{ at: P.comfortPct, label: P.comfortPct + '%' }, { at: P.maxPct, label: P.maxPct + '%' }].filter(l => l.at < top).concat([{ at: Math.min(100, top), label: '100% of income' }])
-        .filter((l, i, a) => a.findIndex(x => x.at === l.at) === i),
-    }));
-    body.append(h('p', { class: 'note' }, `Bars show each option as a share of your take-home of ${kr(income)} kr. The first two reference lines mark the housing comfort level (${P.comfortPct}%) and ceiling (${P.maxPct}%): the blue housing segment should stop before them. A bar that runs past 100% means monthly costs exceed income.`));
-  }
-  return chartCard('b', 'Can you sustain it?', 'How much of your take-home each option uses, after your other fixed costs and savings goal.', body);
-}
-
-/* C. cumulative cash out of pocket */
-function chartC(M) {
-  const host = h('div', { class: 'line-wrap' });
-  const Hmax = Math.max(...M.map(x => x.m.H));
-  const body = h('div');
-  if (ui.views.c === 'table') {
-    const step = Hmax <= 12 ? 3 : Hmax <= 24 ? 6 : 12;
-    const months = []; for (let k = 0; k <= Hmax; k += step) months.push(k);
-    if (months[months.length - 1] !== Hmax) months.push(Hmax);
-    body.append(dataTable(['Month', ...M.map(x => x.o.name)], months.map(k => [k === 0 ? 'Move-in' : 'Month ' + k, ...M.map(({ m }) => k <= m.H ? kr(cashAt(k, m)) : '–')])));
-  } else {
-    body.append(legend(M.map(({ o }) => [`var(--s${o.slot})`, o.name, true])));
-    body.append(host);
-    host.__M = M;
-  }
-  body.append(h('p', { class: 'note' }, 'Cash paid out by each month, including deposit, prepaid rent, fees and furniture at move-in. Prepaid rent is credited against the last months of rent. Deposit refunds and furniture resale at the end are not shown.'));
-  return chartCard('c', 'Cash out of pocket over time', 'The move-in payment sets where each line starts; the monthly cost sets how steeply it climbs.', body);
-}
-
-function drawLine(host) {
-  const M = host.__M;
-  const W = Math.max(280, host.clientWidth);
-  const narrow = W < 560;
-  const Hmax = Math.max(...M.map(x => x.m.H));
-  const stay = S.profile.stay;
-  const mg = { l: 46, r: narrow ? 14 : 132, t: 26, b: 28 };
-  const Ht = narrow ? 260 : 320;
-  const pw = W - mg.l - mg.r, ph = Ht - mg.t - mg.b;
-  const series = M.map(({ o, m }) => ({ o, m, pts: Array.from({ length: m.H + 1 }, (_, k) => cashAt(k, m)) }));
-  const ymax = Math.max(...series.map(s => s.pts[s.pts.length - 1]), 1);
-  const { ticks, top } = niceTicks(ymax, 4);
-  const X = k => mg.l + k / Hmax * pw, Y = v => mg.t + ph - v / top * ph;
-  const NS = 'http://www.w3.org/2000/svg';
-  const el = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
-  const svg = el('svg', { viewBox: `0 0 ${W} ${Ht}`, height: Ht, role: 'img', tabindex: '0', 'aria-label': 'Line chart of cumulative cash paid out by month for each rental option. Use left and right arrow keys to read values.' });
-  ticks.forEach(t => {
-    svg.append(el('line', { x1: mg.l, x2: W - mg.r, y1: Y(t), y2: Y(t), stroke: 'var(--line)', 'stroke-width': 1 }));
-    svg.append(el('text', { x: mg.l - 8, y: Y(t) + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--ink-3)' }, krc(t)));
-  });
-  const xs = Hmax <= 12 ? 1 : Hmax <= 24 ? 3 : 6, xstep = Hmax / xs > 8 ? (Hmax <= 24 ? 6 : 12) : (Hmax <= 12 ? 2 : xs);
-  for (let k = 0; k <= Hmax; k += xstep) svg.append(el('text', { x: X(k), y: Ht - 8, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--ink-3)' }, k === 0 ? 'Move-in' : k + ' mo'));
-  if (stay <= Hmax) {
-    svg.append(el('line', { x1: X(stay), x2: X(stay), y1: mg.t - 4, y2: mg.t + ph, stroke: 'var(--ink-3)', 'stroke-width': 1 }));
-    svg.append(el('text', { x: X(stay), y: 12, 'text-anchor': stay / Hmax > 0.85 ? 'end' : 'middle', 'font-size': 11, fill: 'var(--ink-2)' }, `Planned stay · ${stay} mo`));
-  }
-  series.forEach(s => {
-    const d = s.pts.map((v, k) => `${k ? 'L' : 'M'}${X(k).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-    svg.append(el('path', { d, fill: 'none', stroke: `var(--s${s.o.slot})`, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
-  });
-  const labelled = [];
-  [...series].sort((a, b) => Y(a.pts[a.pts.length - 1]) - Y(b.pts[b.pts.length - 1])).forEach(s => {
-    const k = s.pts.length - 1, y = Y(s.pts[k]);
-    svg.append(el('circle', { cx: X(k), cy: y, r: 4, fill: `var(--s${s.o.slot})`, stroke: 'var(--surface)', 'stroke-width': 2 }));
-    if (!narrow && series.length <= 4 && labelled.every(ly => Math.abs(ly - y) >= 14)) {
-      labelled.push(y);
-      const name = s.o.name.length > 17 ? s.o.name.slice(0, 16) + '…' : s.o.name;
-      svg.append(el('text', { x: X(k) + 10, y: y + 4, 'font-size': 11.5, fill: 'var(--ink)' }, name));
-    }
-  });
-  const cross = el('line', { y1: mg.t, y2: mg.t + ph, stroke: 'var(--ink-2)', 'stroke-width': 1, visibility: 'hidden' });
-  const dots = series.map(s => el('circle', { r: 4, fill: `var(--s${s.o.slot})`, stroke: 'var(--surface)', 'stroke-width': 2, visibility: 'hidden' }));
-  svg.append(cross, ...dots);
-  const hit = el('rect', { x: mg.l, y: mg.t - 6, width: pw, height: ph + 12, fill: 'transparent' });
-  svg.append(hit);
-  let cur = -1;
-  const show = (k, cx, cy) => {
-    k = clamp(Math.round(k), 0, Hmax); cur = k;
-    cross.setAttribute('x1', X(k)); cross.setAttribute('x2', X(k)); cross.setAttribute('visibility', 'visible');
-    const rows = [];
-    series.forEach((s, i) => {
-      if (k <= s.m.H) { dots[i].setAttribute('cx', X(k)); dots[i].setAttribute('cy', Y(s.pts[k])); dots[i].setAttribute('visibility', 'visible'); rows.push([s.pts[k], s]); }
-      else dots[i].setAttribute('visibility', 'hidden');
-    });
-    rows.sort((a, b) => a[0] - b[0]);
-    const r = svg.getBoundingClientRect();
-    showTip(cx ?? r.left + X(k), cy ?? r.top + mg.t + 20, [
-      h('div', { class: 'th' }, k === 0 ? 'At move-in' : `After ${k} month${k > 1 ? 's' : ''}`),
-      ...rows.map(([v, s]) => tipRow(`var(--s${s.o.slot})`, kr(v) + ' kr', s.o.name)),
-      series.length > rows.length ? h('div', { class: 'tn' }, 'Options with a shorter commitment are not shown past their end.') : null]);
-  };
-  const out = () => { cur = -1; cross.setAttribute('visibility', 'hidden'); dots.forEach(d => d.setAttribute('visibility', 'hidden')); hideTip(); };
-  hit.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); show((e.clientX - r.left - mg.l) / pw * Hmax, e.clientX, e.clientY); });
-  hit.addEventListener('pointerleave', out);
-  svg.addEventListener('blur', out);
-  svg.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    e.preventDefault(); show((cur < 0 ? (e.key === 'ArrowRight' ? -1 : 1) : cur) + (e.key === 'ArrowRight' ? 1 : -1));
-  });
-  host.replaceChildren(svg);
-}
-
-/* D. scorecard */
-function scorecard(M) {
-  const ranked = [...M].sort((a, b) => a.m.rank - b.m.rank);
-  const wsum = Object.values(S.weights).reduce((a, b) => a + b, 0);
-  const cell = v => v == null
-    ? h('td', { class: 'heat na', title: 'Not applicable with the data entered' }, '–')
-    : h('td', { class: 'heat' + (v >= 66 ? ' hi' : ''), style: `--p:${v.toFixed(1)}` }, Math.round(v));
-  const table = h('table', { class: 'tbl score' },
-    h('thead', null, h('tr', null,
-      h('th', { scope: 'col' }, 'Option'),
-      h('th', { scope: 'col', style: 'text-align:center' }, 'Overall'),
-      WEIGHTS.map(([k]) => h('th', { scope: 'col', style: 'text-align:center' }, CRIT[k], h('small', null, wsum && S.weights[k] ? 'weight ' + pct(S.weights[k] / wsum) : 'ignored'))))),
-    h('tbody', null, ranked.map(({ o, m }) => h('tr', null,
-      h('th', { scope: 'row', class: 'rowname' }, h('span', { class: 'rank' }, '#' + m.rank), h('span', { class: 'sw', style: `background:var(--s${o.slot})` }), o.name),
-      h('td', { class: 'overall' }, Math.round(m.overall)),
-      WEIGHTS.map(([k]) => cell(m.scores[k]))))));
+  const n = E.ranked.length;
+  root.append(h('div', { class: 'hb-grid', style: `grid-row:1 / ${n + 1}` }, ticks.map(t => h('i', { class: 'gl', style: `left:${t / top * 100}%` }))));
+  root.append(h('div', { class: 'hb-axis', style: `grid-row:${n + 1}` }, ticks.map(t => h('span', { style: `left:${t / top * 100}%` }, krc(t)))));
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('div', null, h('h2', null, 'Scorecard'), h('p', { class: 'desc' }, 'Each criterion is scored 0 to 100, where higher is better. Darker cells score higher. Adjust the weights in the inputs panel.'))),
-    h('div', { class: 'scroll' }, table));
+    h('div', { class: 'card-head' }, h('h2', null, 'What each option really costs a month'),
+      h('p', { class: 'desc' }, 'Rent and utilities less included perks, plus commute (fare and time) and furnishing spread over your commitment.')),
+    h('div', { class: 'legend' }, parts.map(p => h('span', null, h('i', { style: `background:${p[1]}` }), p[0]))),
+    root,
+    h('details', { class: 'breakdown' }, h('summary', null, 'Show as table'),
+      table(['Option', ...parts.map(p => p[0]), 'All-in'], E.ranked.map(m => [m.o.name, ...parts.map(p => kr(p[2](m))), kr(m.allIn)]))));
 }
 
-/* E. full comparison */
-function comparison(M) {
-  const P = S.profile;
-  const rowsDef = [
-    ['g', 'Monthly cost'],
-    ['Rent', m => m.o.rent, kr, -1],
-    ['Heating, water and electricity', m => m.utilities, kr, -1],
-    ['Other fees', m => m.o.otherFees, kr, -1],
-    ['Transport', m => m.o.transit, kr, -1],
-    ['Wanted services not included', m => m.servicesNeeded, kr, -1],
-    ['Monthly cash cost', m => m.monthlyCash, kr, -1],
-    ['Set-up costs spread monthly', m => m.amort, kr, -1],
-    ['Like-for-like monthly cost', m => m.likeForLike, kr, -1],
-    ['Commute time per month (hours)', m => m.commuteHours, v => v.toFixed(1), -1],
-    ['Value of commute time', m => m.timeCost, kr, -1],
-    ['Monthly cost including commute time', m => m.trueMonthly, kr, -1],
-    ['Housing cost per m²', m => m.perM2, v => v == null ? '–' : kr(v), -1],
-    ['g', 'Move-in'],
-    ['Deposit', m => m.o.deposit, kr, -1],
-    ['Prepaid rent', m => m.o.prepaid, kr, -1],
-    ['One-off fees', m => m.o.fees, kr, -1],
-    ['Furniture to buy', m => m.furnGross, kr, -1],
-    ['Total move-in cash', m => m.upfront, kr, -1],
-    ['Share of your available cash', m => div(m.upfront, P.savings), v => v == null ? '–' : pct(v), -1],
-    ['Cash short at move-in', m => m.savingsGap, v => v == null ? '–' : kr(v), -1],
-    ['g', 'Commitment'],
-    ['Binding months', m => m.binding, v => String(v), -1],
-    ['Months costed', m => m.H, v => String(v), 0],
-    [`Total cost over the commitment (excl. deposit)`, m => m.totalCost, kr, -1],
-    ['g', 'Sustainability'],
-    ['Housing as share of income', m => m.housingShare, v => v == null ? '–' : pct(v, 1), -1],
-    ['All monthly costs as share of income', m => m.allInShare, v => v == null ? '–' : pct(v, 1), -1],
-    ['Left after fixed costs and savings goal', m => m.income > 0 ? m.surplus : null, v => v == null ? '–' : kr(v), 1],
-    ['Verdict', m => m.status.label, v => v, 0],
-    ['g', 'Score'],
-    ['Overall score', m => m.overall, v => String(Math.round(v)), 1],
-  ];
-  const head = h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'DKK unless stated'),
-    M.map(({ o }) => h('th', { scope: 'col' }, h('span', { class: 'sw', style: `display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;background:var(--s${o.slot})` }), o.name, h('small', null, o.area || '')))));
-  const body = h('tbody', null, rowsDef.map(r => {
-    if (r[0] === 'g') return h('tr', { class: 'grp' }, h('th', { colspan: M.length + 1 }, r[1]));
-    const [label, f, fmt, dir] = r;
-    const vals = M.map(({ m }) => f(m));
-    let best = null;
-    const numeric = vals.filter(v => typeof v === 'number' && Number.isFinite(v));
-    if (dir && numeric.length > 1) { const b = dir < 0 ? Math.min(...numeric) : Math.max(...numeric); if (numeric.some(v => v !== b)) best = b; }
-    return h('tr', null, h('th', { scope: 'row', class: 'rowname', style: 'font-weight:400' }, label), vals.map(v => h('td', { class: best != null && v === best ? 'best' : '' }, fmt(v))));
-  }));
+function compareCard(E) {
+  const bestCost = E.ranked.length > 1 ? Math.min(...E.ranked.map(m => m.allIn)) : null;
+  const rows = E.ranked.map(m => h('tr', null,
+    h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Untitled'),
+    h('td', { class: m.allIn === bestCost ? 'best' : '' }, kr(m.allIn)),
+    h('td', null, m.share != null ? [pct(m.share), h('span', { class: 'chipcell' }, statusChip(m.status))] : '–'),
+    h('td', { class: m.left != null && m.left < 0 ? 'neg' : '' }, m.left != null ? kr(m.left) : '–'),
+    h('td', null, kr(m.upfront)),
+    h('td', null, m.o.lease > 0 ? m.o.lease + ' mo' : 'Open-ended')));
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('div', null, h('h2', null, 'Full comparison'), h('p', { class: 'desc' }, 'Every figure behind the charts. A dot marks the best value in a row.'))),
-    h('div', { class: 'scroll' }, h('table', { class: 'tbl' }, head, body)));
+    h('div', { class: 'card-head' }, h('h2', null, 'Side by side'), h('p', { class: 'desc' }, 'Ranked by all-in monthly cost. Options that are not sustainable rank last.')),
+    h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
+      h('thead', null, h('tr', null, ['Option', 'All-in / mo', 'Housing / take-home', 'Left / mo', 'Move-in cash', 'Lease'].map(x => h('th', { scope: 'col' }, x)))),
+      h('tbody', null, rows))),
+    h('p', { class: 'small-note' }, 'Housing is rent plus utilities. "Left / mo" is take-home minus housing, transport and your other costs. "Move-in cash" is the deposit plus any furniture you must buy.'));
 }
 
-/* verdict, tiles, alerts */
-function verdict(M) {
-  const P = S.profile;
-  const ranked = [...M].sort((a, b) => a.m.rank - b.m.rank);
-  const top = ranked[0], second = ranked[1];
-  const strong = WEIGHTS.filter(([k]) => top.m.scores[k] != null && S.weights[k] > 0)
-    .sort((a, b) => top.m.scores[b[0]] - top.m.scores[a[0]]).slice(0, 2);
-  const card = h('section', { class: 'card verdict' },
-    h('div', null,
-      h('div', { class: 'eyebrow' }, `Best fit for a ${P.stay}-month stay`),
-      h('div', { class: 'v-name' }, top.o.name),
-      h('div', { class: 'v-sub' }, [top.o.area, top.o.size ? top.o.size + ' m²' : null, `${kr(top.m.likeForLike)} kr a month like-for-like`].filter(Boolean).join(' · ')),
-      h('div', { class: 'v-why' }, top.m.income > 0 ? statusChip(top.m.status) : null,
-        strong.map(([k]) => h('span', { class: 'tag' }, `${CRIT[k]} ${Math.round(top.m.scores[k])}`)),
-        second ? h('span', { class: 'tag' }, top.m.overall - second.m.overall < 1 ? `Close call with ${second.o.name}` : `Ahead of ${second.o.name} by ${Math.round(top.m.overall - second.m.overall)} pts`) : null)),
-    h('div', { class: 'hero' }, h('span', { class: 'n' }, Math.round(top.m.overall)), h('span', { class: 'of' }, '/ 100'), h('div', { class: 'cap' }, 'Weighted score')));
-  const avg = M.reduce((a, x) => a + x.m.likeForLike, 0) / M.length;
-  const cheapest = [...M].sort((a, b) => a.m.likeForLike - b.m.likeForLike)[0];
-  const share = M.filter(x => x.m.housingShare != null).sort((a, b) => a.m.housingShare - b.m.housingShare)[0];
-  const lowUp = [...M].sort((a, b) => a.m.upfront - b.m.upfront)[0];
-  const tile = (lbl, val, unit, who, delta) => h('div', { class: 'tile' }, h('div', { class: 'lbl' }, lbl), h('div', { class: 'val' }, val, h('small', null, unit)), h('div', { class: 'who' }, who), h('div', { class: 'delta' }, delta));
-  const tiles = h('div', { class: 'tiles' },
-    tile('Lowest monthly cost', kr(cheapest.m.likeForLike), 'kr / mo', cheapest.o.name, M.length > 1 ? `${kr(avg - cheapest.m.likeForLike)} kr below the average` : 'Like-for-like'),
-    share ? tile('Lightest on your income', pct(share.m.housingShare, 1), 'of income', share.o.name, `Housing: rent, utilities, fees`) : tile('Lightest on your income', '–', '', 'Add a take-home salary', ''),
-    tile('Least cash to move in', kr(lowUp.m.upfront), 'kr', lowUp.o.name, P.savings > 0 ? `${pct(lowUp.m.upfront / P.savings)} of your available cash` : 'Deposit, prepaid rent, fees, furniture'));
-  return [card, tiles];
-}
-
-function alerts(M) {
-  const P = S.profile, items = [];
-  for (const { o, m } of M) {
-    const n = o.name || 'Untitled';
-    for (const r of m.status.reasons) items.push({ level: m.status.level === 'bad' || /exceed income/.test(r) ? 'bad' : 'warn', text: `${n}: ${r}` });
-    if (m.savingsGap > 0) items.push({ level: 'bad', text: `${n}: move-in cash of ${kr(m.upfront)} kr is ${kr(m.savingsGap)} kr more than the ${kr(P.savings)} kr you have available.` });
-    if (o.rent > 0 && o.deposit > o.rent * 3 + 1) items.push({ level: 'warn', text: `${n}: the deposit is more than three months' rent. Danish rules generally cap it at three months for ordinary private lets, so check the lease.` });
-    if (o.rent > 0 && o.prepaid > o.rent * 3 + 1) items.push({ level: 'warn', text: `${n}: prepaid rent is more than three months' rent. Check that the lease allows this.` });
-    if (m.binding > m.stay) items.push({ level: 'warn', text: `${n}: you are committed for ${m.binding} months, longer than your ${m.stay}-month stay. Costs are counted for the full period.` });
-    else if (o.termType === 'fixed' && o.term < m.stay) items.push({ level: 'warn', text: `${n}: the ${o.term}-month lease ends before your planned stay, so you would need to renew or move.` });
+function watchCard(E) {
+  const items = [];
+  for (const m of E.ranked) {
+    const n = m.o.name || 'Untitled';
+    if (m.status.level === 'bad') items.push({ level: m.status.level, tag: m.status.level === 'bad' ? 'Problem' : 'Check', text: `${n}: ${m.status.why}` });
+    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) items.push({ level: 'warn', tag: 'Check', text: `${n}: the deposit is more than three months' rent. Danish rules generally cap it at three months for ordinary private lets, so check the lease.` });
+    if (m.commit > S.profile.stay) items.push({ level: 'warn', tag: 'Check', text: `${n}: you are committed for ${m.commit} months, longer than your ${S.profile.stay}-month stay. Costs are counted for the full period.` });
   }
-  const sec = h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Things to check')));
-  if (!items.length) { sec.append(h('p', { class: 'ok' }, 'Nothing flagged. Every option fits your budget, cash and lease assumptions.')); return sec; }
-  const li = it => h('li', null, statusChip({ level: it.level, label: it.level === 'bad' ? 'Problem' : 'Check' }), h('span', null, it.text));
-  const first = items.slice(0, 6), rest = items.slice(6);
-  sec.append(h('ul', { class: 'alerts' }, first.map(li), rest.length ? h('li', null, h('details', null, h('summary', null, `Show ${rest.length} more`), h('ul', { class: 'alerts', style: 'margin-top:8px' }, rest.map(li)))) : null));
-  return sec;
+  if (!items.length) return null;
+  const shown = items.slice(0, 4);
+  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Worth a second look')),
+    h('ul', { class: 'notes' }, shown.map(it => h('li', null, statusChip({ level: it.level, label: it.tag }), h('span', null, it.text)))),
+    items.length > shown.length ? h('p', { class: 'small-note' }, `${items.length - shown.length} more flagged. Open each option to review.`) : null);
 }
 
-function howItWorks() {
+function howCard() {
   const P = S.profile;
-  return h('details', { class: 'card how' },
-    h('summary', null, 'How the numbers are calculated'),
-    h('div', { class: 'how-body' },
-      h('h3', null, 'Monthly cost'),
-      h('ul', null,
-        h('li', null, 'Monthly cash cost = rent + heating, water and electricity + other fees + transport + the price of any service you want that the option does not include.'),
-        h('li', null, `Set-up costs = (one-off fees + furniture you must buy, minus its resale value) divided by the months you are committed, plus the return you give up on deposit and prepaid rent (${P.financeRate}% a year). The deposit itself is refundable, so it is not counted as a cost.`),
-        h('li', null, 'Months committed = the longer of your planned stay and the lease commitment. For a fixed term the commitment is the term; for an open-ended lease it is your notice period.'),
-        h('li', null, `Commute time value = round-trip hours per month × your hourly take-home (salary ÷ 37-hour weeks) × ${P.timePct}%. It appears only when you switch it on, and in the full comparison.`)),
-      h('h3', null, 'Sustainability'),
-      h('ul', null,
-        h('li', null, `Housing share = (rent + utilities + fees) ÷ total monthly income. Up to ${P.comfortPct}% is comfortable, up to ${P.maxPct}% is stretched, above that is not sustainable. These thresholds are rules of thumb you can change; they are usually quoted against gross income, so applying them to take-home is the stricter test.`),
-        h('li', null, 'Left over = income − monthly cash cost − other fixed costs − savings goal. A negative value with savings removed is flagged as not sustainable.'),
-        h('li', null, 'Move-in cash = deposit + prepaid rent + one-off fees + furniture to buy, compared with the cash you say is available.')),
-      h('h3', null, 'Scores (0 to 100)'),
-      h('ul', null,
-        h('li', null, 'Affordability: 100 when like-for-like cost is 20% of income or less, falling to 0 at 55% (relative to the other options if no income is entered).'),
-        h('li', null, 'Commute: 100 at 10 minutes one way or less, 0 at 60 minutes or more.'),
-        h('li', null, 'Lease fit: best when the commitment matches your stay. A fixed term shorter than your stay scores between 60 and 100; longer is scored by stay ÷ term. Open-ended leases lose 10 points per notice month beyond the first.'),
-        h('li', null, 'Furnishing: furnished 100, partly 60, unfurnished 20. If you own furniture the order reverses.'),
-        h('li', null, 'Services: share of the services you want (by price) that are included. Skipped if you want none.'),
-        h('li', null, 'Move-in cash: 100 when set-up cash is 30% of your available cash or less, 0 at 100%. Without a savings figure it uses months of income instead.'),
-        h('li', null, 'Personal fit: your 1 to 5 rating, rescaled.')),
-      h('p', null, 'Amounts are estimates built from the figures you enter. Check every lease for the real terms.')));
+  return h('details', { class: 'card how' }, h('summary', null, 'How this is calculated'),
+    h('ul', null,
+      h('li', null, 'All-in monthly cost = rent + utilities − included perks + transport + value of commute time + furnishing spread over your commitment.'),
+      h('li', null, `Commitment = the longer of your planned stay and the lease length (${P.notice} months notice if open-ended).`),
+      h('li', null, `Commute time is valued at ${P.timePct}% of your hourly take-home (salary ÷ 37-hour weeks), for ${P.days} days a week, there and back.`),
+      h('li', null, 'The deposit is refundable, so it is shown as move-in cash and not counted as a cost.'),
+      h('li', null, 'Sustainability: comfortable up to 30% of take-home on rent and utilities, stretched up to 40%, not sustainable above that or when monthly costs exceed take-home. These are rules of thumb, usually quoted against gross income.')));
 }
 
 function renderResults() {
   hideTip();
-  const M = scoreAll(S);
-  if (!M.length) { resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Add a rental option to begin.')); return; }
-  const c = chartC(M);
-  resultsEl.replaceChildren(...verdict(M), alerts(M), chartA(M), chartB(M), c, scorecard(M), comparison(M), howItWorks());
-  const host = resultsEl.querySelector('.line-wrap');
-  if (host) drawLine(host);
+  const E = evaluate(S);
+  if (!E.ranked.length) {
+    resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Enter the rent for at least one option to see the comparison.'));
+    return;
+  }
+  const note = S.profile.takeHome > 0 ? null : h('div', { class: 'card empty' }, 'Add your take-home salary to check each option against your income.');
+  resultsEl.replaceChildren(...[verdictCard(E), note, chartCard(E), compareCard(E), watchCard(E), howCard()].filter(Boolean));
 }
 
-/* =====================================================================
-   Chrome: theme, views, data dialog
-   ===================================================================== */
-function applyTheme(t) {
-  if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
-}
+/* ---------- chrome ---------- */
+function applyTheme(t) { if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
 try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') applyTheme(t); } catch (e) { /* ignore */ }
 $('#btn-theme').addEventListener('click', () => {
   const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -1250,87 +545,31 @@ $('#btn-theme').addEventListener('click', () => {
   applyTheme(next);
   try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
 });
-
 const shell = $('#shell');
 function setView(v) {
-  ui.mobile = v; shell.dataset.view = v;
+  shell.dataset.view = v;
   $('#tab-inputs').setAttribute('aria-pressed', String(v === 'inputs'));
   $('#tab-results').setAttribute('aria-pressed', String(v === 'results'));
   if (v === 'results') requestAnimationFrame(renderResults);
 }
 $('#tab-inputs').addEventListener('click', () => setView('inputs'));
 $('#tab-results').addEventListener('click', () => setView('results'));
-
-function syncSampleNote() { $('#sample-note').hidden = !S.meta.sample; }
-$('#btn-dismiss-sample').addEventListener('click', () => { S.meta.sample = false; save(); syncSampleNote(); });
-
-const dlg = $('#dlg');
-function replaceState(next) {
-  S = next; ui.open = S.options[0] && S.options[0].id; save(); syncSampleNote(); renderInputs(); renderResults(); updateSummaries();
-}
-function openDialog() {
-  const out = h('textarea', { id: 'dlg-export', readOnly: true, 'aria-label': 'Exported data' });
-  out.value = JSON.stringify(S, null, 2);
-  const msg = h('span', { class: 'ok', role: 'status' });
-  const inp = h('textarea', { id: 'dlg-import', placeholder: 'Paste exported JSON here', 'aria-label': 'Data to import' });
-  const err = h('div', { class: 'err', role: 'alert' });
-  const file = h('input', { id: 'dlg-file', type: 'file', accept: 'application/json,.json', 'aria-label': 'Choose a JSON file to import' });
-  file.addEventListener('change', () => {
-    const f = file.files && file.files[0]; if (!f) return;
-    const r = new FileReader(); r.onload = () => { inp.value = String(r.result); }; r.readAsText(f);
+const syncNote = () => { $('#sample-note').hidden = !S.sample; };
+$('#btn-dismiss-sample').addEventListener('click', () => { S.sample = false; save(); syncNote(); });
+function replaceState(next) { S = next; ui.open = S.options[0].id; syncNote(); refresh(); }
+$('#btn-sample').addEventListener('click', () => replaceState(sampleState()));
+(function () {
+  const b = $('#btn-clear'); let armed = false, t = 0;
+  b.addEventListener('click', () => {
+    if (!armed) { armed = true; b.textContent = 'Click again to clear'; t = setTimeout(() => { armed = false; b.textContent = 'Clear'; }, 3500); return; }
+    clearTimeout(t); armed = false; b.textContent = 'Clear'; replaceState(blankState());
   });
-  const confirmBtn = (label, cls, action) => {
-    const b = h('button', { class: 'btn ' + cls, type: 'button' }, label);
-    let armed = false, t = 0;
-    b.addEventListener('click', () => {
-      if (!armed) { armed = true; b.textContent = 'Click again to confirm'; t = setTimeout(() => { armed = false; b.textContent = label; }, 4000); return; }
-      clearTimeout(t); action(); dlg.close();
-    });
-    return b;
-  };
-  dlg.replaceChildren(h('div', { class: 'dlg-in' },
-    h('div', { class: 'dlg-row', style: 'justify-content:space-between' }, h('h2', { id: 'dlg-title' }, 'Save, load & reset'), h('button', { class: 'btn ghost sm', type: 'button', onclick: () => dlg.close() }, 'Close')),
-    h('p', { class: 'hint' }, 'Your inputs are kept in this browser automatically. Copy the JSON below to back it up or move it to another device.'),
-    h('div', { class: 'field wide' }, h('label', { for: 'dlg-export' }, 'Export'), out),
-    h('div', { class: 'dlg-row' },
-      h('button', { class: 'btn', type: 'button', onclick: async () => {
-        try { await navigator.clipboard.writeText(out.value); msg.textContent = 'Copied.'; } catch (e) { out.focus(); out.select(); msg.textContent = 'Press Ctrl+C or Cmd+C to copy.'; }
-      } }, 'Copy JSON'),
-      h('button', { class: 'btn', type: 'button', onclick: () => {
-        try {
-          const a = h('a', { href: URL.createObjectURL(new Blob([out.value], { type: 'application/json' })), download: 'copenhagen-rentals.json' });
-          document.body.append(a); a.click(); a.remove(); msg.textContent = 'Download started.';
-        } catch (e) { msg.textContent = 'Download is not available here. Use Copy JSON instead.'; }
-      } }, 'Download file'), msg),
-    h('div', { class: 'field wide' }, h('label', { for: 'dlg-import' }, 'Import'), inp),
-    h('div', { class: 'dlg-row' }, h('label', { class: 'sr', for: 'dlg-file' }, 'JSON file'), file,
-      h('button', { class: 'btn primary', type: 'button', onclick: () => {
-        err.textContent = '';
-        try { replaceState(normalize(JSON.parse(inp.value))); dlg.close(); } catch (e) { err.textContent = 'Could not read that data: ' + (e && e.message ? e.message : 'invalid JSON') + '.'; }
-      } }, 'Load data')), err,
-    h('div', { class: 'group-title' }, 'Reset'),
-    h('div', { class: 'dlg-row' },
-      confirmBtn('Load sample data', '', () => replaceState(sampleState())),
-      confirmBtn('Start blank', 'danger', () => replaceState(blankState())))));
-  if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
-}
-$('#btn-data').addEventListener('click', openDialog);
-dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-
+})();
 let rt = 0, lastW = innerWidth;
-window.addEventListener('resize', () => {
-  if (innerWidth === lastW) return;
-  lastW = innerWidth; clearTimeout(rt); rt = setTimeout(() => { if (resultsEl.offsetParent !== null) renderResults(); }, 120);
-});
+window.addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(rt); rt = setTimeout(() => { if (resultsEl.offsetParent !== null) renderResults(); }, 120); });
 
-/* =====================================================================
-   Boot
-   ===================================================================== */
-syncSampleNote();
-renderInputs();
-renderResults();
-updateSummaries();
-window.RentalEvaluator = { compute, scoreAll, cashAt, normalize, sampleState, get state() { return S; } };
+syncNote(); renderInputs(); renderResults(); updateSummaries();
+window.RentalEvaluator = { compute, evaluate, normalize, sampleState, get state() { return S; } };
 })();
 </script>
 </body>

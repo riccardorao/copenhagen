@@ -1,32 +1,28 @@
 # Copenhagen Rental Evaluator
 
-A single-page dashboard for comparing rental options in Copenhagen against your own budget. Open `index.html` in any modern browser. There is no build step and no server. Everything runs locally, and your inputs are kept in the browser's local storage.
+A lean comparison tool for rental options in Copenhagen. Open `index.html` in any modern browser. There is no build step and no server, and your inputs stay in the browser's local storage.
 
-## What it compares
+It assumes every option you enter has **already passed your non-negotiables** (area, size, pets, and so on). It does not ask you to restate them. It compares what is left on what each place really costs you.
 
-| Factor | What you enter | How it is used |
-|---|---|---|
-| Rent and utilities | Rent, heating and water, electricity, other fees | Monthly cash cost and housing share of income |
-| Deposit | Deposit, prepaid rent, one-off fees | Move-in cash; the return you give up on tied-up cash |
-| Duration | Fixed term or open-ended, notice period, your planned stay | Months you are committed; spreads one-off costs; lease-fit score |
-| Furniture | Furnished, partly or unfurnished, cost to furnish, resale value | Furniture you must buy and its net cost |
-| Services | A price list of services you care about (gym, internet, laundry…) and which options include them | Adds the cost of wanted services an option lacks, so options are compared like for like |
-| Commute | Minutes one way, transport cost, days a week | Transport cost, commute hours and an optional time value |
-| Take-home salary | Salary, other income, fixed costs, savings goal, cash available | Sustainability: housing share, monthly surplus, move-in cash gap |
+## What you enter
+
+**Once:** your monthly take-home salary, optionally your other monthly costs, and how long you plan to stay.
+
+**Per option, all quick numbers:** rent, utilities (0 if included), deposit, lease length (0 if open-ended), furnished or not, commute minutes, transport cost, and the value of any perks included (gym, internet, laundry).
+
+A collapsed "Fine-tune" section holds the few assumptions behind the maths (commute days, value of commute time, cost to furnish, notice period). The defaults are sensible, so you can ignore it.
 
 ## What you get
 
-- A best-fit verdict with a weighted 0 to 100 score. You set the weights.
-- Monthly cost breakdown per option.
-- A sustainability chart showing how take-home is used, against comfort and ceiling thresholds for housing share (30% and 40% by default, both editable).
-- Cumulative cash out of pocket over the commitment, so you can see where a cheaper rent overtakes a costly move-in.
-- A scorecard heatmap and a full comparison table.
-- A "Things to check" list covering stretched budgets, move-in cash above your savings, deposits above three months' rent, and leases that are shorter or longer than your stay.
-- Light and dark themes, a table view for every chart, and JSON export and import.
+- **One verdict:** the best-value option and its all-in monthly cost.
+- **One chart:** the real monthly cost of each option, split into rent and utilities, commute, and set-up.
+- **One table:** all-in cost, rent and utilities as a share of take-home with a sustainability label, money left each month, move-in cash and lease length.
+- **A short list of things to double-check,** such as a deposit above three months' rent or a lease longer than your stay.
 
-The "How the numbers are calculated" section at the bottom of the dashboard sets out every formula and scoring rule.
+## How it is calculated
 
-## Notes
+All-in monthly cost = rent + utilities − included perks + transport + value of commute time + furnishing spread over the months you are committed. The deposit is refundable, so it appears as move-in cash and not as a cost.
 
-- Amounts are DKK. The sample data is illustrative; use the data menu to start blank.
-- Results are estimates built from what you enter. Check each lease for the real terms.
+Sustainability looks at rent and utilities as a share of take-home: comfortable up to 30%, stretched up to 40%, not sustainable above that or when monthly costs exceed take-home. These are rules of thumb. Options that are not sustainable rank last.
+
+Amounts are DKK and the sample data is illustrative. Check each lease for the real terms.
