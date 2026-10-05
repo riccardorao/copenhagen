@@ -1,28 +1,28 @@
-# Copenhagen Rental Evaluator
+# Valutatore affitti Copenaghen
 
-A lean comparison tool for rental options in Copenhagen. Open `index.html` in any modern browser. There is no build step and no server, and your inputs stay in the browser's local storage.
+Uno strumento per confrontare le case in affitto a Copenaghen. Apri `index.html` in un browser moderno: non serve installare nulla e i dati restano nel tuo browser.
 
-It assumes every option you enter has **already passed your non-negotiables** (area, size, pets, and so on). It does not ask you to restate them. It compares what is left on what each place really costs you.
+Si parte dal presupposto che ogni opzione inserita rispetti **già i tuoi requisiti irrinunciabili**. Lo strumento confronta ciò che resta su costi, quartiere e qualità della vita, e riassume tutto in un punteggio a stelle.
 
-## What you enter
+## Cosa inserisci
 
-**Once:** your monthly take-home salary, optionally your other monthly costs, and how long you plan to stay.
+- **Una volta:** stipendio netto mensile, altre spese mensili (facoltativo) e permanenza prevista.
+- **Per ogni casa:** quartiere, affitto, utenze, deposito, durata del contratto, arredata o no, tragitto casa-lavoro, costo dei trasporti, servizi inclusi (palestra, internet, lavanderia) e una valutazione a stelle della qualità dell'alloggio.
+- **Per ogni quartiere:** da 1 a 5 stelle su sicurezza, trasporti, verde e acqua, servizi, vita sociale e tranquillità. La valutazione è condivisa da tutte le case nello stesso quartiere.
+- **Priorità (facoltativo):** il peso di ogni criterio. Affitto e costi partono con peso alto come fattore chiave, insieme alla sicurezza.
 
-**Per option, all quick numbers:** rent, utilities (0 if included), deposit, lease length (0 if open-ended), furnished or not, commute minutes, transport cost, and the value of any perks included (gym, internet, laundry).
+## Cosa ottieni
 
-A collapsed "Fine-tune" section holds the few assumptions behind the maths (commute days, value of commute time, cost to furnish, notice period). The defaults are sensible, so you can ignore it.
+- **Verdetto:** la casa con il punteggio più alto e il suo costo mensile tutto incluso.
+- **Valutazione a stelle:** totale e stelle per affitto e costi, quartiere, tragitto e alloggio, con il dettaglio dei quartieri.
+- **Costi a confronto:** costo mensile tutto incluso, quota del netto con indicatore di sostenibilità, quanto resta ogni mese, contanti iniziali e contratto.
+- **Da ricontrollare:** pochi avvisi mirati, ad esempio un deposito oltre tre mesi di affitto o un quartiere non ancora valutato.
 
-## What you get
+## Come viene calcolato
 
-- **One verdict:** the best-value option and its all-in monthly cost.
-- **One chart:** the real monthly cost of each option, split into rent and utilities, commute, and set-up.
-- **One table:** all-in cost, rent and utilities as a share of take-home with a sustainability label, money left each month, move-in cash and lease length.
-- **A short list of things to double-check,** such as a deposit above three months' rent or a lease longer than your stay.
+- **Affitto e costi:** 5 stelle se il costo mensile tutto incluso è al massimo il 25% del netto, 0 stelle dal 55% in su.
+- **Tragitto:** 5 stelle fino a 10 minuti, 0 stelle da 60 minuti in su.
+- **Quartiere e alloggio:** le stelle che assegni tu.
+- **Totale:** media pesata secondo le priorità. Le opzioni non sostenibili finiscono in fondo.
 
-## How it is calculated
-
-All-in monthly cost = rent + utilities − included perks + transport + value of commute time + furnishing spread over the months you are committed. The deposit is refundable, so it appears as move-in cash and not as a cost.
-
-Sustainability looks at rent and utilities as a share of take-home: comfortable up to 30%, stretched up to 40%, not sustainable above that or when monthly costs exceed take-home. These are rules of thumb. Options that are not sustainable rank last.
-
-Amounts are DKK and the sample data is illustrative. Check each lease for the real terms.
+Importi in corone danesi (kr). I dati di esempio sono illustrativi: verifica sempre il contratto reale.
