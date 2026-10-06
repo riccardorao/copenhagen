@@ -288,7 +288,11 @@ const toXY = (lat, lon) => [(lon - LON0) * KX, (lat - LAT0) * KY];
 const norm = s => String(s || '').toLowerCase().replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/å/g, 'a')
   .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/aa/g, 'a').replace(/[^a-z0-9]+/g, ' ').trim();
 const OUTSIDE = 'Fuori Copenaghen';
-const AREAS = (D ? D.districts.map(d => d.name) : ['Amager Vest', 'Amager Øst', 'Bispebjerg', 'Brønshøj-Husum', 'Frederiksberg', 'Indre By', 'Nørrebro', 'Valby', 'Vanløse', 'Vesterbro-Kongens Enghave', 'Østerbro']).concat([OUTSIDE]);
+const AREAS = (D ? D.districts.map(d => d.name) : ['Amager Vest', 'Amager Øst', 'Bispebjerg', 'Brønshøj-Husum', 'Christianshavn', 'Frederiksberg', 'Indre By',
+  'Indre Nørrebro', 'Kongens Enghave', 'Valby', 'Vanløse', 'Vesterbro', 'Ydre Nørrebro', 'Østerbro']).concat([OUTSIDE]);
+const SAFE = (D && D.safety) || {};
+/* Sicurezza dall'indagine del Comune: media tra "sicuri nel quartiere" e "sicuri la sera", 70% = 1 stella, 90% = 5 stelle */
+const safetyStars = area => { const v = SAFE[area]; return v ? clamp(1 + 4 * ((v.tryg + v.aften) / 2 - 70) / 20, 1, 5) : null; };
 const STREETS = D ? Object.keys(D.addr) : [];
 const STREET_BY_NORM = new Map(STREETS.map(s => [norm(s), s]));
 const PARKS = D ? D.parks.map(poly => poly[0].map(([x, y]) => toXY(y / E5, x / E5))) : [];
@@ -410,7 +414,7 @@ const AREA_KEYS = AREA_CRIT.map(c => c[0]);
 const ZONE_KEYS = ['sicurezza', 'trasporti', 'verde', 'quiete', 'servizi', 'vita'];
 const CRIT = [
   ['costi', 'Affitto e costi', 3, 'calcolato'],
-  ['sicurezza', 'Sicurezza', 3, 'tuo voto'],
+  ['sicurezza', 'Sicurezza', 3, 'indagine'],
   ['trasporti', 'Metro e treno', 2, 'dati'],
   ['pendolarismo', 'Tragitto casa-lavoro', 2, 'calcolato'],
   ['alloggio', "Qualità dell'alloggio", 2, 'tuo voto'],
@@ -420,8 +424,9 @@ const CRIT = [
   ['vita', 'Vita sociale', 1, 'tuo voto'],
 ];
 const WEIGHT_OPTS = [['0', 'Ignora'], ['1', 'Bassa'], ['2', 'Media'], ['3', 'Alta']];
-const AREA_ALIASES = { 'Vesterbro': 'Vesterbro-Kongens Enghave', 'Sydhavn': 'Vesterbro-Kongens Enghave', 'Christianshavn': 'Indre By',
-  'Amager Vest / Ørestad': 'Amager Vest', 'Bispebjerg / Nordvest': 'Bispebjerg' };
+const AREA_ALIASES = { 'Vesterbro-Kongens Enghave': ['Vesterbro', 'Kongens Enghave'], 'Sydhavn': ['Kongens Enghave'], 'Nørrebro': ['Indre Nørrebro', 'Ydre Nørrebro'],
+  'Amager Vest / Ørestad': ['Amager Vest'], 'Bispebjerg / Nordvest': ['Bispebjerg'] };
+const aliasOf = name => AREA_ALIASES[name] || [name];
 
 /* ---------- stato ---------- */
 function baseProfile() { return { takeHome: 0, otherCosts: 0, stay: 12, days: 4, timePct: 50, furnCost: 18000, notice: 3 }; }
@@ -439,12 +444,12 @@ function sampleState() {
     profile: { ...baseProfile(), takeHome: 38000, otherCosts: 5000 },
     weights: baseWeights(),
     areas: {
-      'Nørrebro': { sicurezza: 3, servizi: 5, vita: 5 },
-      'Østerbro': { sicurezza: 4, servizi: 4, vita: 3 },
-      'Amager Vest': { sicurezza: 4, servizi: 3, vita: 2 },
+      'Indre Nørrebro': { sicurezza: 0, servizi: 5, vita: 5 },
+      'Østerbro': { sicurezza: 0, servizi: 4, vita: 3 },
+      'Amager Vest': { sicurezza: 0, servizi: 3, vita: 2 },
     },
     options: [
-      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3 }),
+      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3 }),
       mk({ name: 'Arredato a Østerbro', street: 'Willemoesgade', hn: '20', area: 'Østerbro', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400, quality: 4 }),
       mk({ name: 'Nuova costruzione, Ørestad', street: 'Ørestads Boulevard', hn: '55A', area: 'Amager Vest', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580, quality: 5 }),
     ],
@@ -461,10 +466,11 @@ function normalize(raw) {
   const areas = {};
   const ra = raw.areas && typeof raw.areas === 'object' ? raw.areas : {};
   for (const [name, r] of Object.entries(ra)) {
-    const a = AREA_ALIASES[name] || name;
-    if (!AREAS.includes(a) || !r) continue;
-    areas[a] = areas[a] || blankRatings();
-    for (const k of AREA_KEYS) areas[a][k] = Math.max(areas[a][k], clamp(Math.round(nz(r[k], 0)), 0, 5));
+    for (const a of aliasOf(name)) {
+      if (!AREAS.includes(a) || !r) continue;
+      areas[a] = areas[a] || blankRatings();
+      for (const k of AREA_KEYS) areas[a][k] = Math.max(areas[a][k], clamp(Math.round(nz(r[k], 0)), 0, 5));
+    }
   }
   const opts = (Array.isArray(raw.options) && raw.options.length ? raw.options : b.options).slice(0, MAX_OPTIONS).map((r, i) => {
     r = r || {};
@@ -473,7 +479,7 @@ function normalize(raw) {
     o.name = String(r.name ?? 'Opzione ' + (i + 1)).slice(0, 80);
     o.street = String(r.street || '').slice(0, 80);
     o.hn = String(r.hn || '').slice(0, 10);
-    const a = AREA_ALIASES[r.area] || r.area;
+    const a = aliasOf(r.area)[0];
     o.area = AREAS.includes(a) ? a : AREAS[0];
     for (const k of ['rent', 'utils', 'deposit', 'lease', 'commuteMin', 'fare', 'perks']) o[k] = Math.max(0, nz(r[k], o[k]));
     o.lat = nz(r.lat, 0); o.lon = nz(r.lon, 0); o.pinned = !!r.pinned && !!o.lat && !!o.lon;
@@ -548,6 +554,8 @@ function evaluate(S) {
     sc.verde = g ? clamp(5 - (g.park - 200) / 250, 1, 5) : null;
     sc.quiete = g && g.db != null ? clamp(5 - (g.db - 50) / 5, 1, 5) : null;
     for (const k of AREA_KEYS) sc[k] = r[k] > 0 ? r[k] : null;
+    m.safety = SAFE[m.area] || null;
+    if (m.safety) sc.sicurezza = safetyStars(m.area);
     sc.alloggio = o.quality > 0 ? o.quality : null;
     m.sc = sc;
     m.zona = weighted(sc, ZONE_KEYS, Object.fromEntries(ZONE_KEYS.map(k => [k, S.weights[k] || 1])));
@@ -698,15 +706,19 @@ function renderInputs() {
   const used = AREAS.filter(a => S.options.some(o => areaOf(o) === a));
   const areas = h('section', { class: 'card' },
     h('div', { class: 'sec-title' }, h('div', null, h('h2', null, 'Quartieri'),
-      h('p', { class: 'desc' }, 'Trasporti, verde e rumore arrivano dai dati del Comune. Qui dai il tuo voto a ciò che i dati aperti non coprono a livello di quartiere. Clicca una stella già scelta per azzerarla.'))),
+      h('p', { class: 'desc' }, 'Sicurezza, trasporti, verde e rumore arrivano dai dati del Comune. Qui dai il tuo voto a servizi e vita sociale. Clicca una stella già scelta per azzerarla.'))),
     used.map(a => {
       const r = ratingsFor(a);
       const n = S.options.filter(o => areaOf(o) === a).length;
+      const sv = SAFE[a];
       return h('div', { class: 'area-block' },
         h('h3', null, a, h('span', null, n === 1 ? '1 casa' : `${n} case`)),
-        h('div', { class: 'star-rows' }, AREA_CRIT.map(([k, l, hint]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, hint, () => r[k], v => { r[k] = v; }))));
+        h('div', { class: 'star-rows' },
+          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Sicurezza', h('small', null,
+            `Indagine del Comune 2025: ${sv.tryg}% si sente sicuro nel quartiere, ${sv.aften}% la sera e di notte (media città ${D.safetyCity.tryg}% e ${D.safetyCity.aften}%). Reati denunciati nel 2024: ${sv.krim} ogni 1.000 abitanti (città ${D.safetyCity.krim}).`)), stars(safetyStars(a))) : null,
+          AREA_CRIT.filter(([k]) => !(sv && k === 'sicurezza')).map(([k, l, hint]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, hint, () => r[k], v => { r[k] = v; }))));
     }),
-    h('p', { class: 'small-note' }, 'La criminalità è pubblicata solo per comune, non per quartiere: per la sicurezza usa una visita serale e i report della polizia di Copenaghen.'));
+    h('p', { class: 'small-note' }, 'La sicurezza viene dall’indagine annuale sulla sicurezza del Comune di Copenaghen. Per Frederiksberg, che è un comune a sé, la valuti tu.'));
 
   const prio = h('details', { class: 'card' },
     h('summary', null, h('h2', null, 'Priorità'), h('span', { class: 'desc' }, 'Facoltativo')),
@@ -857,7 +869,7 @@ function zoneDetail(E) {
       h('tbody', null, E.ranked.map(m => {
         const g = m.geo;
         return h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Senza nome'),
-          cell(m.sc.sicurezza, m.area),
+          cell(m.sc.sicurezza, m.safety ? `${m.area}: ${m.safety.tryg}% sicuri, ${m.safety.aften}% la sera, ${m.safety.krim} reati/1.000 ab.` : `${m.area}: tuo voto`),
           cell(m.sc.trasporti, g ? `${g.station.name}, ${metres(g.station.d)}` : 'senza indirizzo'),
           cell(m.sc.verde, g ? (g.park === 0 ? 'nel parco' : `parco a ${metres(g.park)}`) : 'senza indirizzo'),
           cell(m.sc.quiete, g ? (g.db != null ? `${g.db} dB Lden` : 'dato assente') : 'senza indirizzo'),
@@ -891,7 +903,8 @@ function watchCard(E) {
     if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: il deposito supera tre mesi di affitto. Le regole danesi in genere lo limitano a tre mesi per i normali affitti privati: controlla il contratto.` });
     if (m.commit > S.profile.stay) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: ti impegni per ${m.commit} mesi, più dei ${S.profile.stay} previsti. I costi sono calcolati sull’intero periodo.` });
     if (!g && D) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: senza indirizzo, quindi trasporti, verde e rumore non contano nel punteggio.` });
-    if (AREA_KEYS.every(k => m.sc[k] == null)) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: il quartiere ${m.area} non ha ancora i tuoi voti su sicurezza, servizi e vita sociale.` });
+    if (m.safety && m.safety.aften < 75) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: a ${m.area} solo il ${m.safety.aften}% dei residenti si sente sicuro la sera e di notte (media città ${D.safetyCity.aften}%). Fai una visita serale.` });
+    if (['servizi', 'vita'].every(k => m.sc[k] == null)) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: il quartiere ${m.area} non ha ancora i tuoi voti su servizi e vita sociale.` });
   }
   if (!items.length) return null;
   const shown = items.slice(0, 5);
@@ -909,11 +922,12 @@ function howCard() {
       h('li', null, 'Verde: 5 stelle entro 200 m da un parco di almeno 1 ettaro, una stella in meno ogni 250 m, minimo 1.'),
       h('li', null, 'Tranquillità: rumore stradale Lden all’indirizzo (abitazione più esposta). 5 stelle a 50 dB, una in meno ogni 5 dB, minimo 1. Il valore guida danese per le abitazioni è 58 dB.'),
       h('li', null, 'Tragitto: 5 stelle fino a 10 minuti di sola andata, 0 stelle da 60 minuti in su.'),
-      h('li', null, 'Sicurezza, servizi, vita sociale e qualità dell’alloggio: le stelle che assegni tu. Gli indicatori senza voto sono esclusi dalla media.'),
+      h('li', null, 'Sicurezza: media tra la quota di residenti che si sente sicura nel quartiere e quella che si sente sicura la sera, dall’indagine 2025 del Comune nei suoi 13 quartieri. 70% vale 1 stella, 90% vale 5 stelle. I reati denunciati per 1.000 abitanti sono mostrati come contesto ma non entrano nelle stelle, perché nelle zone centrali e della movida contano anche i reati contro visitatori e pendolari.'),
+      h('li', null, 'Servizi, vita sociale e qualità dell’alloggio, più la sicurezza a Frederiksberg: le stelle che assegni tu. Gli indicatori senza voto sono esclusi dalla media.'),
       h('li', null, 'Totale: media pesata secondo le priorità (Ignora 0, Bassa 1, Media 2, Alta 3).'),
       h('li', null, `Costo mensile tutto incluso = affitto + utenze − servizi inclusi + trasporti + valore del tempo di viaggio (${P.timePct}% del netto orario, ${P.days} giorni a settimana) + arredamento distribuito sui mesi di impegno. Il deposito è restituibile, quindi non è un costo.`),
       h('li', null, 'Sostenibilità: affitto e utenze fino al 30% del netto è sostenibile, fino al 40% al limite, oltre o con costi superiori al netto non sostenibile.'),
-      h('li', null, `Fonti: Københavns Kommune, dati aperti (rumore stradale 2022 per abitazione, quartieri, stazioni, parchi). Indirizzi e confini di Frederiksberg: © OpenStreetMap contributors (ODbL); per Frederiksberg il rumore non è disponibile. ${D ? `Dati elaborati il ${D.meta.built}: ${nf.format(D.meta.streets)} vie, ${nf.format(D.meta.addresses)} indirizzi.` : ''}`)));
+      h('li', null, `Fonti: Københavns Kommune, dati aperti (rumore stradale 2022 per abitazione, quartieri, stazioni, parchi) e Tryghedsundersøgelse 2025 (sondaggio Epinion, dati sui reati della polizia di Copenaghen). Indirizzi e confini di Frederiksberg: © OpenStreetMap contributors (ODbL); per Frederiksberg il rumore non è disponibile. ${D ? `Dati elaborati il ${D.meta.built}: ${nf.format(D.meta.streets)} vie, ${nf.format(D.meta.addresses)} indirizzi.` : ''}`)));
 }
 
 function renderResults() {

@@ -4,9 +4,13 @@
 Sources
 - Københavns Kommune WFS (https://wfs-kbhkort.kk.dk/k101/ows):
   * vejstoej_boliger_2022  road noise (Lden, dB) for every dwelling, with street and house number
-  * bydel                  the 10 city districts
+  * lokaludvalgsgraense, kvarter  local-committee areas and quarters, combined into the 13 districts
+                           used by the city's safety survey (Nørrebro split into Indre and Ydre)
   * station_oversigtskort  metro, S-train and other rail stations
   * park_groent_omr_oversigtskort  parks and green areas (Copenhagen and neighbours)
+- Københavns Kommune, Tryghedsundersøgelse 2025 (survey by Epinion, crime data from Københavns Politi):
+  https://www.kk.dk/sites/default/files/2025-06/Tryghedsunders%C3%B8gelsen%202025.pdf
+  Values transcribed into SAFETY below (appendix summary table and figure U).
 - OpenStreetMap (© OpenStreetMap contributors, ODbL):
   * Nominatim: Frederiksberg Kommune boundary
   * Overpass: Frederiksberg addresses (imported from Danmarks Adresseregister); no noise data exists for these
@@ -24,12 +28,13 @@ from collections import defaultdict
 
 from pyproj import Transformer
 from shapely.geometry import shape, mapping
-from shapely.ops import transform
+from shapely.ops import transform, unary_union
 
 WFS = 'https://wfs-kbhkort.kk.dk/k101/ows?service=WFS&version=1.0.0&request=GetFeature'
 SOURCES = {
     'noise.csv': WFS + '&typeName=k101:vejstoej_boliger_2022&propertyName=vejnavn,husnummer,postnummer,x,y,lden&outputFormat=csv',
-    'bydel.json': WFS + '&typeName=k101:bydel&outputFormat=json&SRSNAME=EPSG:4326',
+    'lokaludvalg.json': WFS + '&typeName=k101:lokaludvalgsgraense&outputFormat=json&SRSNAME=EPSG:4326',
+    'kvarter.json': WFS + '&typeName=k101:kvarter&outputFormat=json&SRSNAME=EPSG:4326',
     'stations.json': WFS + '&typeName=k101:station_oversigtskort&outputFormat=json&SRSNAME=EPSG:4326',
     'parks.json': WFS + '&typeName=k101:park_groent_omr_oversigtskort&outputFormat=json&SRSNAME=EPSG:4326',
     'frb.json': 'https://nominatim.openstreetmap.org/search?q=Frederiksberg+Kommune&format=geojson&polygon_geojson=1&limit=1',
@@ -39,6 +44,26 @@ SOURCES = {
 }
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'data', 'cph-data.js')
+# Tryghedsundersøgelse 2025: % feeling safe in their neighbourhood, % safe in the evening and at night,
+# and reported criminal-code offences per 1,000 residents in 2024 (Københavns Politi).
+SAFETY = {
+    'Amager Vest':     (90, 85, 51),
+    'Amager Øst':      (85, 77, 44),
+    'Bispebjerg':      (80, 74, 49),
+    'Brønshøj-Husum':  (81, 71, 45),
+    'Christianshavn':  (89, 79, 82),
+    'Indre By':        (91, 85, 253),
+    'Indre Nørrebro':  (89, 82, 46),
+    'Kongens Enghave': (92, 84, 46),
+    'Valby':           (88, 81, 44),
+    'Vanløse':         (89, 79, 42),
+    'Vesterbro':       (90, 82, 129),
+    'Ydre Nørrebro':   (86, 75, 52),
+    'Østerbro':        (91, 83, 42),
+}
+SAFETY_CITY = (88, 80, 73)
+# Nørrebro quarters on each side of Jagtvej, as the survey splits them
+NORREBRO = {'Indre Nørrebro': [20401, 20402], 'Ydre Nørrebro': [20403, 20404, 20405]}
 MIN_PARK_M2 = 10_000          # parks of at least 1 ha count as green space
 E5 = 100_000                  # coordinates stored as integers in 1e-5 degrees (about 1 m)
 
@@ -105,8 +130,16 @@ def build(cache):
 
     # --- districts -------------------------------------------------------------
     districts = []
-    for f in json.load(open(os.path.join(cache, 'bydel.json')))['features']:
-        districts.append({'name': f['properties']['navn'], 'rings': poly_coords(shape(f['geometry']), 0.0004)})
+    kvarter = {f['properties']['kvarternr']: shape(f['geometry'])
+               for f in json.load(open(os.path.join(cache, 'kvarter.json')))['features'] if f.get('geometry')}
+    for f in json.load(open(os.path.join(cache, 'lokaludvalg.json')))['features']:
+        name = f['properties']['navn']
+        if name == 'Nørrebro':
+            for part, ids in NORREBRO.items():
+                districts.append({'name': part, 'rings': poly_coords(unary_union([kvarter[i] for i in ids]), 0.0004)})
+        else:
+            districts.append({'name': name, 'rings': poly_coords(shape(f['geometry']), 0.0004)})
+    assert sorted(d['name'] for d in districts) == sorted(SAFETY), 'district names must match the safety survey'
     frb = json.load(open(os.path.join(cache, 'frb.json')))['features'][0]
     districts.append({'name': 'Frederiksberg', 'rings': poly_coords(shape(frb['geometry']), 0.0004)})
     districts.sort(key=lambda d: d['name'])
@@ -135,6 +168,8 @@ def build(cache):
             'streets': len(addr),
         },
         'districts': districts,
+        'safety': {k: {'tryg': v[0], 'aften': v[1], 'krim': v[2]} for k, v in SAFETY.items()},
+        'safetyCity': {'tryg': SAFETY_CITY[0], 'aften': SAFETY_CITY[1], 'krim': SAFETY_CITY[2]},
         'stations': stations,
         'parks': parks,
         'addr': addr,
