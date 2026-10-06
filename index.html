@@ -82,7 +82,6 @@ h1, h2, h3, p { margin: 0; }
 }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
 .card h2 { font-size: 15px; font-weight: 650; }
-.card .desc { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
 .card-head { margin-bottom: 14px; }
 .eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; font-weight: 600; color: var(--ink-3); }
 
@@ -130,19 +129,16 @@ details.card[open] > summary h2::before { content: "▾ "; }
 .star-rows { display: flex; flex-direction: column; gap: 8px; }
 .star-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .star-row .sl { min-width: 0; font-size: 13px; }
-.star-row .sl small { display: block; color: var(--ink-3); font-size: 11.5px; line-height: 1.3; }
-.stars-in { display: inline-flex; flex: none; }
-.stars-in button { border: 0; background: transparent; padding: 2px 3px; font-size: 20px; line-height: 1; color: var(--star-off); cursor: pointer; }
-.stars-in button.on { color: var(--star); }
-.stars-in button:hover { transform: scale(1.12); }
+.stars.stars-in { font-size: 24px; letter-spacing: 3px; cursor: pointer; flex: none; border-radius: 4px; }
+.stars-in:hover .fg { filter: brightness(1.1); }
 .area-block { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
 .area-block:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
 .area-block h3 { font-size: 13.5px; font-weight: 650; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
 .area-block h3 span { font-weight: 400; color: var(--ink-3); font-size: 12px; }
-.stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 0; font-size: 13px; vertical-align: -1px; }
+.stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; font-size: 16px; vertical-align: -2px; white-space: nowrap; }
 .stars .bg { color: var(--star-off); }
 .stars .fg { position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; color: var(--star); }
-.stars.lg { font-size: 30px; letter-spacing: 2px; }
+.stars.lg { font-size: 34px; letter-spacing: 3px; }
 .sv { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .sv .n { font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: 12.5px; min-width: 1.8em; text-align: left; }
 .na { color: var(--ink-3); font-size: 12px; font-style: italic; }
@@ -204,7 +200,36 @@ table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 details.how summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink-2); }
 details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); max-width: 80ch; }
 .small-note { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
-@media (max-width: 560px) { .brand p { display: none; } }
+
+.opt-head .t .stars { font-size: 14px; letter-spacing: 1px; vertical-align: -2px; margin-left: 4px; }
+.opt-head .t .stars .bg { color: var(--star-off); }
+.opt-head .t .stars .fg { color: var(--star); }
+.star-row > .stars { font-size: 24px; letter-spacing: 3px; flex: none; }
+.status.ico { padding: 0; width: 20px; height: 20px; justify-content: center; font-size: 12px; font-weight: 800; color: var(--c); }
+.loc { gap: 8px; }
+.loc-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.loc-top span { color: var(--ink-3); font-size: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 1px 9px; font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.fact b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.loc-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.v-line .num { font-variant-numeric: tabular-nums; color: var(--ink); }
+.hero .cap { margin: 0 0 8px; }
+.hero .of { margin-left: 6px; }
+.tbl.stars-tbl td, .tbl.stars-tbl th:not(:first-child) { text-align: center; }
+.tbl.stars-tbl .stars { font-size: 15px; letter-spacing: 0; }
+.flag-list { display: flex; flex-direction: column; gap: 10px; }
+.flag-row { display: flex; gap: 6px 14px; align-items: center; flex-wrap: wrap; }
+.flag-row b { font-weight: 600; font-size: 13px; min-width: 150px; }
+.flags { display: flex; gap: 6px; flex-wrap: wrap; }
+.map-legend { margin-top: 10px; }
+@media (max-width: 560px) {
+  .flag-row b { min-width: 100%; }
+  .tbl th, .tbl td { padding: 8px 5px; }
+  .tbl tbody th { min-width: 88px; font-size: 12.5px; }
+  .tbl.stars-tbl .stars { font-size: 12px; }
+  .rank { display: none; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .stars-in button:hover { transform: none; } }
 </style>
 </head>
@@ -213,7 +238,6 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direc
   <div class="topbar-in">
     <div class="brand">
       <h1>Valutatore affitti Copenaghen</h1>
-      <p>Confronta le case che rispettano già i tuoi requisiti irrinunciabili: costi, zona e qualità della vita.</p>
     </div>
     <div class="top-actions">
       <button class="btn" id="btn-sample" type="button">Carica esempio</button>
@@ -229,7 +253,6 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direc
   </div>
   <div class="sample-note" id="sample-note" hidden>
     <span class="pill">Dati di esempio</span>
-    <span>Affitti e voti di quartiere illustrativi. Indirizzi, rumore, stazioni e parchi sono dati reali.</span>
     <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Chiudi</button>
   </div>
 </header>
@@ -446,10 +469,10 @@ function sampleState() {
     areas: {
       'Indre Nørrebro': { sicurezza: 0, servizi: 5, vita: 5 },
       'Østerbro': { sicurezza: 0, servizi: 4, vita: 3 },
-      'Amager Vest': { sicurezza: 0, servizi: 3, vita: 2 },
+      'Amager Vest': { sicurezza: 0, servizi: 3, vita: 2.5 },
     },
     options: [
-      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3 }),
+      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3.5 }),
       mk({ name: 'Arredato a Østerbro', street: 'Willemoesgade', hn: '20', area: 'Østerbro', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400, quality: 4 }),
       mk({ name: 'Nuova costruzione, Ørestad', street: 'Ørestads Boulevard', hn: '55A', area: 'Amager Vest', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580, quality: 5 }),
     ],
@@ -469,7 +492,7 @@ function normalize(raw) {
     for (const a of aliasOf(name)) {
       if (!AREAS.includes(a) || !r) continue;
       areas[a] = areas[a] || blankRatings();
-      for (const k of AREA_KEYS) areas[a][k] = Math.max(areas[a][k], clamp(Math.round(nz(r[k], 0)), 0, 5));
+      for (const k of AREA_KEYS) areas[a][k] = Math.max(areas[a][k], clamp(Math.round(nz(r[k], 0) * 2) / 2, 0, 5));
     }
   }
   const opts = (Array.isArray(raw.options) && raw.options.length ? raw.options : b.options).slice(0, MAX_OPTIONS).map((r, i) => {
@@ -483,7 +506,7 @@ function normalize(raw) {
     o.area = AREAS.includes(a) ? a : AREAS[0];
     for (const k of ['rent', 'utils', 'deposit', 'lease', 'commuteMin', 'fare', 'perks']) o[k] = Math.max(0, nz(r[k], o[k]));
     o.lat = nz(r.lat, 0); o.lon = nz(r.lon, 0); o.pinned = !!r.pinned && !!o.lat && !!o.lon;
-    o.quality = clamp(Math.round(nz(r.quality, 0)), 0, 5);
+    o.quality = clamp(Math.round(nz(r.quality, 0) * 2) / 2, 0, 5);
     o.furnished = r.furnished !== false;
     return o;
   });
@@ -567,26 +590,38 @@ function evaluate(S) {
 }
 
 /* ---------- componenti ---------- */
-function stars(v, lg) {
-  if (v == null) return h('span', { class: 'na' }, 'da valutare');
-  const fill = clamp(v, 0, 5) / 5 * 100;
-  return h('span', { class: 'sv' },
-    h('span', { class: 'stars' + (lg ? ' lg' : ''), role: 'img', 'aria-label': `${nf1.format(v)} stelle su 5` },
-      h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'),
-      h('span', { class: 'fg', 'aria-hidden': 'true', style: `width:${fill}%` }, '★★★★★')),
-    lg ? null : h('span', { class: 'n' }, nf1.format(v)));
+const half = v => Math.round(clamp(v, 0, 5) * 2) / 2;
+function stars(v, lg, tip) {
+  if (v == null) return h('span', { class: 'na', title: 'Non disponibile' }, '–');
+  const r = half(v);
+  return h('span', { class: 'stars' + (lg ? ' lg' : ''), role: 'img', title: tip, 'aria-label': `${String(r).replace('.', ',')} stelle su 5` },
+    h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'),
+    h('span', { class: 'fg', 'aria-hidden': 'true', style: `width:${r / 5 * 100}%` }, '★★★★★'));
 }
-function starInput(id, label, hint, get, set) {
-  const group = h('div', { class: 'stars-in', role: 'radiogroup', 'aria-label': label, id });
-  const paint = () => [...group.children].forEach((b, i) => { b.classList.toggle('on', i < get()); b.setAttribute('aria-checked', String(i + 1 === get())); });
-  for (let i = 1; i <= 5; i++) {
-    group.append(h('button', { type: 'button', role: 'radio', 'aria-label': `${i} su 5`,
-      onclick: () => { set(get() === i ? 0 : i); paint(); changed(); } }, '★'));
-  }
+/* voto a stelle a passi di 0,5: clic sulla metà sinistra o destra di una stella; stesso clic per azzerare */
+function starInput(id, label, get, set) {
+  const fg = h('span', { class: 'fg', 'aria-hidden': 'true' }, '★★★★★');
+  const box = h('div', { class: 'stars stars-in', id, role: 'slider', tabindex: '0', 'aria-label': label, 'aria-valuemin': 0, 'aria-valuemax': 5 },
+    h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'), fg);
+  const paint = () => { fg.style.width = get() / 5 * 100 + '%'; box.setAttribute('aria-valuenow', String(get())); };
+  const put = v => { set(v); paint(); changed(); };
+  box.addEventListener('click', e => {
+    const r = box.getBoundingClientRect();
+    const v = clamp(Math.ceil((e.clientX - r.left) / r.width * 10) / 2, 0.5, 5);
+    put(v === get() ? 0 : v);
+  });
+  box.addEventListener('keydown', e => {
+    const k = { ArrowRight: 0.5, ArrowUp: 0.5, ArrowLeft: -0.5, ArrowDown: -0.5 }[e.key];
+    if (k) { e.preventDefault(); put(clamp(get() + k, 0, 5)); }
+    else if (e.key === 'Home' || e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); put(0); }
+    else if (e.key === 'End') { e.preventDefault(); put(5); }
+  });
   paint();
-  return h('div', { class: 'star-row' }, h('span', { class: 'sl' }, label, hint ? h('small', null, hint) : null), group);
+  return h('div', { class: 'star-row' }, h('span', { class: 'sl' }, label), box);
 }
-const statusChip = st => h('span', { class: 'status ' + st.level }, h('i', { 'aria-hidden': 'true' }, { good: '✓', warn: '!', bad: '✕' }[st.level]), st.label);
+const ICON = { good: '✓', warn: '!', bad: '✕' };
+const statusChip = st => h('span', { class: 'status ico ' + st.level, role: 'img', title: st.label, 'aria-label': st.label }, ICON[st.level]);
+const flag = (level, text) => h('span', { class: 'status ' + level }, h('i', { 'aria-hidden': 'true' }, ICON[level]), text);
 
 /* ---------- pannello dati ---------- */
 const inputsEl = $('#inputs');
@@ -599,8 +634,7 @@ function numField(id, label, get, set, o = {}) {
   inp.addEventListener('input', () => { set(num(inp.value)); changed(); });
   return h('div', { class: 'field' + (o.wide ? ' wide' : '') },
     h('label', { for: id }, label),
-    h('div', { class: 'inp' + (o.unit ? ' has-unit' : '') }, inp, o.unit ? h('span', { class: 'unit' }, o.unit) : null),
-    o.hint ? h('div', { class: 'hint' }, o.hint) : null);
+    h('div', { class: 'inp' + (o.unit ? ' has-unit' : '') }, inp, o.unit ? h('span', { class: 'unit' }, o.unit) : null));
 }
 function textField(id, label, get, set, o = {}) {
   const inp = h('input', { id, type: 'text', maxlength: o.max || 80, value: get(), list: o.list, autocomplete: 'off', placeholder: o.placeholder });
@@ -610,7 +644,7 @@ function textField(id, label, get, set, o = {}) {
 function selectField(id, label, get, set, options, o = {}) {
   const sel = h('select', { id }, options.map(([v, l]) => h('option', { value: v, selected: v === get() }, l)));
   sel.addEventListener('change', () => { set(sel.value); if (o.rerender) refresh(); else changed(); });
-  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), sel, o.hint ? h('div', { class: 'hint' }, o.hint) : null);
+  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), sel);
 }
 
 /* riquadro posizione: aggiornato a ogni battuta senza ricostruire la scheda */
@@ -621,27 +655,23 @@ function locBox(o) {
 }
 function fillLoc(box, o) {
   const g = geoFor(o), kids = [];
+  const fact = (k, v) => h('span', { class: 'fact' }, k, h('b', null, v));
   if (!D) {
-    kids.push(h('span', null, 'Dati geografici non caricati: scegli il quartiere a mano.'));
+    kids.push(h('span', { class: 'na' }, 'Dati geografici non caricati'));
   } else if (g) {
-    kids.push(h('div', null, h('b', null, g.label), ` · ${g.district}`,
-      g.precision === 'via' ? h('span', { class: 'hint' }, ' (centro della via: aggiungi il civico per più precisione)') : null,
-      g.precision === 'vicino' ? h('span', { class: 'hint' }, ` (civico ${g.asked} non trovato, uso il più vicino)`) : null));
-    kids.push(h('div', { class: 'row' },
-      h('span', null, `${g.station.type} ${g.station.name}: ${metres(g.station.d)}`),
-      h('span', null, g.park === 0 ? 'Dentro un parco' : `Parco a ${metres(g.park)}`),
-      h('span', null, g.db != null ? `Rumore stradale ${g.db} dB` : 'Rumore non disponibile')));
+    kids.push(h('div', { class: 'loc-top' }, h('b', null, g.label), h('span', null, g.district)));
+    kids.push(h('div', { class: 'facts' }, fact('Metro ', metres(g.station.d)), fact('Parco ', g.park === 0 ? '0 m' : metres(g.park)), fact('Rumore ', g.db != null ? `${g.db} dB` : '–')));
   } else if (o.street) {
     const sugg = suggestStreets(o.street);
-    kids.push(h('span', { class: 'warn' }, sugg.length ? 'Via non trovata. Intendevi:' : 'Via non trovata a Copenaghen o Frederiksberg. Puoi posizionarla sulla mappa.'));
+    kids.push(h('span', { class: 'na' }, sugg.length ? 'Via non trovata. Forse:' : 'Via non trovata'));
     if (sugg.length) kids.push(h('div', { class: 'sugg' }, sugg.map(s => h('button', { class: 'btn sm', type: 'button', onclick: () => {
       o.street = s; o.pinned = false; const el = document.getElementById(`o-${o.id}-street`); if (el) el.value = s; changed(); fillLoc(box, o);
     } }, s))));
   } else {
-    kids.push(h('span', null, 'Scrivi la via per posizionare la casa sulla mappa.'));
+    kids.push(h('span', { class: 'na' }, 'Scrivi la via'));
   }
-  if (D) kids.push(h('div', null, h('button', { class: 'btn sm', type: 'button', onclick: () => startPlacing(o) }, o.pinned ? 'Sposta il punto sulla mappa' : 'Posiziona sulla mappa'),
-    o.pinned ? h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { o.pinned = false; refresh(); } }, 'Usa l’indirizzo') : null));
+  if (D) kids.push(h('div', { class: 'loc-actions' }, h('button', { class: 'btn sm', type: 'button', onclick: () => startPlacing(o) }, o.pinned ? 'Sposta sulla mappa' : 'Sulla mappa'),
+    o.pinned ? h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { o.pinned = false; refresh(); } }, 'Usa indirizzo') : null));
   box.replaceChildren(...kids);
 }
 function startPlacing(o) {
@@ -663,20 +693,20 @@ function optionCard(o) {
   card.append(h('div', { class: 'opt-body' },
     h('div', { class: 'fields' }, textField(f('name'), 'Nome', () => o.name, v => { o.name = v; }, { wide: true })),
     h('div', { class: 'fields addr' },
-      textField(f('street'), 'Via', () => o.street, v => { o.street = v; o.pinned = false; fillLoc(box, o); }, { list: 'street-list', placeholder: 'es. Jagtvej' }),
-      textField(f('hn'), 'Civico', () => o.hn, v => { o.hn = v; fillLoc(box, o); }, { max: 10, placeholder: '12' })),
+      textField(f('street'), 'Via', () => o.street, v => { o.street = v; o.pinned = false; fillLoc(box, o); }, { list: 'street-list' }),
+      textField(f('hn'), 'Civico', () => o.hn, v => { o.hn = v; fillLoc(box, o); }, { max: 10 })),
     box,
-    g ? null : selectField(f('area'), 'Quartiere', () => o.area, v => { o.area = v; }, AREAS.map(a => [a, a]), { wide: true, rerender: true, hint: 'Usato finché la casa non è sulla mappa.' }),
+    g ? null : selectField(f('area'), 'Quartiere', () => o.area, v => { o.area = v; }, AREAS.map(a => [a, a]), { wide: true, rerender: true }),
     h('div', { class: 'fields' },
       numField(f('rent'), 'Affitto', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
-      numField(f('utils'), 'Utenze', () => o.utils, v => { o.utils = v; }, { unit: 'kr', hint: 'Riscaldamento, acqua, luce. 0 se incluse.' }),
+      numField(f('utils'), 'Utenze', () => o.utils, v => { o.utils = v; }, { unit: 'kr' }),
       numField(f('deposit'), 'Deposito', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
-      numField(f('lease'), 'Durata contratto', () => o.lease, v => { o.lease = v; }, { unit: 'mesi', hint: '0 se a tempo indeterminato.' }),
-      selectField(f('furnished'), 'Arredamento', () => (o.furnished ? 'si' : 'no'), v => { o.furnished = v === 'si'; }, [['si', 'Arredato'], ['no', 'Non arredato']]),
-      numField(f('commuteMin'), 'Tragitto', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min', hint: 'Solo andata.' }),
-      numField(f('fare'), 'Costo trasporti', () => o.fare, v => { o.fare = v; }, { unit: 'kr', hint: 'Al mese. 0 se in bici.' }),
-      numField(f('perks'), 'Servizi inclusi', () => o.perks, v => { o.perks = v; }, { unit: 'kr', hint: 'Palestra, internet o lavanderia che altrimenti pagheresti, al mese.' })),
-    starInput(f('quality'), "Qualità dell'alloggio", 'Luce, stato, disposizione, balcone.', () => o.quality, v => { o.quality = v; }),
+      numField(f('lease'), 'Contratto', () => o.lease, v => { o.lease = v; }, { unit: 'mesi' }),
+      selectField(f('furnished'), 'Arredamento', () => (o.furnished ? 'si' : 'no'), v => { o.furnished = v === 'si'; }, [['si', 'Arredato'], ['no', 'Vuoto']]),
+      numField(f('commuteMin'), 'Tragitto', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min' }),
+      numField(f('fare'), 'Trasporti', () => o.fare, v => { o.fare = v; }, { unit: 'kr' }),
+      numField(f('perks'), 'Servizi inclusi', () => o.perks, v => { o.perks = v; }, { unit: 'kr' })),
+    starInput(f('quality'), 'Alloggio', () => o.quality, v => { o.quality = v; }),
     h('div', { class: 'opt-actions' },
       h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copia)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplica'),
       h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Elimina'))));
@@ -686,48 +716,43 @@ function optionCard(o) {
 function renderInputs() {
   const keep = inputsEl.scrollTop, P = S.profile;
   const you = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('h2', null, 'I tuoi numeri')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Tu')),
     h('div', { class: 'fields' },
-      numField('p-takeHome', 'Stipendio netto mensile', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true, hint: 'Dopo tasse e pensione. Serve a capire se ogni opzione è sostenibile.' }),
-      numField('p-other', 'Altre spese mensili', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr', hint: 'Cibo, telefono, prestiti. Facoltativo.' }),
-      numField('p-stay', 'Permanenza prevista', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mesi' })),
-    h('details', { class: 'fine' }, h('summary', null, 'Regolazioni (facoltativo)'),
+      numField('p-takeHome', 'Netto mensile', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true }),
+      numField('p-other', 'Altre spese', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr' }),
+      numField('p-stay', 'Permanenza', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mesi' })),
+    h('details', { class: 'fine' }, h('summary', null, 'Altro'),
       h('div', { class: 'fields' },
-        numField('p-days', 'Giorni in ufficio a settimana', () => P.days, v => { P.days = clamp(v, 0, 7); }),
-        numField('p-time', 'Valore del tempo di viaggio', () => P.timePct, v => { P.timePct = v; }, { unit: '%', hint: 'Quota del tuo netto orario.' }),
-        numField('p-furn', 'Costo per arredare', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr', hint: 'Al netto della rivendita. Si somma alle case non arredate.' }),
-        numField('p-notice', 'Preavviso, contratto indeterminato', () => P.notice, v => { P.notice = v; }, { unit: 'mesi' }))));
+        numField('p-days', 'Giorni in ufficio', () => P.days, v => { P.days = clamp(v, 0, 7); }, { unit: '/sett.' }),
+        numField('p-time', 'Valore del tempo', () => P.timePct, v => { P.timePct = v; }, { unit: '%' }),
+        numField('p-furn', 'Costo arredi', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr' }),
+        numField('p-notice', 'Preavviso', () => P.notice, v => { P.notice = v; }, { unit: 'mesi' }))));
 
   const opts = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('div', null, h('h2', null, 'La tua shortlist'), h('p', { class: 'desc' }, 'Inserisci solo case che rispettano già i tuoi requisiti irrinunciabili.')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Shortlist'),
       h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Opzione ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Aggiungi')),
     h('div', { class: 'opt-list' }, S.options.map(optionCard)));
 
   const used = AREAS.filter(a => S.options.some(o => areaOf(o) === a));
   const areas = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('div', null, h('h2', null, 'Quartieri'),
-      h('p', { class: 'desc' }, 'Sicurezza, trasporti, verde e rumore arrivano dai dati del Comune. Qui dai il tuo voto a servizi e vita sociale. Clicca una stella già scelta per azzerarla.'))),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Quartieri')),
     used.map(a => {
       const r = ratingsFor(a);
-      const n = S.options.filter(o => areaOf(o) === a).length;
       const sv = SAFE[a];
       return h('div', { class: 'area-block' },
-        h('h3', null, a, h('span', null, n === 1 ? '1 casa' : `${n} case`)),
+        h('h3', null, a),
         h('div', { class: 'star-rows' },
-          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Sicurezza', h('small', null,
-            `Indagine del Comune 2025: ${sv.tryg}% si sente sicuro nel quartiere, ${sv.aften}% la sera e di notte (media città ${D.safetyCity.tryg}% e ${D.safetyCity.aften}%). Reati denunciati nel 2024: ${sv.krim} ogni 1.000 abitanti (città ${D.safetyCity.krim}).`)), stars(safetyStars(a))) : null,
-          AREA_CRIT.filter(([k]) => !(sv && k === 'sicurezza')).map(([k, l, hint]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, hint, () => r[k], v => { r[k] = v; }))));
-    }),
-    h('p', { class: 'small-note' }, 'La sicurezza viene dall’indagine annuale sulla sicurezza del Comune di Copenaghen. Per Frederiksberg, che è un comune a sé, la valuti tu.'));
+          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Sicurezza'), stars(safetyStars(a), false, `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.`)) : null,
+          AREA_CRIT.filter(([k]) => !(sv && k === 'sicurezza')).map(([k, l]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, () => r[k], v => { r[k] = v; }))));
+    }));
 
   const prio = h('details', { class: 'card' },
-    h('summary', null, h('h2', null, 'Priorità'), h('span', { class: 'desc' }, 'Facoltativo')),
+    h('summary', null, h('h2', null, 'Priorità')),
     h('div', { class: 'prio', style: 'margin-top:12px' },
-      h('p', { class: 'hint' }, 'Quanto pesa ogni criterio nel punteggio a stelle. Affitto e costi partono con peso alto come fattore chiave.'),
-      CRIT.map(([k, l, , src]) => {
+      CRIT.map(([k, l]) => {
         const sel = h('select', { id: `w-${k}`, 'aria-label': `Peso di ${l}` }, WEIGHT_OPTS.map(([v, t]) => h('option', { value: v, selected: +v === S.weights[k] }, t)));
         sel.addEventListener('change', () => { S.weights[k] = +sel.value; changed(); });
-        return h('div', { class: 'prio-row' }, h('span', null, l, k === 'costi' ? h('span', { class: 'key-tag' }, 'fattore chiave') : h('span', { class: 'src-tag' }, src)), sel);
+        return h('div', { class: 'prio-row' }, h('span', null, l, k === 'costi' ? h('span', { class: 'key-tag' }, 'chiave') : null), sel);
       })));
 
   inputsEl.replaceChildren(h('div', { class: 'stack' }, you, opts, areas, prio));
@@ -738,7 +763,7 @@ function updateSummaries() {
   const E = evaluate(S);
   for (const m of E.list) {
     const a = inputsEl.querySelector(`[data-sum="${m.o.id}"]`);
-    if (a) a.textContent = m.ready ? `${m.area} · ${kr(m.allIn)} kr/mese · ${nf1.format(m.overall ?? 0)} ★` : `${m.area} · inserisci l'affitto`;
+    if (a) a.replaceChildren(...(m.ready ? [`${m.area} · ${kr(m.allIn)} kr `, stars(m.overall)] : [`${m.area} · manca l’affitto`]));
     const n = inputsEl.querySelector(`[data-name="${m.o.id}"]`);
     if (n) n.textContent = m.o.name || 'Senza nome';
   }
@@ -756,20 +781,15 @@ function updateSummaries() {
 const resultsEl = $('#results');
 
 function verdictCard(E) {
-  const [best, next] = E.ranked;
-  const P = S.profile;
-  const gap = next ? best.overall - next.overall : 0;
+  const best = E.ranked[0];
   return h('section', { class: 'card verdict' },
     h('div', null,
-      h('div', { class: 'eyebrow' }, `Scelta migliore per ${P.stay} mesi`),
+      h('div', { class: 'eyebrow' }, 'Migliore'),
       h('div', { class: 'v-name' }, best.o.name || 'Senza nome'),
-      h('div', { class: 'v-line' }, best.share != null ? statusChip(best.status) : null,
-        h('span', null, `${best.geo ? best.geo.label + ', ' : ''}${best.area} · ${kr(best.allIn)} kr al mese tutto incluso`)),
-      next ? h('div', { class: 'v-line', style: 'margin-top:4px' },
-        gap >= 0.05 ? `${nf1.format(gap)} stelle sopra ${next.o.name}` : `Testa a testa con ${next.o.name}`) : null),
+      h('div', { class: 'v-line' }, best.share != null ? [statusChip(best.status), h('b', { class: 'num' }, pct(best.share))] : null, h('span', null, best.area))),
     h('div', { class: 'hero' },
-      h('div', null, h('span', { class: 'n' }, nf1.format(best.overall)), h('span', { class: 'of' }, '/ 5')),
-      h('div', { class: 'cap' }, stars(best.overall, true))));
+      h('div', { class: 'cap' }, stars(best.overall, true)),
+      h('div', null, h('span', { class: 'n' }, kr(best.allIn)), h('span', { class: 'of' }, 'kr/mese'))));
 }
 
 function mapCard(E) {
@@ -778,15 +798,11 @@ function mapCard(E) {
   const host = h('div', { class: 'map-wrap' + (placingOpt ? ' placing' : ''), id: 'map-host' });
   const pinned = E.ranked.filter(m => m.geo);
   return h('section', { class: 'card', id: 'map-card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Mappa'),
-      h('p', { class: 'desc' }, 'Le case della shortlist, numerate per posizione in classifica, con stazioni di metro e S-tog e parchi.')),
-    placingOpt ? h('div', { class: 'map-banner' }, h('span', null, `Clicca sulla mappa per posizionare “${placingOpt.name}”.`),
+    h('div', { class: 'card-head' }, h('h2', null, 'Mappa')),
+    placingOpt ? h('div', { class: 'map-banner' }, h('span', null, `Clicca sulla mappa: ${placingOpt.name}`),
       h('button', { class: 'btn sm', type: 'button', onclick: () => { ui.placing = null; renderResults(); } }, 'Annulla')) : null,
     host,
-    h('div', { class: 'map-key' }, h('span', null, h('i', { style: 'background:var(--map-park)' }), 'Parchi ≥ 1 ha'),
-      h('span', null, h('i', { style: 'background:var(--ink-3);border-radius:50%;width:7px;height:7px' }), 'Stazioni metro e S-tog')),
-    pinned.length ? h('ul', { class: 'map-legend' }, pinned.map(m => h('li', null, h('span', { class: 'pin' }, m.rank),
-      h('span', { class: 't' }, m.o.name, h('small', null, `${m.geo.label} · ${m.area}`))))) : h('p', { class: 'small-note' }, 'Aggiungi una via alle case per vederle sulla mappa.'));
+    pinned.length ? h('ul', { class: 'map-legend' }, pinned.map(m => h('li', null, h('span', { class: 'pin' }, m.rank), h('span', { class: 't' }, m.o.name)))) : null);
 }
 
 function drawMap(host, E) {
@@ -824,7 +840,7 @@ function drawMap(host, E) {
     const g = el('g');
     g.append(el('circle', { cx: x, cy: y, r: 11, fill: 'var(--accent)', stroke: 'var(--surface)', 'stroke-width': 2 }));
     g.append(el('text', { x, y: y + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 700, fill: 'var(--on-accent)' }, m.rank));
-    g.append(el('title', null, `#${m.rank} ${m.o.name} · ${m.geo.label} · ${nf1.format(m.overall)} stelle`));
+    g.append(el('title', null, `#${m.rank} ${m.o.name} · ${m.geo.label}`));
     gPin.append(g);
   }
   svg.append(gLand, gPark, gLbl, gSt, gPin);
@@ -842,92 +858,76 @@ function drawMap(host, E) {
 }
 
 function starsCard(E) {
-  const cols = [
-    ['Affitto e costi', m => m.sc.costi, 'fattore chiave'],
-    ['Zona', m => m.zona, 'quartiere e indirizzo'],
-    ['Tragitto', m => m.sc.pendolarismo, null],
-    ['Alloggio', m => m.sc.alloggio, null],
-  ];
+  const cols = [['Totale', m => m.overall], ['Costi', m => m.sc.costi], ['Zona', m => m.zona], ['Tragitto', m => m.sc.pendolarismo], ['Alloggio', m => m.sc.alloggio]];
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Valutazione a stelle'),
-      h('p', { class: 'desc' }, 'Il totale è la media pesata dei criteri secondo le tue priorità. Le opzioni non sostenibili finiscono in fondo.')),
+    h('div', { class: 'card-head' }, h('h2', null, 'Stelle')),
     h('div', { class: 'scroll' }, h('table', { class: 'tbl stars-tbl' },
-      h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Opzione'), h('th', { scope: 'col' }, 'Totale'),
-        cols.map(([l, , s]) => h('th', { scope: 'col' }, l, s ? h('small', null, s) : null)))),
+      h('thead', null, h('tr', null, h('th', { scope: 'col' }, ''), cols.map(([l]) => h('th', { scope: 'col' }, l)))),
       h('tbody', null, E.ranked.map(m => h('tr', null,
-        h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Senza nome', h('small', { style: 'display:block;font-weight:400;color:var(--ink-3)' }, m.area)),
-        h('td', { style: 'font-weight:650' }, stars(m.overall)),
+        h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Senza nome'),
         cols.map(([, f]) => h('td', null, stars(f(m))))))))),
     zoneDetail(E));
 }
 
 function zoneDetail(E) {
-  const cell = (v, note) => h('td', null, stars(v), note ? h('small', null, note) : null);
-  return h('details', { class: 'fine' }, h('summary', null, 'Dettaglio zona'),
+  const cells = m => {
+    const g = m.geo, sv = m.safety;
+    return [
+      stars(m.sc.sicurezza, false, sv ? `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.` : 'Tuo voto'),
+      stars(m.sc.trasporti, false, g ? `${g.station.name} · ${metres(g.station.d)}` : null),
+      stars(m.sc.verde, false, g ? (g.park === 0 ? 'Dentro un parco' : `Parco a ${metres(g.park)}`) : null),
+      stars(m.sc.quiete, false, g && g.db != null ? `${g.db} dB` : null),
+      stars(m.sc.servizi), stars(m.sc.vita)];
+  };
+  return h('details', { class: 'fine' }, h('summary', null, 'Dettaglio'),
     h('div', { class: 'scroll', style: 'margin-top:10px' }, h('table', { class: 'tbl stars-tbl' },
-      h('thead', null, h('tr', null, ['Opzione', 'Sicurezza', 'Metro e treno', 'Verde', 'Tranquillità', 'Servizi', 'Vita sociale'].map(x => h('th', { scope: 'col' }, x)))),
-      h('tbody', null, E.ranked.map(m => {
-        const g = m.geo;
-        return h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Senza nome'),
-          cell(m.sc.sicurezza, m.safety ? `${m.area}: ${m.safety.tryg}% sicuri, ${m.safety.aften}% la sera, ${m.safety.krim} reati/1.000 ab.` : `${m.area}: tuo voto`),
-          cell(m.sc.trasporti, g ? `${g.station.name}, ${metres(g.station.d)}` : 'senza indirizzo'),
-          cell(m.sc.verde, g ? (g.park === 0 ? 'nel parco' : `parco a ${metres(g.park)}`) : 'senza indirizzo'),
-          cell(m.sc.quiete, g ? (g.db != null ? `${g.db} dB Lden` : 'dato assente') : 'senza indirizzo'),
-          cell(m.sc.servizi, null), cell(m.sc.vita, null));
-      })))));
+      h('thead', null, h('tr', null, ['', 'Sicurezza', 'Metro', 'Verde', 'Quiete', 'Servizi', 'Vita'].map(x => h('th', { scope: 'col' }, x)))),
+      h('tbody', null, E.ranked.map(m => h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Senza nome'), cells(m).map(c => h('td', null, c))))))));
 }
 
 function costCard(E) {
   const bestCost = E.ranked.length > 1 ? Math.min(...E.ranked.map(m => m.allIn)) : null;
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Costi a confronto'),
-      h('p', { class: 'desc' }, 'Costo mensile tutto incluso: affitto e utenze meno i servizi inclusi, più trasporti, valore del tempo di viaggio e arredamento distribuito sui mesi di impegno.')),
+    h('div', { class: 'card-head' }, h('h2', null, 'Costi')),
     h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
-      h('thead', null, h('tr', null, ['Opzione', 'Totale/mese', 'Affitto+utenze / netto', 'Restano/mese', 'Contanti iniziali', 'Contratto'].map(x => h('th', { scope: 'col' }, x)))),
+      h('thead', null, h('tr', null, ['', 'Kr/mese', 'Affitto/netto', 'Restano', 'Ingresso', 'Contratto'].map(x => h('th', { scope: 'col' }, x)))),
       h('tbody', null, E.ranked.map(m => h('tr', null,
         h('th', { scope: 'row' }, m.o.name || 'Senza nome'),
         h('td', { class: m.allIn === bestCost ? 'best' : '' }, kr(m.allIn)),
         h('td', null, m.share != null ? [pct(m.share), h('span', { class: 'chipcell' }, statusChip(m.status))] : '–'),
         h('td', { class: m.left != null && m.left < 0 ? 'neg' : '' }, m.left != null ? kr(m.left) : '–'),
         h('td', null, kr(m.upfront)),
-        h('td', null, m.o.lease > 0 ? m.o.lease + ' mesi' : 'Indet.')))))),
-    h('p', { class: 'small-note' }, 'Importi in corone danesi (kr). "Restano" è il netto meno affitto, utenze, trasporti e altre spese. "Contanti iniziali" è il deposito più l’eventuale arredamento da comprare.'));
+        h('td', null, m.o.lease > 0 ? m.o.lease + ' m' : '∞')))))));
 }
 
 function watchCard(E) {
-  const items = [];
+  const rows = [];
   for (const m of E.ranked) {
-    const n = m.o.name || 'Senza nome', g = m.geo;
-    if (m.status.level === 'bad') items.push({ level: 'bad', tag: 'Problema', text: `${n}: ${m.status.why}` });
-    if (g && g.db != null && g.db >= 65) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: rumore stradale alto, ${g.db} dB sulla facciata più esposta (valore guida danese per le abitazioni: 58 dB). Controlla se le camere danno sul cortile.` });
-    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: il deposito supera tre mesi di affitto. Le regole danesi in genere lo limitano a tre mesi per i normali affitti privati: controlla il contratto.` });
-    if (m.commit > S.profile.stay) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: ti impegni per ${m.commit} mesi, più dei ${S.profile.stay} previsti. I costi sono calcolati sull’intero periodo.` });
-    if (!g && D) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: senza indirizzo, quindi trasporti, verde e rumore non contano nel punteggio.` });
-    if (m.safety && m.safety.aften < 75) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: a ${m.area} solo il ${m.safety.aften}% dei residenti si sente sicuro la sera e di notte (media città ${D.safetyCity.aften}%). Fai una visita serale.` });
-    if (['servizi', 'vita'].every(k => m.sc[k] == null)) items.push({ level: 'warn', tag: 'Verifica', text: `${n}: il quartiere ${m.area} non ha ancora i tuoi voti su servizi e vita sociale.` });
+    const g = m.geo, f = [];
+    if (m.status.level === 'bad') f.push(['bad', m.left != null && m.left < 0 ? 'Costi oltre il netto' : `Affitto ${pct(m.share)}`]);
+    if (g && g.db != null && g.db >= 65) f.push(['warn', `Rumore ${g.db} dB`]);
+    if (m.safety && m.safety.aften < 75) f.push(['warn', `Sera ${m.safety.aften}% sicuri`]);
+    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) f.push(['warn', 'Deposito > 3 mesi']);
+    if (m.commit > S.profile.stay) f.push(['warn', `Vincolo ${m.commit} mesi`]);
+    if (!g && D) f.push(['warn', 'Senza indirizzo']);
+    if (['servizi', 'vita'].every(k => m.sc[k] == null)) f.push(['warn', 'Voti mancanti']);
+    if (f.length) rows.push(h('div', { class: 'flag-row' }, h('b', null, m.o.name || 'Senza nome'), h('span', { class: 'flags' }, f.map(([l, t]) => flag(l, t)))));
   }
-  if (!items.length) return null;
-  const shown = items.slice(0, 5);
-  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Da ricontrollare')),
-    h('ul', { class: 'notes' }, shown.map(it => h('li', null, statusChip({ level: it.level, label: it.tag }), h('span', null, it.text)))),
-    items.length > shown.length ? h('p', { class: 'small-note' }, `Altri ${items.length - shown.length} punti segnalati.`) : null);
+  if (!rows.length) return null;
+  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Attenzione')), h('div', { class: 'flag-list' }, rows));
 }
 
 function howCard() {
   const P = S.profile;
-  return h('details', { class: 'card how' }, h('summary', null, 'Come viene calcolato e fonti'),
+  return h('details', { class: 'card how' }, h('summary', null, 'Come funziona'),
     h('ul', null,
-      h('li', null, 'Affitto e costi: 5 stelle se il costo mensile tutto incluso è al massimo il 25% del netto, 0 stelle dal 55% in su. Senza stipendio il confronto è relativo tra le opzioni.'),
-      h('li', null, 'Metro e treno: 5 stelle entro 300 m dalla stazione di metro o S-tog più vicina, una stella in meno ogni 300 m, minimo 1.'),
-      h('li', null, 'Verde: 5 stelle entro 200 m da un parco di almeno 1 ettaro, una stella in meno ogni 250 m, minimo 1.'),
-      h('li', null, 'Tranquillità: rumore stradale Lden all’indirizzo (abitazione più esposta). 5 stelle a 50 dB, una in meno ogni 5 dB, minimo 1. Il valore guida danese per le abitazioni è 58 dB.'),
-      h('li', null, 'Tragitto: 5 stelle fino a 10 minuti di sola andata, 0 stelle da 60 minuti in su.'),
-      h('li', null, 'Sicurezza: media tra la quota di residenti che si sente sicura nel quartiere e quella che si sente sicura la sera, dall’indagine 2025 del Comune nei suoi 13 quartieri. 70% vale 1 stella, 90% vale 5 stelle. I reati denunciati per 1.000 abitanti sono mostrati come contesto ma non entrano nelle stelle, perché nelle zone centrali e della movida contano anche i reati contro visitatori e pendolari.'),
-      h('li', null, 'Servizi, vita sociale e qualità dell’alloggio, più la sicurezza a Frederiksberg: le stelle che assegni tu. Gli indicatori senza voto sono esclusi dalla media.'),
-      h('li', null, 'Totale: media pesata secondo le priorità (Ignora 0, Bassa 1, Media 2, Alta 3).'),
-      h('li', null, `Costo mensile tutto incluso = affitto + utenze − servizi inclusi + trasporti + valore del tempo di viaggio (${P.timePct}% del netto orario, ${P.days} giorni a settimana) + arredamento distribuito sui mesi di impegno. Il deposito è restituibile, quindi non è un costo.`),
-      h('li', null, 'Sostenibilità: affitto e utenze fino al 30% del netto è sostenibile, fino al 40% al limite, oltre o con costi superiori al netto non sostenibile.'),
-      h('li', null, `Fonti: Københavns Kommune, dati aperti (rumore stradale 2022 per abitazione, quartieri, stazioni, parchi) e Tryghedsundersøgelse 2025 (sondaggio Epinion, dati sui reati della polizia di Copenaghen). Indirizzi e confini di Frederiksberg: © OpenStreetMap contributors (ODbL); per Frederiksberg il rumore non è disponibile. ${D ? `Dati elaborati il ${D.meta.built}: ${nf.format(D.meta.streets)} vie, ${nf.format(D.meta.addresses)} indirizzi.` : ''}`)));
+      h('li', null, 'Costi: 5 stelle fino al 25% del netto, 0 dal 55%.'),
+      h('li', null, 'Metro: 5 stelle entro 300 m, −1 ogni 300 m. Verde: 5 entro 200 m, −1 ogni 250 m. Quiete: 5 a 50 dB, −1 ogni 5 dB.'),
+      h('li', null, 'Sicurezza: indagine 2025 del Comune, media tra sicuri di giorno e di sera. 70% = 1 stella, 90% = 5.'),
+      h('li', null, 'Tragitto: 5 stelle a 10 min, 0 a 60 min. Totale: media pesata (Priorità).'),
+      h('li', null, `Kr/mese = affitto + utenze − servizi inclusi + trasporti + tempo di viaggio (${P.timePct}% del netto orario) + arredi sul vincolo.`),
+      h('li', null, 'Affitto/netto: ✓ fino al 30%, ! fino al 40%, ✕ oltre o con costi sopra il netto.'),
+      h('li', null, `Fonti: Københavns Kommune (rumore 2022, quartieri, stazioni, parchi, Tryghedsundersøgelse 2025), © OpenStreetMap contributors (Frederiksberg). ${D ? `Dati del ${D.meta.built}.` : ''}`)));
 }
 
 function renderResults() {
