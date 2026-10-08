@@ -1,20 +1,21 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Copenhagen Rental Evaluator</title>
+<title>Valutatore affitti Copenaghen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: inputs on the left, one verdict + one chart + one table on the right; stacks with an Inputs/Results switch on phones. */
+/* Layout: dati a sinistra; verdetto, mappa e due tabelle a destra; su telefono una colonna con selettore Dati/Risultati. */
 :root {
   --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --bg: #f2f1ed; --surface: #fcfcfb; --surface-2: #f5f4f0; --line: #e4e2dc; --line-2: #c9c6be;
   --ink: #161615; --ink-2: #52514e; --ink-3: #6b6a65;
   --accent: #256abf; --accent-hover: #184f95; --on-accent: #ffffff; --accent-soft: #e3eefb;
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --star: #c98500; --star-off: #dcd9d1;
+  --map-land: #ecebe6; --map-park: #cfe5d3; --map-water: #dde9f4;
   --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
 }
 @media (prefers-color-scheme: dark) {
@@ -22,7 +23,8 @@
     --bg: #121211; --surface: #1a1a19; --surface-2: #222220; --line: #2d2d2b; --line-2: #46463f;
     --ink: #f4f4f1; --ink-2: #c3c2b7; --ink-3: #9a998f;
     --accent: #3987e5; --accent-hover: #6da7ec; --on-accent: #0b0b0b; --accent-soft: #1d2b3f;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --star: #f0b429; --star-off: #3a3a36;
+    --map-land: #24241f; --map-park: #1f3a27; --map-water: #18222d;
     color-scheme: dark;
   }
 }
@@ -30,7 +32,8 @@
   --bg: #121211; --surface: #1a1a19; --surface-2: #222220; --line: #2d2d2b; --line-2: #46463f;
   --ink: #f4f4f1; --ink-2: #c3c2b7; --ink-3: #9a998f;
   --accent: #3987e5; --accent-hover: #6da7ec; --on-accent: #0b0b0b; --accent-soft: #1d2b3f;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --star: #f0b429; --star-off: #3a3a36;
+  --map-land: #24241f; --map-park: #1f3a27; --map-water: #18222d;
   color-scheme: dark;
 }
 
@@ -39,10 +42,10 @@
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 400 14px/1.45 var(--font); -webkit-font-smoothing: antialiased; }
 button, input, select { font: inherit; color: inherit; }
-h1, h2, p { margin: 0; }
+h1, h2, h3, p { margin: 0; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
-/* top bar */
+/* barra superiore */
 .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line); }
 .topbar-in { max-width: 1240px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .brand { flex: 1 1 260px; min-width: 0; }
@@ -52,7 +55,7 @@ h1, h2, p { margin: 0; }
 .viewtabs { display: none; width: 100%; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 8px; border: 1px solid var(--line); }
 .viewtabs button { flex: 1; border: 0; background: transparent; padding: 7px; border-radius: 6px; font-weight: 500; color: var(--ink-2); cursor: pointer; }
 .viewtabs button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; line-height: 1.3; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; line-height: 1.3; white-space: nowrap; flex: none; }
 .btn:hover { border-color: var(--ink-3); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
@@ -60,14 +63,13 @@ h1, h2, p { margin: 0; }
 .btn.ghost:hover { background: var(--surface-2); color: var(--ink); }
 .btn.danger { color: var(--crit); }
 .btn.sm { padding: 3px 8px; font-size: 12px; }
-.btn { white-space: nowrap; flex: none; }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 .sample-note { max-width: 1240px; margin: 0 auto; padding: 0 16px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ink-2); font-size: 12.5px; }
 .sample-note .pill { background: var(--accent-soft); color: var(--ink); border-radius: 99px; padding: 2px 10px; font-weight: 500; }
 
 /* layout */
 .shell { max-width: 1240px; margin: 0 auto; padding: 16px 16px 56px; }
-.cols { display: grid; grid-template-columns: minmax(320px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.cols { display: grid; grid-template-columns: minmax(300px, 370px) minmax(0, 1fr); gap: 20px; align-items: start; }
 .inputs { position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); max-height: calc(100dvh - 80px); overflow-y: auto; scrollbar-gutter: stable; padding-right: 4px; }
 .stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .results { min-width: 0; }
@@ -80,12 +82,12 @@ h1, h2, p { margin: 0; }
 }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
 .card h2 { font-size: 15px; font-weight: 650; }
-.card .desc { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
 .card-head { margin-bottom: 14px; }
 .eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; font-weight: 600; color: var(--ink-3); }
 
-/* inputs */
+/* campi */
 .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+.fields.addr { grid-template-columns: minmax(0, 1fr) 84px; }
 .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .field.wide { grid-column: 1 / -1; }
 .field > label { font-size: 12px; color: var(--ink-2); font-weight: 500; }
@@ -100,6 +102,16 @@ h1, h2, p { margin: 0; }
 details.fine { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
 details.fine > summary { cursor: pointer; font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
 details.fine .fields { margin-top: 12px; }
+details.card > summary { cursor: pointer; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; list-style: none; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary h2::before { content: "▸ "; color: var(--ink-3); }
+details.card[open] > summary h2::before { content: "▾ "; }
+
+.loc { font-size: 12.5px; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+.loc b { color: var(--ink); font-weight: 600; }
+.loc .row { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.loc .sugg { display: flex; flex-wrap: wrap; gap: 6px; }
+.loc .warn { color: var(--ink); }
 
 .opt-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
 .opt { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; }
@@ -113,56 +125,68 @@ details.fine .fields { margin-top: 12px; }
 .opt-body { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
 .opt-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-/* status chips */
+/* stelle */
+.star-rows { display: flex; flex-direction: column; gap: 8px; }
+.star-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.star-row .sl { min-width: 0; font-size: 13px; }
+.stars.stars-in { font-size: 24px; letter-spacing: 3px; cursor: pointer; flex: none; border-radius: 4px; }
+.stars-in:hover .fg { filter: brightness(1.1); }
+.area-block { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.area-block:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.area-block h3 { font-size: 13.5px; font-weight: 650; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
+.area-block h3 span { font-weight: 400; color: var(--ink-3); font-size: 12px; }
+.stars { position: relative; display: inline-block; line-height: 1; letter-spacing: 1px; font-size: 16px; vertical-align: -2px; white-space: nowrap; }
+.stars .bg { color: var(--star-off); }
+.stars .fg { position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; color: var(--star); }
+.stars.lg { font-size: 34px; letter-spacing: 3px; }
+.sv { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.sv .n { font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: 12.5px; min-width: 1.8em; text-align: left; }
+.na { color: var(--ink-3); font-size: 12px; font-style: italic; }
+.key-tag { font-size: 11px; font-weight: 600; background: var(--accent-soft); color: var(--ink); border-radius: 99px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+.src-tag { font-size: 11px; color: var(--ink-3); margin-left: 6px; white-space: nowrap; }
+.prio { display: flex; flex-direction: column; gap: 8px; }
+.prio-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; align-items: center; font-size: 13px; }
+.prio-row select { height: 30px; }
+
+/* stati */
 .status { --c: var(--good); display: inline-flex; align-items: center; gap: 5px; border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: color-mix(in srgb, var(--c) 12%, var(--surface)); color: var(--ink); border-radius: 99px; padding: 1px 9px 1px 7px; font-size: 12px; font-weight: 550; white-space: nowrap; }
 .status i { font-style: normal; color: var(--c); font-weight: 800; }
 .status.warn { --c: var(--warn); }
 .status.bad { --c: var(--crit); }
 
-/* verdict */
+/* verdetto */
 .verdict { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: center; }
 .v-name { font-size: 26px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; margin: 4px 0 6px; overflow-wrap: anywhere; }
 .v-line { color: var(--ink-2); display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
 .hero { text-align: right; line-height: 1; }
 .hero .n { font-size: 56px; font-weight: 700; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-.hero .cap { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+.hero .of { font-size: 16px; color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+.hero .cap { margin-top: 8px; }
 @media (max-width: 560px) { .verdict { grid-template-columns: minmax(0, 1fr); } .hero { text-align: left; } }
 
-/* chart */
-.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 14px; font-size: 12.5px; color: var(--ink-2); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
-.hbar { display: grid; grid-template-columns: minmax(84px, 170px) minmax(0, 1fr); column-gap: 14px; row-gap: 14px; position: relative; }
-.hb-label { grid-column: 1; align-self: center; min-width: 0; font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hb-grid { grid-column: 2; position: relative; pointer-events: none; }
-.hb-grid .gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
-.hb-bar { grid-column: 2; display: flex; align-items: center; position: relative; z-index: 1; min-height: 24px; }
-.bar { display: flex; gap: 2px; height: 22px; flex: none; }
-.bar .seg { height: 100%; min-width: 2px; }
-.bar .seg:last-child { border-radius: 0 4px 4px 0; }
-.bar .seg:hover, .bar .seg:focus-visible { filter: brightness(1.12); }
-.bar-total { margin-left: 8px; font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.hb-axis { grid-column: 2; position: relative; height: 16px; margin-top: -6px; }
-.hb-axis span { position: absolute; font-size: 11px; color: var(--ink-3); transform: translateX(-50%); font-variant-numeric: tabular-nums; }
-.hb-axis span:first-child { transform: none; }
-.hb-axis span:last-child { transform: translateX(-100%); }
-.tip { position: fixed; z-index: 60; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; box-shadow: 0 6px 20px rgba(0,0,0,.18); font-size: 12.5px; min-width: 150px; max-width: 280px; }
-.tip .th { font-weight: 600; margin-bottom: 4px; }
-.tip .tr { display: grid; grid-template-columns: 10px auto minmax(0, 1fr); gap: 7px; align-items: center; padding: 1px 0; }
-.tip .tr .k { height: 10px; width: 10px; border-radius: 2px; }
-.tip .tr strong { font-variant-numeric: tabular-nums; }
-.tip .tr .l { color: var(--ink-2); }
-.tip .tn { color: var(--ink-3); margin-top: 4px; font-size: 11.5px; }
-details.breakdown { margin-top: 14px; }
-details.breakdown > summary { cursor: pointer; font-size: 12.5px; color: var(--accent); }
+/* mappa */
+.map-wrap { position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: var(--map-water); }
+.map-wrap svg { display: block; width: 100%; }
+.map-wrap.placing { cursor: crosshair; outline: 2px solid var(--accent); }
+.map-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--accent-soft); border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; font-size: 13px; }
+.map-legend { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px 16px; font-size: 12.5px; }
+.map-legend li { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.map-legend .pin { flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.map-legend span.t { min-width: 0; }
+.map-legend small { color: var(--ink-3); display: block; }
+.map-key { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+.map-key i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 
-/* tables */
+/* tabelle */
 .scroll { overflow-x: auto; max-width: 100%; }
 table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .tbl th, .tbl td { padding: 9px 8px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tbl th:first-child, .tbl td:first-child { text-align: left; }
 .tbl thead th { color: var(--ink-2); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--line-2); vertical-align: bottom; }
-.tbl tbody th { font-weight: 600; white-space: normal; min-width: 130px; }
+.tbl thead th small { display: block; font-weight: 400; color: var(--ink-3); }
+.tbl tbody th { font-weight: 600; white-space: normal; min-width: 120px; }
+.tbl.stars-tbl td { text-align: left; }
+.tbl td small { display: block; color: var(--ink-3); font-size: 11.5px; }
 .tbl td.best { font-weight: 650; }
 .tbl td.best::before { content: "●"; color: var(--accent); font-size: 8px; margin-right: 6px; vertical-align: 2px; }
 .tbl td.neg { color: var(--crit); font-weight: 600; }
@@ -174,52 +198,81 @@ table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .notes .status { flex: none; margin-top: 1px; }
 .empty { padding: 24px 16px; text-align: center; color: var(--ink-2); }
 details.how summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink-2); }
-details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); max-width: 78ch; }
+details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); max-width: 80ch; }
 .small-note { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
-@media (max-width: 560px) { .brand p { display: none; } }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+.opt-head .t .stars { font-size: 14px; letter-spacing: 1px; vertical-align: -2px; margin-left: 4px; }
+.opt-head .t .stars .bg { color: var(--star-off); }
+.opt-head .t .stars .fg { color: var(--star); }
+.star-row > .stars { font-size: 24px; letter-spacing: 3px; flex: none; }
+.status.ico { padding: 0; width: 20px; height: 20px; justify-content: center; font-size: 12px; font-weight: 800; color: var(--c); }
+.loc { gap: 8px; }
+.loc-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.loc-top span { color: var(--ink-3); font-size: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 1px 9px; font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.fact b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.loc-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.v-line .num { font-variant-numeric: tabular-nums; color: var(--ink); }
+.hero .cap { margin: 0 0 8px; }
+.hero .of { margin-left: 6px; }
+.tbl.stars-tbl td, .tbl.stars-tbl th:not(:first-child) { text-align: center; }
+.tbl.stars-tbl .stars { font-size: 15px; letter-spacing: 0; }
+.flag-list { display: flex; flex-direction: column; gap: 10px; }
+.flag-row { display: flex; gap: 6px 14px; align-items: center; flex-wrap: wrap; }
+.flag-row b { font-weight: 600; font-size: 13px; min-width: 150px; }
+.flags { display: flex; gap: 6px; flex-wrap: wrap; }
+.map-legend { margin-top: 10px; }
+@media (max-width: 560px) {
+  .flag-row b { min-width: 100%; }
+  .tbl th, .tbl td { padding: 8px 5px; }
+  .tbl tbody th { min-width: 88px; font-size: 12.5px; }
+  .tbl.stars-tbl .stars { font-size: 12px; }
+  .rank { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } .stars-in button:hover { transform: none; } }
 </style>
 </head>
 <body>
 <header class="topbar">
   <div class="topbar-in">
     <div class="brand">
-      <h1>Copenhagen Rental Evaluator</h1>
-      <p>Compare the places that already meet your must-haves on what they really cost you.</p>
+      <h1>Valutatore affitti Copenaghen</h1>
     </div>
     <div class="top-actions">
-      <button class="btn" id="btn-sample" type="button">Load sample</button>
-      <button class="btn" id="btn-clear" type="button">Clear</button>
-      <button class="btn" id="btn-theme" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+      <button class="btn" id="btn-sample" type="button">Carica esempio</button>
+      <button class="btn" id="btn-clear" type="button">Svuota</button>
+      <button class="btn" id="btn-theme" type="button" aria-label="Passa dal tema chiaro a quello scuro" title="Cambia tema">
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
       </button>
     </div>
-    <div class="viewtabs" role="group" aria-label="Switch view">
-      <button type="button" id="tab-inputs" aria-pressed="false">Inputs</button>
-      <button type="button" id="tab-results" aria-pressed="true">Results</button>
+    <div class="viewtabs" role="group" aria-label="Cambia vista">
+      <button type="button" id="tab-inputs" aria-pressed="false">Dati</button>
+      <button type="button" id="tab-results" aria-pressed="true">Risultati</button>
     </div>
   </div>
   <div class="sample-note" id="sample-note" hidden>
-    <span class="pill">Sample data</span>
-    <span>Illustrative figures. Replace them with your shortlist.</span>
-    <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Dismiss</button>
+    <span class="pill">Dati di esempio</span>
+    <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Chiudi</button>
   </div>
 </header>
 
 <div class="shell" id="shell" data-view="results">
   <div class="cols">
-    <aside class="inputs" id="inputs" aria-label="Inputs"></aside>
+    <aside class="inputs" id="inputs" aria-label="Dati"></aside>
     <main class="results stack" id="results" aria-live="polite"></main>
   </div>
 </div>
-<div id="tip" class="tip" role="tooltip" hidden></div>
+<datalist id="street-list"></datalist>
 
+<script src="data/cph-data.js"></script>
 <script>
 (function () {
 'use strict';
 
-/* ---------- helpers ---------- */
-const KEY = 'copenhagen-rental-evaluator-v2';
+/* ---------- utilità ---------- */
+const KEY = 'copenhagen-rental-evaluator-v4';
+const OLD_KEYS = ['copenhagen-rental-evaluator-v3', 'copenhagen-rental-evaluator-v2'];
 const THEME_KEY = 'copenhagen-rental-evaluator-theme';
 const MAX_OPTIONS = 8;
 
@@ -242,28 +295,186 @@ function h(tag, attrs, ...kids) {
 const $ = s => document.querySelector(s);
 const uid = () => 'o' + Math.random().toString(36).slice(2, 8);
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
-const nf = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 });
+const nf = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0 });
+const nf1 = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const kr = n => (n < 0 ? '−' : '') + nf.format(Math.abs(Math.round(n)));
-const krc = n => Math.abs(n) >= 1000 ? (Math.round(n / 100) / 10) + 'k' : String(Math.round(n));
 const pct = x => Math.round(x * 100) + '%';
+const metres = d => d < 1000 ? `${Math.round(d / 10) * 10} m` : `${nf1.format(d / 1000)} km`;
 const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
-const nz = (v, d) => (v !== '' && v !== null && Number.isFinite(+v) ? +v : d);
+const nz = (v, d) => (v !== '' && v !== null && v !== undefined && Number.isFinite(+v) ? +v : d);
 
-/* ---------- state ---------- */
-function baseProfile() { return { takeHome: 0, otherCosts: 0, stay: 12, days: 4, timePct: 50, furnCost: 18000, notice: 3 }; }
-function blankOption() {
-  return { id: uid(), name: 'New option', rent: 0, utils: 0, deposit: 0, lease: 12, furnished: true, commuteMin: 20, fare: 0, perks: 0 };
+/* ---------- dati geografici ---------- */
+const D = window.CPH_DATA || null;
+const E5 = 1e5;
+const LAT0 = 55.68, LON0 = 12.56, KX = Math.cos(LAT0 * Math.PI / 180) * 111320, KY = 110574;
+const toXY = (lat, lon) => [(lon - LON0) * KX, (lat - LAT0) * KY];
+const norm = s => String(s || '').toLowerCase().replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/å/g, 'a')
+  .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/aa/g, 'a').replace(/[^a-z0-9]+/g, ' ').trim();
+const OUTSIDE = 'Fuori Copenaghen';
+const AREAS = (D ? D.districts.map(d => d.name) : ['Amager Vest', 'Amager Øst', 'Bispebjerg', 'Brønshøj-Husum', 'Christianshavn', 'Frederiksberg', 'Indre By',
+  'Indre Nørrebro', 'Kongens Enghave', 'Valby', 'Vanløse', 'Vesterbro', 'Ydre Nørrebro', 'Østerbro']).concat([OUTSIDE]);
+const SAFE = (D && D.safety) || {};
+/* Sicurezza dall'indagine del Comune: media tra "sicuri nel quartiere" e "sicuri la sera", 70% = 1 stella, 90% = 5 stelle */
+const safetyStars = area => { const v = SAFE[area]; return v ? clamp(1 + 4 * ((v.tryg + v.aften) / 2 - 70) / 20, 1, 5) : null; };
+const STREETS = D ? Object.keys(D.addr) : [];
+const STREET_BY_NORM = new Map(STREETS.map(s => [norm(s), s]));
+const PARKS = D ? D.parks.map(poly => poly[0].map(([x, y]) => toXY(y / E5, x / E5))) : [];
+const STATIONS = D ? D.stations.map(([name, t, la, lo]) => ({ name, type: { M: 'Metro', S: 'S-tog', T: 'Stazione' }[t], lat: la / E5, lon: lo / E5 })) : [];
+const streetCache = new Map();
+
+function streetRows(name) {
+  if (!streetCache.has(name)) {
+    const raw = D && D.addr[name];
+    streetCache.set(name, raw ? raw.split(';').map(t => { const [hn, la, lo, db] = t.split(','); return { hn, lat: +la / E5, lon: +lo / E5, db: +db < 0 ? null : +db }; }) : null);
+  }
+  return streetCache.get(name);
 }
-function blankState() { const o = blankOption(); o.name = 'Option 1'; return { profile: baseProfile(), options: [o], sample: false }; }
+function suggestStreets(q) {
+  const n = norm(q);
+  if (n.length < 2) return [];
+  const pre = [], sub = [];
+  for (const [k, v] of STREET_BY_NORM) {
+    if (k.startsWith(n)) pre.push(v); else if (sub.length < 6 && k.includes(n)) sub.push(v);
+    if (pre.length >= 6) break;
+  }
+  if (pre.length || sub.length) return pre.concat(sub).slice(0, 6);
+  // nessuna corrispondenza: suggerisci le vie con al massimo 2 errori di battitura
+  const scored = [];
+  for (const [k, v] of STREET_BY_NORM) { const d = editDistance(n, k, 2); if (d <= 2) scored.push([d, v]); }
+  return scored.sort((a, b) => a[0] - b[0]).slice(0, 6).map(x => x[1]);
+}
+function editDistance(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      rowMin = Math.min(rowMin, cur[j]);
+    }
+    if (rowMin > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+function inRing(px, py, ring) {
+  let c = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+function districtOf(lat, lon) {
+  if (!D) return null;
+  const px = lon * E5, py = lat * E5;
+  for (const d of D.districts) for (const poly of d.rings) if (inRing(px, py, poly[0])) return d.name;
+  return OUTSIDE;
+}
+function segDist(px, py, ax, ay, bx, by) {
+  const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy;
+  const t = l ? clamp(((px - ax) * dx + (py - ay) * dy) / l, 0, 1) : 0;
+  return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+}
+function nearestPark(lat, lon) {
+  const [px, py] = toXY(lat, lon);
+  let best = Infinity;
+  for (const ring of PARKS) {
+    if (inRing(px, py, ring)) return 0;
+    for (let i = 1; i < ring.length; i++) best = Math.min(best, segDist(px, py, ring[i - 1][0], ring[i - 1][1], ring[i][0], ring[i][1]));
+  }
+  return best;
+}
+function nearestStation(lat, lon) {
+  const [px, py] = toXY(lat, lon);
+  let best = null;
+  for (const s of STATIONS) {
+    const [sx, sy] = toXY(s.lat, s.lon), d = Math.hypot(px - sx, py - sy);
+    if (!best || d < best.d) best = { ...s, d };
+  }
+  return best;
+}
+/* Posizione di un'opzione: punto sulla mappa, numero civico esatto, civico più vicino o centro della via. */
+function locate(o) {
+  if (o.pinned && o.lat && o.lon) return { lat: o.lat, lon: o.lon, db: null, label: 'Punto scelto sulla mappa', precision: 'mappa' };
+  if (!o.street || !D) return null;
+  const name = STREET_BY_NORM.get(norm(o.street));
+  if (!name) return null;
+  const rows = streetRows(name);
+  const want = norm(o.hn).replace(/ /g, '');
+  if (want) {
+    const exact = rows.find(r => norm(r.hn).replace(/ /g, '') === want);
+    if (exact) return { lat: exact.lat, lon: exact.lon, db: exact.db, label: `${name} ${exact.hn}`, precision: 'civico', street: name };
+    const n = parseInt(want, 10);
+    if (n) {
+      let near = null;
+      for (const r of rows) { const d = Math.abs((parseInt(r.hn, 10) || 0) - n); if (!near || d < near.d) near = { d, r }; }
+      if (near) return { lat: near.r.lat, lon: near.r.lon, db: near.r.db, label: `${name} ${near.r.hn}`, precision: 'vicino', street: name, asked: o.hn };
+    }
+  }
+  const mid = rows[Math.floor(rows.length / 2)];
+  const dbs = rows.map(r => r.db).filter(x => x != null).sort((a, b) => a - b);
+  return { lat: mid.lat, lon: mid.lon, db: dbs.length ? dbs[Math.floor(dbs.length / 2)] : null, label: name, precision: 'via', street: name };
+}
+const geoCache = new Map();
+function geoFor(o) {
+  const key = `${o.pinned ? o.lat + ',' + o.lon : ''}|${norm(o.street)}|${norm(o.hn)}`;
+  if (!geoCache.has(key)) {
+    const loc = locate(o);
+    geoCache.set(key, loc ? { ...loc, district: districtOf(loc.lat, loc.lon), station: nearestStation(loc.lat, loc.lon), park: nearestPark(loc.lat, loc.lon) } : null);
+  }
+  return geoCache.get(key);
+}
+
+/* ---------- criteri ---------- */
+const AREA_CRIT = [
+  ['sicurezza', 'Sicurezza', 'Criminalità e percezione di sicurezza, anche la sera.'],
+  ['servizi', 'Servizi', 'Supermercati, medico, palestre, negozi.'],
+  ['vita', 'Vita sociale', 'Ristoranti, bar, cultura.'],
+];
+const AREA_KEYS = AREA_CRIT.map(c => c[0]);
+const ZONE_KEYS = ['sicurezza', 'trasporti', 'verde', 'quiete', 'servizi', 'vita'];
+const CRIT = [
+  ['costi', 'Affitto e costi', 3, 'calcolato'],
+  ['sicurezza', 'Sicurezza', 3, 'indagine'],
+  ['trasporti', 'Metro e treno', 2, 'dati'],
+  ['pendolarismo', 'Tragitto casa-lavoro', 2, 'calcolato'],
+  ['alloggio', "Qualità dell'alloggio", 2, 'tuo voto'],
+  ['verde', 'Verde', 1, 'dati'],
+  ['quiete', 'Tranquillità', 1, 'dati'],
+  ['servizi', 'Servizi', 1, 'tuo voto'],
+  ['vita', 'Vita sociale', 1, 'tuo voto'],
+];
+const WEIGHT_OPTS = [['0', 'Ignora'], ['1', 'Bassa'], ['2', 'Media'], ['3', 'Alta']];
+const AREA_ALIASES = { 'Vesterbro-Kongens Enghave': ['Vesterbro', 'Kongens Enghave'], 'Sydhavn': ['Kongens Enghave'], 'Nørrebro': ['Indre Nørrebro', 'Ydre Nørrebro'],
+  'Amager Vest / Ørestad': ['Amager Vest'], 'Bispebjerg / Nordvest': ['Bispebjerg'] };
+const aliasOf = name => AREA_ALIASES[name] || [name];
+
+/* ---------- stato ---------- */
+function baseProfile() { return { takeHome: 0, otherCosts: 0, stay: 12, days: 4, timePct: 50, furnCost: 18000, notice: 3 }; }
+function baseWeights() { return Object.fromEntries(CRIT.map(([k, , w]) => [k, w])); }
+function blankRatings() { return Object.fromEntries(AREA_KEYS.map(k => [k, 0])); }
+function blankOption() {
+  return { id: uid(), name: 'Nuova opzione', street: '', hn: '', lat: 0, lon: 0, pinned: false, area: AREAS[0],
+    rent: 0, utils: 0, deposit: 0, lease: 12, furnished: true, commuteMin: 20, fare: 0, perks: 0, quality: 0 };
+}
+function blankState() { const o = blankOption(); o.name = 'Opzione 1'; return { profile: baseProfile(), weights: baseWeights(), areas: {}, options: [o], sample: false }; }
 function sampleState() {
   const mk = o => ({ ...blankOption(), ...o });
   return {
     sample: true,
     profile: { ...baseProfile(), takeHome: 38000, otherCosts: 5000 },
+    weights: baseWeights(),
+    areas: {
+      'Indre Nørrebro': { sicurezza: 0, servizi: 5, vita: 5 },
+      'Østerbro': { sicurezza: 0, servizi: 4, vita: 3 },
+      'Amager Vest': { sicurezza: 0, servizi: 3, vita: 2.5 },
+    },
     options: [
-      mk({ name: 'Nørrebro 2-room', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230 }),
-      mk({ name: 'Østerbro furnished flat', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400 }),
-      mk({ name: 'Ørestad new-build with gym', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580 }),
+      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3.5 }),
+      mk({ name: 'Arredato a Østerbro', street: 'Willemoesgade', hn: '20', area: 'Østerbro', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400, quality: 4 }),
+      mk({ name: 'Nuova costruzione, Ørestad', street: 'Ørestads Boulevard', hn: '55A', area: 'Amager Vest', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580, quality: 5 }),
     ],
   };
 }
@@ -273,27 +484,52 @@ function normalize(raw) {
   const P = baseProfile(), rp = raw.profile || {};
   for (const k of Object.keys(P)) P[k] = Math.max(0, nz(rp[k], P[k]));
   P.stay = Math.max(1, P.stay);
+  const W = baseWeights(), rw = raw.weights || {};
+  for (const k of Object.keys(W)) W[k] = clamp(Math.round(nz(rw[k], W[k])), 0, 3);
+  const areas = {};
+  const ra = raw.areas && typeof raw.areas === 'object' ? raw.areas : {};
+  for (const [name, r] of Object.entries(ra)) {
+    for (const a of aliasOf(name)) {
+      if (!AREAS.includes(a) || !r) continue;
+      areas[a] = areas[a] || blankRatings();
+      for (const k of AREA_KEYS) areas[a][k] = Math.max(areas[a][k], clamp(Math.round(nz(r[k], 0) * 2) / 2, 0, 5));
+    }
+  }
   const opts = (Array.isArray(raw.options) && raw.options.length ? raw.options : b.options).slice(0, MAX_OPTIONS).map((r, i) => {
     r = r || {};
     const o = blankOption();
     o.id = String(r.id || o.id).slice(0, 20);
-    o.name = String(r.name ?? 'Option ' + (i + 1)).slice(0, 80);
+    o.name = String(r.name ?? 'Opzione ' + (i + 1)).slice(0, 80);
+    o.street = String(r.street || '').slice(0, 80);
+    o.hn = String(r.hn || '').slice(0, 10);
+    const a = aliasOf(r.area)[0];
+    o.area = AREAS.includes(a) ? a : AREAS[0];
     for (const k of ['rent', 'utils', 'deposit', 'lease', 'commuteMin', 'fare', 'perks']) o[k] = Math.max(0, nz(r[k], o[k]));
+    o.lat = nz(r.lat, 0); o.lon = nz(r.lon, 0); o.pinned = !!r.pinned && !!o.lat && !!o.lon;
+    o.quality = clamp(Math.round(nz(r.quality, 0) * 2) / 2, 0, 5);
     o.furnished = r.furnished !== false;
     return o;
   });
   const seen = new Set(); opts.forEach(o => { while (seen.has(o.id)) o.id += 'x'; seen.add(o.id); });
-  return { profile: P, options: opts, sample: !!raw.sample };
+  return { profile: P, weights: W, areas, options: opts, sample: !!raw.sample };
 }
-function load() { try { const t = localStorage.getItem(KEY); if (t) return normalize(JSON.parse(t)); } catch (e) { /* ignore */ } return null; }
+function load() {
+  for (const k of [KEY, ...OLD_KEYS]) {
+    try { const t = localStorage.getItem(k); if (t) return normalize(JSON.parse(t)); } catch (e) { /* ignora */ }
+  }
+  return null;
+}
 let saveTimer = 0;
-function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }, 250); }
+function flush() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignora */ } }
+function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { saveTimer = 0; flush(); }, 250); }
+window.addEventListener('pagehide', () => { if (saveTimer) { clearTimeout(saveTimer); flush(); } });
 
-window.addEventListener('pagehide', () => { if (saveTimer) { clearTimeout(saveTimer); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } } });
 let S = load() || sampleState();
-const ui = { open: S.options[0] && S.options[0].id };
+const ui = { open: S.options[0] && S.options[0].id, placing: null };
+const ratingsFor = area => (S.areas[area] = S.areas[area] || blankRatings());
+const areaOf = o => { const g = geoFor(o); return g ? g.district : o.area; };
 
-/* ---------- model ---------- */
+/* ---------- modello ---------- */
 function compute(o, S) {
   const P = S.profile, income = P.takeHome;
   const stay = Math.max(1, P.stay);
@@ -306,244 +542,414 @@ function compute(o, S) {
   const hours = o.commuteMin * 2 / 60 * P.days * 52 / 12;
   const hourly = income > 0 ? income / (37 * 52 / 12) : 0;
   const time = hours * hourly * P.timePct / 100;
-  const commute = o.fare + time;
-  const allIn = housingNet + commute + setup;
+  const allIn = housingNet + o.fare + time + setup;
   const cash = housing + o.fare;
   const share = income > 0 ? housing / income : null;
   const left = income > 0 ? income - P.otherCosts - cash : null;
   let level = 'good', why = '';
   if (share != null) {
-    if (left < 0) { level = 'bad'; why = `Monthly costs exceed your take-home by ${kr(-left)} kr.`; }
-    else if (share > 0.4) { level = 'bad'; why = `Rent and utilities take ${pct(share)} of take-home, above 40%.`; }
-    else if (share > 0.3) { level = 'warn'; why = `Rent and utilities take ${pct(share)} of take-home, above 30%.`; }
+    if (left < 0) { level = 'bad'; why = `i costi mensili superano il tuo netto di ${kr(-left)} kr.`; }
+    else if (share > 0.4) { level = 'bad'; why = `affitto e utenze assorbono il ${pct(share)} del netto, oltre il 40%.`; }
+    else if (share > 0.3) { level = 'warn'; why = `affitto e utenze assorbono il ${pct(share)} del netto, oltre il 30%.`; }
   }
   return {
-    o, ready: o.rent > 0, housing, housingNet, commute, time, setup, allIn, cash, share, left,
-    upfront: o.deposit + furn, commit, H, hours,
-    status: { level, why, label: { good: 'Comfortable', warn: 'Stretched', bad: 'Not sustainable' }[level] },
+    o, ready: o.rent > 0, geo: geoFor(o), area: areaOf(o), housing, allIn, cash, share, left,
+    upfront: o.deposit + furn, commit, H,
+    status: { level, why, label: { good: 'Sostenibile', warn: 'Al limite', bad: 'Non sostenibile' }[level] },
   };
+}
+function weighted(sc, keys, W) {
+  let tw = 0, ts = 0;
+  for (const k of keys) { const w = W[k]; if (sc[k] != null && w > 0) { tw += w; ts += w * sc[k]; } }
+  return tw > 0 ? ts / tw : null;
 }
 function evaluate(S) {
   const list = S.options.map(o => compute(o, S));
   const ranked = list.filter(m => m.ready);
-  ranked.sort((a, b) => (a.status.level === 'bad') - (b.status.level === 'bad') || a.allIn - b.allIn);
+  const costs = ranked.map(m => m.allIn), cmin = Math.min(...costs), cmax = Math.max(...costs);
+  for (const m of ranked) {
+    const o = m.o, g = m.geo, sc = {}, r = S.areas[m.area] || {};
+    const income = S.profile.takeHome;
+    sc.costi = income > 0 ? clamp(5 * (0.55 - m.allIn / income) / 0.30, 0, 5)
+      : (cmax > cmin ? 1 + 4 * (cmax - m.allIn) / (cmax - cmin) : 5);
+    sc.pendolarismo = clamp(5 * (60 - o.commuteMin) / 50, 0, 5);
+    sc.trasporti = g ? clamp(5 - (g.station.d - 300) / 300, 1, 5) : null;
+    sc.verde = g ? clamp(5 - (g.park - 200) / 250, 1, 5) : null;
+    sc.quiete = g && g.db != null ? clamp(5 - (g.db - 50) / 5, 1, 5) : null;
+    for (const k of AREA_KEYS) sc[k] = r[k] > 0 ? r[k] : null;
+    m.safety = SAFE[m.area] || null;
+    if (m.safety) sc.sicurezza = safetyStars(m.area);
+    sc.alloggio = o.quality > 0 ? o.quality : null;
+    m.sc = sc;
+    m.zona = weighted(sc, ZONE_KEYS, Object.fromEntries(ZONE_KEYS.map(k => [k, S.weights[k] || 1])));
+    m.overall = weighted(sc, CRIT.map(c => c[0]), S.weights) ?? 0;
+  }
+  ranked.sort((a, b) => (a.status.level === 'bad') - (b.status.level === 'bad') || b.overall - a.overall || a.allIn - b.allIn);
   ranked.forEach((m, i) => { m.rank = i + 1; });
   return { list, ranked };
 }
 
-/* ---------- tooltip ---------- */
-const tip = $('#tip');
-function showTip(x, y, nodes) {
-  tip.replaceChildren(...nodes); tip.hidden = false;
-  const r = tip.getBoundingClientRect();
-  let left = x + 14, top = y + 14;
-  if (left + r.width > innerWidth - 8) left = x - r.width - 14;
-  if (top + r.height > innerHeight - 8) top = y - r.height - 14;
-  tip.style.left = Math.max(8, left) + 'px'; tip.style.top = Math.max(8, top) + 'px';
+/* ---------- componenti ---------- */
+const half = v => Math.round(clamp(v, 0, 5) * 2) / 2;
+function stars(v, lg, tip) {
+  if (v == null) return h('span', { class: 'na', title: 'Non disponibile' }, '–');
+  const r = half(v);
+  return h('span', { class: 'stars' + (lg ? ' lg' : ''), role: 'img', title: tip, 'aria-label': `${String(r).replace('.', ',')} stelle su 5` },
+    h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'),
+    h('span', { class: 'fg', 'aria-hidden': 'true', style: `width:${r / 5 * 100}%` }, '★★★★★'));
 }
-function hideTip() { tip.hidden = true; }
-function bindTip(el, build) {
-  el.addEventListener('pointermove', e => showTip(e.clientX, e.clientY, build()));
-  el.addEventListener('pointerleave', hideTip);
-  el.addEventListener('focus', () => { const r = el.getBoundingClientRect(); showTip(r.left + r.width / 2, r.top, build()); });
-  el.addEventListener('blur', hideTip);
+/* voto a stelle a passi di 0,5: clic sulla metà sinistra o destra di una stella; stesso clic per azzerare */
+function starInput(id, label, get, set) {
+  const fg = h('span', { class: 'fg', 'aria-hidden': 'true' }, '★★★★★');
+  const box = h('div', { class: 'stars stars-in', id, role: 'slider', tabindex: '0', 'aria-label': label, 'aria-valuemin': 0, 'aria-valuemax': 5 },
+    h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'), fg);
+  const paint = () => { fg.style.width = get() / 5 * 100 + '%'; box.setAttribute('aria-valuenow', String(get())); };
+  const put = v => { set(v); paint(); changed(); };
+  box.addEventListener('click', e => {
+    const r = box.getBoundingClientRect();
+    const v = clamp(Math.ceil((e.clientX - r.left) / r.width * 10) / 2, 0.5, 5);
+    put(v === get() ? 0 : v);
+  });
+  box.addEventListener('keydown', e => {
+    const k = { ArrowRight: 0.5, ArrowUp: 0.5, ArrowLeft: -0.5, ArrowDown: -0.5 }[e.key];
+    if (k) { e.preventDefault(); put(clamp(get() + k, 0, 5)); }
+    else if (e.key === 'Home' || e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); put(0); }
+    else if (e.key === 'End') { e.preventDefault(); put(5); }
+  });
+  paint();
+  return h('div', { class: 'star-row' }, h('span', { class: 'sl' }, label), box);
 }
+const ICON = { good: '✓', warn: '!', bad: '✕' };
+const statusChip = st => h('span', { class: 'status ico ' + st.level, role: 'img', title: st.label, 'aria-label': st.label }, ICON[st.level]);
+const flag = (level, text) => h('span', { class: 'status ' + level }, h('i', { 'aria-hidden': 'true' }, ICON[level]), text);
 
-/* ---------- inputs ---------- */
+/* ---------- pannello dati ---------- */
 const inputsEl = $('#inputs');
 let rafId = 0;
 function changed() { save(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(() => { renderResults(); updateSummaries(); }); }
+function refresh() { save(); renderInputs(); renderResults(); updateSummaries(); }
 
 function numField(id, label, get, set, o = {}) {
   const inp = h('input', { id, type: 'number', min: 0, step: 'any', inputmode: 'decimal', value: String(get()) });
   inp.addEventListener('input', () => { set(num(inp.value)); changed(); });
   return h('div', { class: 'field' + (o.wide ? ' wide' : '') },
     h('label', { for: id }, label),
-    h('div', { class: 'inp' + (o.unit ? ' has-unit' : '') }, inp, o.unit ? h('span', { class: 'unit' }, o.unit) : null),
-    o.hint ? h('div', { class: 'hint' }, o.hint) : null);
+    h('div', { class: 'inp' + (o.unit ? ' has-unit' : '') }, inp, o.unit ? h('span', { class: 'unit' }, o.unit) : null));
 }
+function textField(id, label, get, set, o = {}) {
+  const inp = h('input', { id, type: 'text', maxlength: o.max || 80, value: get(), list: o.list, autocomplete: 'off', placeholder: o.placeholder });
+  inp.addEventListener('input', () => { set(inp.value); changed(); });
+  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), h('div', { class: 'inp' }, inp));
+}
+function selectField(id, label, get, set, options, o = {}) {
+  const sel = h('select', { id }, options.map(([v, l]) => h('option', { value: v, selected: v === get() }, l)));
+  sel.addEventListener('change', () => { set(sel.value); if (o.rerender) refresh(); else changed(); });
+  return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), sel);
+}
+
+/* riquadro posizione: aggiornato a ogni battuta senza ricostruire la scheda */
+function locBox(o) {
+  const box = h('div', { class: 'loc', 'data-loc': o.id });
+  fillLoc(box, o);
+  return box;
+}
+function fillLoc(box, o) {
+  const g = geoFor(o), kids = [];
+  const fact = (k, v) => h('span', { class: 'fact' }, k, h('b', null, v));
+  if (!D) {
+    kids.push(h('span', { class: 'na' }, 'Dati geografici non caricati'));
+  } else if (g) {
+    kids.push(h('div', { class: 'loc-top' }, h('b', null, g.label), h('span', null, g.district)));
+    kids.push(h('div', { class: 'facts' }, fact('Metro ', metres(g.station.d)), fact('Parco ', g.park === 0 ? '0 m' : metres(g.park)), fact('Rumore ', g.db != null ? `${g.db} dB` : '–')));
+  } else if (o.street) {
+    const sugg = suggestStreets(o.street);
+    kids.push(h('span', { class: 'na' }, sugg.length ? 'Via non trovata. Forse:' : 'Via non trovata'));
+    if (sugg.length) kids.push(h('div', { class: 'sugg' }, sugg.map(s => h('button', { class: 'btn sm', type: 'button', onclick: () => {
+      o.street = s; o.pinned = false; const el = document.getElementById(`o-${o.id}-street`); if (el) el.value = s; changed(); fillLoc(box, o);
+    } }, s))));
+  } else {
+    kids.push(h('span', { class: 'na' }, 'Scrivi la via'));
+  }
+  if (D) kids.push(h('div', { class: 'loc-actions' }, h('button', { class: 'btn sm', type: 'button', onclick: () => startPlacing(o) }, o.pinned ? 'Sposta sulla mappa' : 'Sulla mappa'),
+    o.pinned ? h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { o.pinned = false; refresh(); } }, 'Usa indirizzo') : null));
+  box.replaceChildren(...kids);
+}
+function startPlacing(o) {
+  ui.placing = o.id;
+  if (matchMedia('(max-width: 960px)').matches) setView('results');
+  renderResults();
+  const m = $('#map-card'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function optionCard(o) {
   const open = ui.open === o.id, f = k => `o-${o.id}-${k}`;
   const card = h('div', { class: 'opt', 'data-open': String(open) },
     h('button', { class: 'opt-head', type: 'button', 'aria-expanded': String(open), onclick: () => { ui.open = open ? null : o.id; renderInputs(); updateSummaries(); } },
-      h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Untitled'), h('span', { 'data-sum': o.id })),
+      h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Senza nome'), h('span', { 'data-sum': o.id })),
       h('span', { class: 'chev', 'aria-hidden': 'true' })));
   if (!open) return card;
-  const name = h('input', { id: f('name'), type: 'text', maxlength: 80, value: o.name });
-  name.addEventListener('input', () => { o.name = name.value; changed(); });
-  const furn = h('select', { id: f('furnished') }, h('option', { value: 'yes', selected: o.furnished }, 'Furnished'), h('option', { value: 'no', selected: !o.furnished }, 'Unfurnished'));
-  furn.addEventListener('change', () => { o.furnished = furn.value === 'yes'; changed(); });
+  const box = locBox(o);
+  const g = geoFor(o);
   card.append(h('div', { class: 'opt-body' },
+    h('div', { class: 'fields' }, textField(f('name'), 'Nome', () => o.name, v => { o.name = v; }, { wide: true })),
+    h('div', { class: 'fields addr' },
+      textField(f('street'), 'Via', () => o.street, v => { o.street = v; o.pinned = false; fillLoc(box, o); }, { list: 'street-list' }),
+      textField(f('hn'), 'Civico', () => o.hn, v => { o.hn = v; fillLoc(box, o); }, { max: 10 })),
+    box,
+    g ? null : selectField(f('area'), 'Quartiere', () => o.area, v => { o.area = v; }, AREAS.map(a => [a, a]), { wide: true, rerender: true }),
     h('div', { class: 'fields' },
-      h('div', { class: 'field wide' }, h('label', { for: f('name') }, 'Name'), h('div', { class: 'inp' }, name)),
-      numField(f('rent'), 'Rent', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
-      numField(f('utils'), 'Utilities', () => o.utils, v => { o.utils = v; }, { unit: 'kr', hint: 'Heating, water, electricity. 0 if in rent.' }),
-      numField(f('deposit'), 'Deposit', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
-      numField(f('lease'), 'Lease length', () => o.lease, v => { o.lease = v; }, { unit: 'mo', hint: '0 if open-ended.' }),
-      h('div', { class: 'field' }, h('label', { for: f('furnished') }, 'Furnishing'), furn),
-      numField(f('commuteMin'), 'Commute', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min', hint: 'One way.' }),
-      numField(f('fare'), 'Transport cost', () => o.fare, v => { o.fare = v; }, { unit: 'kr', hint: 'Per month. 0 if cycling.' }),
-      numField(f('perks'), 'Perks included', () => o.perks, v => { o.perks = v; }, { unit: 'kr', hint: 'Gym, internet or laundry you would otherwise pay for, per month.' })),
+      numField(f('rent'), 'Affitto', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
+      numField(f('utils'), 'Utenze', () => o.utils, v => { o.utils = v; }, { unit: 'kr' }),
+      numField(f('deposit'), 'Deposito', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
+      numField(f('lease'), 'Contratto', () => o.lease, v => { o.lease = v; }, { unit: 'mesi' }),
+      selectField(f('furnished'), 'Arredamento', () => (o.furnished ? 'si' : 'no'), v => { o.furnished = v === 'si'; }, [['si', 'Arredato'], ['no', 'Vuoto']]),
+      numField(f('commuteMin'), 'Tragitto', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min' }),
+      numField(f('fare'), 'Trasporti', () => o.fare, v => { o.fare = v; }, { unit: 'kr' }),
+      numField(f('perks'), 'Servizi inclusi', () => o.perks, v => { o.perks = v; }, { unit: 'kr' })),
+    starInput(f('quality'), 'Alloggio', () => o.quality, v => { o.quality = v; }),
     h('div', { class: 'opt-actions' },
-      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copy)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplicate'),
-      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Remove'))));
+      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copia)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplica'),
+      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Elimina'))));
   return card;
 }
-function refresh() { save(); renderInputs(); renderResults(); updateSummaries(); }
 
 function renderInputs() {
   const keep = inputsEl.scrollTop, P = S.profile;
   const you = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('h2', null, 'Your numbers')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Tu')),
     h('div', { class: 'fields' },
-      numField('p-takeHome', 'Monthly take-home salary', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true, hint: 'After tax and pension. Used to test whether each option is sustainable.' }),
-      numField('p-other', 'Other monthly costs', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr', hint: 'Food, phone, loans. Optional.' }),
-      numField('p-stay', 'Planned stay', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mo' })),
-    h('details', { class: 'fine' }, h('summary', null, 'Fine-tune (optional)'),
+      numField('p-takeHome', 'Netto mensile', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true }),
+      numField('p-other', 'Altre spese', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr' }),
+      numField('p-stay', 'Permanenza', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mesi' })),
+    h('details', { class: 'fine' }, h('summary', null, 'Altro'),
       h('div', { class: 'fields' },
-        numField('p-days', 'Commute days a week', () => P.days, v => { P.days = clamp(v, 0, 7); }),
-        numField('p-time', 'Value of commute time', () => P.timePct, v => { P.timePct = v; }, { unit: '%', hint: 'Share of your hourly take-home.' }),
-        numField('p-furn', 'Cost to furnish', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr', hint: 'Net of resale. Added to unfurnished options.' }),
-        numField('p-notice', 'Notice, open-ended', () => P.notice, v => { P.notice = v; }, { unit: 'mo' }))));
+        numField('p-days', 'Giorni in ufficio', () => P.days, v => { P.days = clamp(v, 0, 7); }, { unit: '/sett.' }),
+        numField('p-time', 'Valore del tempo', () => P.timePct, v => { P.timePct = v; }, { unit: '%' }),
+        numField('p-furn', 'Costo arredi', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr' }),
+        numField('p-notice', 'Preavviso', () => P.notice, v => { P.notice = v; }, { unit: 'mesi' }))));
+
   const opts = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('div', null, h('h2', null, 'Your shortlist'), h('p', { class: 'desc' }, 'Only add places that already meet your must-haves.')),
-      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Option ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Add')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Shortlist'),
+      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Opzione ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Aggiungi')),
     h('div', { class: 'opt-list' }, S.options.map(optionCard)));
-  inputsEl.replaceChildren(h('div', { class: 'stack' }, you, opts));
+
+  const used = AREAS.filter(a => S.options.some(o => areaOf(o) === a));
+  const areas = h('section', { class: 'card' },
+    h('div', { class: 'sec-title' }, h('h2', null, 'Quartieri')),
+    used.map(a => {
+      const r = ratingsFor(a);
+      const sv = SAFE[a];
+      return h('div', { class: 'area-block' },
+        h('h3', null, a),
+        h('div', { class: 'star-rows' },
+          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Sicurezza'), stars(safetyStars(a), false, `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.`)) : null,
+          AREA_CRIT.filter(([k]) => !(sv && k === 'sicurezza')).map(([k, l]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, () => r[k], v => { r[k] = v; }))));
+    }));
+
+  const prio = h('details', { class: 'card' },
+    h('summary', null, h('h2', null, 'Priorità')),
+    h('div', { class: 'prio', style: 'margin-top:12px' },
+      CRIT.map(([k, l]) => {
+        const sel = h('select', { id: `w-${k}`, 'aria-label': `Peso di ${l}` }, WEIGHT_OPTS.map(([v, t]) => h('option', { value: v, selected: +v === S.weights[k] }, t)));
+        sel.addEventListener('change', () => { S.weights[k] = +sel.value; changed(); });
+        return h('div', { class: 'prio-row' }, h('span', null, l, k === 'costi' ? h('span', { class: 'key-tag' }, 'chiave') : null), sel);
+      })));
+
+  inputsEl.replaceChildren(h('div', { class: 'stack' }, you, opts, areas, prio));
   inputsEl.scrollTop = keep;
 }
+let lastAreas = '';
 function updateSummaries() {
-  for (const m of evaluate(S).list) {
+  const E = evaluate(S);
+  for (const m of E.list) {
     const a = inputsEl.querySelector(`[data-sum="${m.o.id}"]`);
-    if (a) a.textContent = m.ready ? `${kr(m.allIn)} kr a month all-in` : 'Add the rent to include it';
+    if (a) a.replaceChildren(...(m.ready ? [`${m.area} · ${kr(m.allIn)} kr `, stars(m.overall)] : [`${m.area} · manca l’affitto`]));
     const n = inputsEl.querySelector(`[data-name="${m.o.id}"]`);
-    if (n) n.textContent = m.o.name || 'Untitled';
+    if (n) n.textContent = m.o.name || 'Senza nome';
   }
+  // se cambia l'insieme dei quartieri (nuova via), aggiorna il riquadro dei voti
+  const areasNow = S.options.map(areaOf).join('|') + '|' + S.options.map(o => !!geoFor(o)).join('');
+  if (lastAreas && areasNow !== lastAreas) {
+    const focused = document.activeElement && document.activeElement.id;
+    renderInputs();
+    if (focused) { const el = document.getElementById(focused); if (el) { el.focus(); if (el.setSelectionRange && el.type === 'text') el.setSelectionRange(el.value.length, el.value.length); } }
+  }
+  lastAreas = areasNow;
 }
 
-/* ---------- results ---------- */
+/* ---------- risultati ---------- */
 const resultsEl = $('#results');
-const statusChip = st => h('span', { class: 'status ' + st.level }, h('i', { 'aria-hidden': 'true' }, { good: '✓', warn: '!', bad: '✕' }[st.level]), st.label);
-function niceTicks(max, n) {
-  if (!(max > 0)) return { ticks: [0, 1], top: 1 };
-  const raw = max / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), nm = raw / mag;
-  const step = (nm <= 1 ? 1 : nm <= 2 ? 2 : nm <= 2.5 ? 2.5 : nm <= 5 ? 5 : 10) * mag;
-  const top = Math.ceil(max / step - 1e-9) * step, ticks = [];
-  for (let v = 0; v <= top + 1e-9; v += step) ticks.push(+v.toFixed(6));
-  return { ticks, top };
-}
-function table(head, rows) {
-  return h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
-    h('thead', null, h('tr', null, head.map(x => h('th', { scope: 'col' }, x)))),
-    h('tbody', null, rows.map(r => h('tr', null, r.map((c, i) => i === 0 ? h('th', { scope: 'row' }, c) : h('td', null, c)))))));
-}
 
 function verdictCard(E) {
-  const [best, next] = E.ranked;
-  const P = S.profile;
-  const saving = next ? next.allIn - best.allIn : 0;
+  const best = E.ranked[0];
   return h('section', { class: 'card verdict' },
     h('div', null,
-      h('div', { class: 'eyebrow' }, `Best value for a ${P.stay}-month stay`),
-      h('div', { class: 'v-name' }, best.o.name || 'Untitled'),
-      h('div', { class: 'v-line' }, best.share != null ? statusChip(best.status) : null,
-        best.share != null ? h('span', null, `Rent and utilities are ${pct(best.share)} of your take-home`) : h('span', null, 'Add your take-home salary to check sustainability')),
-      next && saving >= 1 ? h('div', { class: 'v-line', style: 'margin-top:4px' }, `${kr(saving)} kr a month less than ${next.o.name}`) : null),
-    h('div', { class: 'hero' }, h('div', { class: 'n' }, kr(best.allIn)), h('div', { class: 'cap' }, 'kr a month, all-in')));
+      h('div', { class: 'eyebrow' }, 'Migliore'),
+      h('div', { class: 'v-name' }, best.o.name || 'Senza nome'),
+      h('div', { class: 'v-line' }, best.share != null ? [statusChip(best.status), h('b', { class: 'num' }, pct(best.share))] : null, h('span', null, best.area))),
+    h('div', { class: 'hero' },
+      h('div', { class: 'cap' }, stars(best.overall, true)),
+      h('div', null, h('span', { class: 'n' }, kr(best.allIn)), h('span', { class: 'of' }, 'kr/mese'))));
 }
 
-function chartCard(E) {
-  const parts = [
-    ['Rent & utilities', 'var(--s1)', m => m.housingNet, 'After subtracting included perks.'],
-    ['Commute', 'var(--s2)', m => m.commute, 'Transport cost plus the value of your commute time.'],
-    ['Set-up', 'var(--s3)', m => m.setup, 'Furnishing, spread over the months you are committed.'],
-  ];
-  const { ticks, top } = niceTicks(Math.max(...E.ranked.map(m => m.allIn), 1) * (innerWidth < 560 ? 1.32 : 1.18), innerWidth < 560 ? 3 : 4);
-  const root = h('div', { class: 'hbar' });
-  E.ranked.forEach((m, i) => {
-    root.append(h('div', { class: 'hb-label', style: `grid-row:${i + 1}`, title: m.o.name }, m.o.name || 'Untitled'));
-    const bar = h('div', { class: 'bar', style: `width:${clamp(m.allIn / top * 100, 0, 100)}%` },
-      parts.filter(p => p[2](m) > 0.5).map(p => {
-        const seg = h('div', { class: 'seg', tabindex: '0', style: `flex:${p[2](m)} 1 0;background:${p[1]}`, 'aria-label': `${m.o.name}, ${p[0]}: ${kr(p[2](m))} kr a month` });
-        bindTip(seg, () => [h('div', { class: 'th' }, m.o.name), h('div', { class: 'tr' }, h('span', { class: 'k', style: `background:${p[1]}` }), h('strong', null, kr(p[2](m)) + ' kr'), h('span', { class: 'l' }, p[0])), h('div', { class: 'tn' }, p[3])]);
-        return seg;
-      }));
-    root.append(h('div', { class: 'hb-bar', style: `grid-row:${i + 1}` }, bar, h('span', { class: 'bar-total' }, kr(m.allIn))));
-  });
-  const n = E.ranked.length;
-  root.append(h('div', { class: 'hb-grid', style: `grid-row:1 / ${n + 1}` }, ticks.map(t => h('i', { class: 'gl', style: `left:${t / top * 100}%` }))));
-  root.append(h('div', { class: 'hb-axis', style: `grid-row:${n + 1}` }, ticks.map(t => h('span', { style: `left:${t / top * 100}%` }, krc(t)))));
+function mapCard(E) {
+  if (!D) return null;
+  const placingOpt = ui.placing && S.options.find(o => o.id === ui.placing);
+  const host = h('div', { class: 'map-wrap' + (placingOpt ? ' placing' : ''), id: 'map-host' });
+  const pinned = E.ranked.filter(m => m.geo);
+  return h('section', { class: 'card', id: 'map-card' },
+    h('div', { class: 'card-head' }, h('h2', null, 'Mappa')),
+    placingOpt ? h('div', { class: 'map-banner' }, h('span', null, `Clicca sulla mappa: ${placingOpt.name}`),
+      h('button', { class: 'btn sm', type: 'button', onclick: () => { ui.placing = null; renderResults(); } }, 'Annulla')) : null,
+    host,
+    pinned.length ? h('ul', { class: 'map-legend' }, pinned.map(m => h('li', null, h('span', { class: 'pin' }, m.rank), h('span', { class: 't' }, m.o.name)))) : null);
+}
+
+function drawMap(host, E) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const pts = [];
+  for (const d of D.districts) for (const poly of d.rings) for (const [x, y] of poly[0]) { const [px, py] = toXY(y / E5, x / E5); pts.push(1); minX = Math.min(minX, px); maxX = Math.max(maxX, px); minY = Math.min(minY, py); maxY = Math.max(maxY, py); }
+  for (const m of E.ranked) if (m.geo) { const [px, py] = toXY(m.geo.lat, m.geo.lon); if (Math.hypot(px, py) < 20000) { minX = Math.min(minX, px - 400); maxX = Math.max(maxX, px + 400); minY = Math.min(minY, py - 400); maxY = Math.max(maxY, py + 400); } }
+  const pad = 300; minX -= pad; maxX += pad; minY -= pad; maxY += pad;
+  const W = Math.max(280, host.clientWidth);
+  const s = Math.min(W / (maxX - minX), (W < 560 ? 420 : 520) / (maxY - minY));
+  const Hh = (maxY - minY) * s;
+  const ox = (W - (maxX - minX) * s) / 2;
+  const P = (lat, lon) => { const [x, y] = toXY(lat, lon); return [ox + (x - minX) * s, (maxY - y) * s]; };
+  const path = ring => ring.map(([x, y], i) => { const [a, b] = P(y / E5, x / E5); return (i ? 'L' : 'M') + a.toFixed(1) + ',' + b.toFixed(1); }).join('') + 'Z';
+  const svg = el('svg', { viewBox: `0 0 ${W} ${Hh}`, height: Hh, role: 'img', 'aria-label': 'Mappa dei quartieri di Copenaghen e Frederiksberg con le case della shortlist' });
+  const gLand = el('g'), gPark = el('g'), gLbl = el('g'), gSt = el('g'), gPin = el('g');
+  for (const d of D.districts) {
+    let cx = 0, cy = 0, n = 0, big = null;
+    for (const poly of d.rings) { gLand.append(el('path', { d: path(poly[0]), fill: 'var(--map-land)', stroke: 'var(--line-2)', 'stroke-width': 1 })); if (!big || poly[0].length > big.length) big = poly[0]; }
+    for (const [x, y] of big) { cx += x; cy += y; n++; }
+    const [lx, ly] = P(cy / n / E5, cx / n / E5);
+    gLbl.append(el('text', { x: lx, y: ly, 'text-anchor': 'middle', 'font-size': W < 560 ? 9 : 11, fill: 'var(--ink-3)', 'font-weight': 500 }, d.name === 'Vesterbro-Kongens Enghave' ? 'Vesterbro-Kgs. Enghave' : d.name));
+  }
+  for (const poly of D.parks) gPark.append(el('path', { d: path(poly[0]), fill: 'var(--map-park)' }));
+  for (const st of STATIONS) {
+    if (districtOf(st.lat, st.lon) === OUTSIDE) continue;
+    const [x, y] = P(st.lat, st.lon);
+    const c = el('circle', { cx: x, cy: y, r: 2.6, fill: 'var(--ink-3)' }); c.append(el('title', null, `${st.type} ${st.name}`)); gSt.append(c);
+  }
+  for (const m of [...E.ranked].reverse()) {
+    if (!m.geo) continue;
+    const [x, y] = P(m.geo.lat, m.geo.lon);
+    const g = el('g');
+    g.append(el('circle', { cx: x, cy: y, r: 11, fill: 'var(--accent)', stroke: 'var(--surface)', 'stroke-width': 2 }));
+    g.append(el('text', { x, y: y + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 700, fill: 'var(--on-accent)' }, m.rank));
+    g.append(el('title', null, `#${m.rank} ${m.o.name} · ${m.geo.label}`));
+    gPin.append(g);
+  }
+  svg.append(gLand, gPark, gLbl, gSt, gPin);
+  if (ui.placing) {
+    svg.addEventListener('click', e => {
+      const o = S.options.find(x => x.id === ui.placing); if (!o) return;
+      const r = svg.getBoundingClientRect(), k = W / r.width;
+      const x = (e.clientX - r.left) * k, y = (e.clientY - r.top) * k;
+      const mx = (x - ox) / s + minX, my = maxY - y / s;
+      o.lat = +(LAT0 + my / KY).toFixed(6); o.lon = +(LON0 + mx / KX).toFixed(6); o.pinned = true;
+      ui.placing = null; refresh();
+    });
+  }
+  host.replaceChildren(svg);
+}
+
+function starsCard(E) {
+  const cols = [['Totale', m => m.overall], ['Costi', m => m.sc.costi], ['Zona', m => m.zona], ['Tragitto', m => m.sc.pendolarismo], ['Alloggio', m => m.sc.alloggio]];
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'What each option really costs a month'),
-      h('p', { class: 'desc' }, 'Rent and utilities less included perks, plus commute (fare and time) and furnishing spread over your commitment.')),
-    h('div', { class: 'legend' }, parts.map(p => h('span', null, h('i', { style: `background:${p[1]}` }), p[0]))),
-    root,
-    h('details', { class: 'breakdown' }, h('summary', null, 'Show as table'),
-      table(['Option', ...parts.map(p => p[0]), 'All-in'], E.ranked.map(m => [m.o.name, ...parts.map(p => kr(p[2](m))), kr(m.allIn)]))));
+    h('div', { class: 'card-head' }, h('h2', null, 'Stelle')),
+    h('div', { class: 'scroll' }, h('table', { class: 'tbl stars-tbl' },
+      h('thead', null, h('tr', null, h('th', { scope: 'col' }, ''), cols.map(([l]) => h('th', { scope: 'col' }, l)))),
+      h('tbody', null, E.ranked.map(m => h('tr', null,
+        h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Senza nome'),
+        cols.map(([, f]) => h('td', null, stars(f(m))))))))),
+    zoneDetail(E));
 }
 
-function compareCard(E) {
+function zoneDetail(E) {
+  const cells = m => {
+    const g = m.geo, sv = m.safety;
+    return [
+      stars(m.sc.sicurezza, false, sv ? `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.` : 'Tuo voto'),
+      stars(m.sc.trasporti, false, g ? `${g.station.name} · ${metres(g.station.d)}` : null),
+      stars(m.sc.verde, false, g ? (g.park === 0 ? 'Dentro un parco' : `Parco a ${metres(g.park)}`) : null),
+      stars(m.sc.quiete, false, g && g.db != null ? `${g.db} dB` : null),
+      stars(m.sc.servizi), stars(m.sc.vita)];
+  };
+  return h('details', { class: 'fine' }, h('summary', null, 'Dettaglio'),
+    h('div', { class: 'scroll', style: 'margin-top:10px' }, h('table', { class: 'tbl stars-tbl' },
+      h('thead', null, h('tr', null, ['', 'Sicurezza', 'Metro', 'Verde', 'Quiete', 'Servizi', 'Vita'].map(x => h('th', { scope: 'col' }, x)))),
+      h('tbody', null, E.ranked.map(m => h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Senza nome'), cells(m).map(c => h('td', null, c))))))));
+}
+
+function costCard(E) {
   const bestCost = E.ranked.length > 1 ? Math.min(...E.ranked.map(m => m.allIn)) : null;
-  const rows = E.ranked.map(m => h('tr', null,
-    h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Untitled'),
-    h('td', { class: m.allIn === bestCost ? 'best' : '' }, kr(m.allIn)),
-    h('td', null, m.share != null ? [pct(m.share), h('span', { class: 'chipcell' }, statusChip(m.status))] : '–'),
-    h('td', { class: m.left != null && m.left < 0 ? 'neg' : '' }, m.left != null ? kr(m.left) : '–'),
-    h('td', null, kr(m.upfront)),
-    h('td', null, m.o.lease > 0 ? m.o.lease + ' mo' : 'Open-ended')));
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Side by side'), h('p', { class: 'desc' }, 'Ranked by all-in monthly cost. Options that are not sustainable rank last.')),
+    h('div', { class: 'card-head' }, h('h2', null, 'Costi')),
     h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
-      h('thead', null, h('tr', null, ['Option', 'All-in / mo', 'Housing / take-home', 'Left / mo', 'Move-in cash', 'Lease'].map(x => h('th', { scope: 'col' }, x)))),
-      h('tbody', null, rows))),
-    h('p', { class: 'small-note' }, 'Housing is rent plus utilities. "Left / mo" is take-home minus housing, transport and your other costs. "Move-in cash" is the deposit plus any furniture you must buy.'));
+      h('thead', null, h('tr', null, ['', 'Kr/mese', 'Affitto/netto', 'Restano', 'Ingresso', 'Contratto'].map(x => h('th', { scope: 'col' }, x)))),
+      h('tbody', null, E.ranked.map(m => h('tr', null,
+        h('th', { scope: 'row' }, m.o.name || 'Senza nome'),
+        h('td', { class: m.allIn === bestCost ? 'best' : '' }, kr(m.allIn)),
+        h('td', null, m.share != null ? [pct(m.share), h('span', { class: 'chipcell' }, statusChip(m.status))] : '–'),
+        h('td', { class: m.left != null && m.left < 0 ? 'neg' : '' }, m.left != null ? kr(m.left) : '–'),
+        h('td', null, kr(m.upfront)),
+        h('td', null, m.o.lease > 0 ? m.o.lease + ' m' : '∞')))))));
 }
 
 function watchCard(E) {
-  const items = [];
+  const rows = [];
   for (const m of E.ranked) {
-    const n = m.o.name || 'Untitled';
-    if (m.status.level === 'bad') items.push({ level: m.status.level, tag: m.status.level === 'bad' ? 'Problem' : 'Check', text: `${n}: ${m.status.why}` });
-    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) items.push({ level: 'warn', tag: 'Check', text: `${n}: the deposit is more than three months' rent. Danish rules generally cap it at three months for ordinary private lets, so check the lease.` });
-    if (m.commit > S.profile.stay) items.push({ level: 'warn', tag: 'Check', text: `${n}: you are committed for ${m.commit} months, longer than your ${S.profile.stay}-month stay. Costs are counted for the full period.` });
+    const g = m.geo, f = [];
+    if (m.status.level === 'bad') f.push(['bad', m.left != null && m.left < 0 ? 'Costi oltre il netto' : `Affitto ${pct(m.share)}`]);
+    if (g && g.db != null && g.db >= 65) f.push(['warn', `Rumore ${g.db} dB`]);
+    if (m.safety && m.safety.aften < 75) f.push(['warn', `Sera ${m.safety.aften}% sicuri`]);
+    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) f.push(['warn', 'Deposito > 3 mesi']);
+    if (m.commit > S.profile.stay) f.push(['warn', `Vincolo ${m.commit} mesi`]);
+    if (!g && D) f.push(['warn', 'Senza indirizzo']);
+    if (['servizi', 'vita'].every(k => m.sc[k] == null)) f.push(['warn', 'Voti mancanti']);
+    if (f.length) rows.push(h('div', { class: 'flag-row' }, h('b', null, m.o.name || 'Senza nome'), h('span', { class: 'flags' }, f.map(([l, t]) => flag(l, t)))));
   }
-  if (!items.length) return null;
-  const shown = items.slice(0, 4);
-  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Worth a second look')),
-    h('ul', { class: 'notes' }, shown.map(it => h('li', null, statusChip({ level: it.level, label: it.tag }), h('span', null, it.text)))),
-    items.length > shown.length ? h('p', { class: 'small-note' }, `${items.length - shown.length} more flagged. Open each option to review.`) : null);
+  if (!rows.length) return null;
+  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Attenzione')), h('div', { class: 'flag-list' }, rows));
 }
 
 function howCard() {
   const P = S.profile;
-  return h('details', { class: 'card how' }, h('summary', null, 'How this is calculated'),
+  return h('details', { class: 'card how' }, h('summary', null, 'Come funziona'),
     h('ul', null,
-      h('li', null, 'All-in monthly cost = rent + utilities − included perks + transport + value of commute time + furnishing spread over your commitment.'),
-      h('li', null, `Commitment = the longer of your planned stay and the lease length (${P.notice} months notice if open-ended).`),
-      h('li', null, `Commute time is valued at ${P.timePct}% of your hourly take-home (salary ÷ 37-hour weeks), for ${P.days} days a week, there and back.`),
-      h('li', null, 'The deposit is refundable, so it is shown as move-in cash and not counted as a cost.'),
-      h('li', null, 'Sustainability: comfortable up to 30% of take-home on rent and utilities, stretched up to 40%, not sustainable above that or when monthly costs exceed take-home. These are rules of thumb, usually quoted against gross income.')));
+      h('li', null, 'Costi: 5 stelle fino al 25% del netto, 0 dal 55%.'),
+      h('li', null, 'Metro: 5 stelle entro 300 m, −1 ogni 300 m. Verde: 5 entro 200 m, −1 ogni 250 m. Quiete: 5 a 50 dB, −1 ogni 5 dB.'),
+      h('li', null, 'Sicurezza: indagine 2025 del Comune, media tra sicuri di giorno e di sera. 70% = 1 stella, 90% = 5.'),
+      h('li', null, 'Tragitto: 5 stelle a 10 min, 0 a 60 min. Totale: media pesata (Priorità).'),
+      h('li', null, `Kr/mese = affitto + utenze − servizi inclusi + trasporti + tempo di viaggio (${P.timePct}% del netto orario) + arredi sul vincolo.`),
+      h('li', null, 'Affitto/netto: ✓ fino al 30%, ! fino al 40%, ✕ oltre o con costi sopra il netto.'),
+      h('li', null, `Fonti: Københavns Kommune (rumore 2022, quartieri, stazioni, parchi, Tryghedsundersøgelse 2025), © OpenStreetMap contributors (Frederiksberg). ${D ? `Dati del ${D.meta.built}.` : ''}`)));
 }
 
 function renderResults() {
-  hideTip();
   const E = evaluate(S);
   if (!E.ranked.length) {
-    resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Enter the rent for at least one option to see the comparison.'));
+    resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Inserisci l’affitto di almeno un’opzione per vedere il confronto.'));
     return;
   }
-  const note = S.profile.takeHome > 0 ? null : h('div', { class: 'card empty' }, 'Add your take-home salary to check each option against your income.');
-  resultsEl.replaceChildren(...[verdictCard(E), note, chartCard(E), compareCard(E), watchCard(E), howCard()].filter(Boolean));
+  const note = S.profile.takeHome > 0 ? null : h('div', { class: 'card empty' }, 'Aggiungi il tuo stipendio netto per verificare la sostenibilità di ogni opzione.');
+  resultsEl.replaceChildren(...[verdictCard(E), note, mapCard(E), starsCard(E), costCard(E), watchCard(E), howCard()].filter(Boolean));
+  const host = $('#map-host');
+  if (host) drawMap(host, E);
 }
 
-/* ---------- chrome ---------- */
+/* ---------- interfaccia ---------- */
 function applyTheme(t) { if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
-try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') applyTheme(t); } catch (e) { /* ignore */ }
+try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') applyTheme(t); } catch (e) { /* ignora */ }
 $('#btn-theme').addEventListener('click', () => {
   const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const next = cur === 'dark' ? 'light' : 'dark';
   applyTheme(next);
-  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignora */ }
 });
 const shell = $('#shell');
 function setView(v) {
@@ -556,20 +962,21 @@ $('#tab-inputs').addEventListener('click', () => setView('inputs'));
 $('#tab-results').addEventListener('click', () => setView('results'));
 const syncNote = () => { $('#sample-note').hidden = !S.sample; };
 $('#btn-dismiss-sample').addEventListener('click', () => { S.sample = false; save(); syncNote(); });
-function replaceState(next) { S = next; ui.open = S.options[0].id; syncNote(); refresh(); }
+function replaceState(next) { S = next; ui.open = S.options[0].id; ui.placing = null; syncNote(); refresh(); }
 $('#btn-sample').addEventListener('click', () => replaceState(sampleState()));
 (function () {
   const b = $('#btn-clear'); let armed = false, t = 0;
   b.addEventListener('click', () => {
-    if (!armed) { armed = true; b.textContent = 'Click again to clear'; t = setTimeout(() => { armed = false; b.textContent = 'Clear'; }, 3500); return; }
-    clearTimeout(t); armed = false; b.textContent = 'Clear'; replaceState(blankState());
+    if (!armed) { armed = true; b.textContent = 'Clicca di nuovo per svuotare'; t = setTimeout(() => { armed = false; b.textContent = 'Svuota'; }, 3500); return; }
+    clearTimeout(t); armed = false; b.textContent = 'Svuota'; replaceState(blankState());
   });
 })();
 let rt = 0, lastW = innerWidth;
-window.addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(rt); rt = setTimeout(() => { if (resultsEl.offsetParent !== null) renderResults(); }, 120); });
+window.addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(rt); rt = setTimeout(() => { if (resultsEl.offsetParent !== null) renderResults(); }, 150); });
 
+$('#street-list').replaceChildren(...STREETS.map(s => h('option', { value: s })));
 syncNote(); renderInputs(); renderResults(); updateSummaries();
-window.RentalEvaluator = { compute, evaluate, normalize, sampleState, get state() { return S; } };
+window.RentalEvaluator = { compute, evaluate, normalize, sampleState, geoFor, suggestStreets, districtOf, get state() { return S; } };
 })();
 </script>
 </body>

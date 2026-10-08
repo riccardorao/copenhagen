@@ -1,28 +1,30 @@
-# Copenhagen Rental Evaluator
+# Valutatore affitti Copenaghen
 
-A lean comparison tool for rental options in Copenhagen. Open `index.html` in any modern browser. There is no build step and no server, and your inputs stay in the browser's local storage.
+Confronta le case in affitto a Copenaghen che rispettano già i tuoi requisiti irrinunciabili. Apri `index.html` in un browser moderno, insieme alla cartella `data/`: non serve installare nulla e i tuoi dati restano nel browser.
 
-It assumes every option you enter has **already passed your non-negotiables** (area, size, pets, and so on). It does not ask you to restate them. It compares what is left on what each place really costs you.
+## Come si usa
 
-## What you enter
+1. **Tu:** netto mensile, altre spese, permanenza.
+2. **Shortlist:** per ogni casa via e civico (quartiere e posizione sulla mappa si ricavano da soli), affitto, utenze, deposito, contratto, arredamento, tragitto, trasporti, servizi inclusi e il tuo voto all'alloggio. Una via sconosciuta si posiziona cliccando sulla mappa.
+3. **Quartieri:** il tuo voto a servizi e vita sociale.
 
-**Once:** your monthly take-home salary, optionally your other monthly costs, and how long you plan to stay.
+Tutti i voti a stelle vanno da 0,5 a 5 a passi di mezza stella: un clic sulla metà di una stella, lo stesso clic di nuovo per azzerare, oppure le frecce della tastiera.
 
-**Per option, all quick numbers:** rent, utilities (0 if included), deposit, lease length (0 if open-ended), furnished or not, commute minutes, transport cost, and the value of any perks included (gym, internet, laundry).
+## Cosa mostra
 
-A collapsed "Fine-tune" section holds the few assumptions behind the maths (commute days, value of commute time, cost to furnish, notice period). The defaults are sensible, so you can ignore it.
+- **Migliore:** la casa col punteggio più alto, con le sue stelle e il costo mensile tutto incluso.
+- **Mappa:** quartieri, parchi, stazioni e le case numerate per classifica.
+- **Stelle:** totale, costi, zona, tragitto e alloggio. "Dettaglio" apre sicurezza, metro, verde, quiete, servizi e vita sociale; passando il cursore su una stella compare il dato sottostante.
+- **Costi:** kr al mese tutto incluso, quota dell'affitto sul netto con indicatore (✓ fino al 30%, ! fino al 40%, ✕ oltre), quanto resta ogni mese, contanti all'ingresso e contratto.
+- **Attenzione:** etichette brevi solo quando serve: rumore alto, sera poco sicura, deposito oltre tre mesi, vincolo più lungo della permanenza, voti mancanti.
 
-## What you get
+## Dati integrati per indirizzo
 
-- **One verdict:** the best-value option and its all-in monthly cost.
-- **One chart:** the real monthly cost of each option, split into rent and utilities, commute, and set-up.
-- **One table:** all-in cost, rent and utilities as a share of take-home with a sustainability label, money left each month, move-in cash and lease length.
-- **A short list of things to double-check,** such as a deposit above three months' rent or a lease longer than your stay.
+- **Sicurezza:** [Tryghedsundersøgelse 2025](https://www.kk.dk/sites/default/files/2025-06/Tryghedsunders%C3%B8gelsen%202025.pdf) del Comune di Copenaghen, nei suoi 13 quartieri: media tra residenti che si sentono sicuri nel quartiere e la sera. 70% = 1 stella, 90% = 5. I reati per 1.000 abitanti restano nel dettaglio come contesto.
+- **Metro e treno:** distanza dalla stazione più vicina. 5 stelle entro 300 m, una in meno ogni 300 m.
+- **Verde:** distanza dal parco di almeno 1 ettaro più vicino. 5 stelle entro 200 m, una in meno ogni 250 m.
+- **Quiete:** rumore stradale Lden all'indirizzo (mappatura 2022). 5 stelle a 50 dB, una in meno ogni 5 dB.
 
-## How it is calculated
+Fonti: Københavns Kommune (dati aperti) e © OpenStreetMap contributors per indirizzi e confini di Frederiksberg, dove rumore e indagine sulla sicurezza non sono disponibili. Per aggiornare i dati: `pip install shapely pyproj && python3 tools/build_data.py`.
 
-All-in monthly cost = rent + utilities − included perks + transport + value of commute time + furnishing spread over the months you are committed. The deposit is refundable, so it appears as move-in cash and not as a cost.
-
-Sustainability looks at rent and utilities as a share of take-home: comfortable up to 30%, stretched up to 40%, not sustainable above that or when monthly costs exceed take-home. These are rules of thumb. Options that are not sustainable rank last.
-
-Amounts are DKK and the sample data is illustrative. Check each lease for the real terms.
+Importi in corone danesi (kr). I dati di esempio sono illustrativi.
