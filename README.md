@@ -1,30 +1,42 @@
-# Valutatore affitti Copenaghen
+# Copenhagen Rent Evaluator
 
-Confronta le case in affitto a Copenaghen che rispettano già i tuoi requisiti irrinunciabili. Apri `index.html` in un browser moderno, insieme alla cartella `data/`: non serve installare nulla e i tuoi dati restano nel browser.
+Compares rental homes in Copenhagen that already meet your must-haves. Open `index.html` in a modern
+browser, together with the `data/` folder: nothing to install, and your data stays in the browser.
 
-## Come si usa
+## How to use it
 
-1. **Tu:** netto mensile, altre spese, permanenza.
-2. **Shortlist:** per ogni casa via e civico (quartiere e posizione sulla mappa si ricavano da soli), affitto, utenze, deposito, contratto, arredamento, tragitto, trasporti, servizi inclusi e il tuo voto all'alloggio. Una via sconosciuta si posiziona cliccando sulla mappa.
-3. **Quartieri:** il tuo voto a servizi e vita sociale.
+1. **You:** monthly take-home pay, other costs, length of stay.
+2. **Shortlist:** for each home, street and number (the neighbourhood and the position on the map are worked
+   out for you), rent, utilities, deposit, lease, furnishing, commute, transport, included services and your
+   own rating of the flat. An unknown street can be placed by clicking on the map.
+3. **Neighbourhoods:** your rating of amenities and social life.
 
-Tutti i voti a stelle vanno da 0,5 a 5 a passi di mezza stella: un clic sulla metà di una stella, lo stesso clic di nuovo per azzerare, oppure le frecce della tastiera.
+Every star rating runs from 0.5 to 5 in half-star steps: click the half of a star, click the same spot again
+to clear it, or use the arrow keys.
 
-## Cosa mostra
+## What it shows
 
-- **Migliore:** la casa col punteggio più alto, con le sue stelle e il costo mensile tutto incluso.
-- **Mappa:** quartieri, parchi, stazioni e le case numerate per classifica.
-- **Stelle:** totale, costi, zona, tragitto e alloggio. "Dettaglio" apre sicurezza, metro, verde, quiete, servizi e vita sociale; passando il cursore su una stella compare il dato sottostante.
-- **Costi:** kr al mese tutto incluso, quota dell'affitto sul netto con indicatore (✓ fino al 30%, ! fino al 40%, ✕ oltre), quanto resta ogni mese, contanti all'ingresso e contratto.
-- **Attenzione:** etichette brevi solo quando serve: rumore alto, sera poco sicura, deposito oltre tre mesi, vincolo più lungo della permanenza, voti mancanti.
+- **Best:** the home with the highest score, with its stars and its all-in monthly cost.
+- **Map:** neighbourhoods, parks, stations and the homes numbered by rank.
+- **Stars:** overall, costs, area, commute and flat. "Detail" opens safety, metro, green space, quiet,
+  amenities and social life; hovering over a star shows the data behind it.
+- **Costs:** all-in kr a month, rent as a share of take-home pay with an indicator (✓ up to 30%, ! up to 40%,
+  ✕ above), what is left each month, cash needed to move in, and the lease.
+- **Watch out:** short labels only when needed: high noise, an evening that feels unsafe, a deposit over three
+  months, a lease longer than your stay, missing ratings.
 
-## Dati integrati per indirizzo
+## Data built in, per address
 
-- **Sicurezza:** [Tryghedsundersøgelse 2025](https://www.kk.dk/sites/default/files/2025-06/Tryghedsunders%C3%B8gelsen%202025.pdf) del Comune di Copenaghen, nei suoi 13 quartieri: media tra residenti che si sentono sicuri nel quartiere e la sera. 70% = 1 stella, 90% = 5. I reati per 1.000 abitanti restano nel dettaglio come contesto.
-- **Metro e treno:** distanza dalla stazione più vicina. 5 stelle entro 300 m, una in meno ogni 300 m.
-- **Verde:** distanza dal parco di almeno 1 ettaro più vicino. 5 stelle entro 200 m, una in meno ogni 250 m.
-- **Quiete:** rumore stradale Lden all'indirizzo (mappatura 2022). 5 stelle a 50 dB, una in meno ogni 5 dB.
+- **Safety:** the City of Copenhagen's [Tryghedsundersøgelse 2025](https://www.kk.dk/sites/default/files/2025-06/Tryghedsunders%C3%B8gelsen%202025.pdf),
+  across its 13 neighbourhoods: the average of residents who feel safe in the neighbourhood and in the evening.
+  70% = 1 star, 90% = 5. Crimes per 1,000 residents stay in the detail as context.
+- **Metro and train:** distance to the nearest station. 5 stars within 300 m, one fewer every 300 m.
+- **Green space:** distance to the nearest park of at least 1 hectare. 5 stars within 200 m, one fewer every 250 m.
+- **Quiet:** road noise Lden at the address (2022 mapping). 5 stars at 50 dB, one fewer every 5 dB.
 
-Fonti: Københavns Kommune (dati aperti) e © OpenStreetMap contributors per indirizzi e confini di Frederiksberg, dove rumore e indagine sulla sicurezza non sono disponibili. Per aggiornare i dati: `pip install shapely pyproj && python3 tools/build_data.py`.
+Sources: Københavns Kommune (open data) and © OpenStreetMap contributors for addresses and the boundaries of
+Frederiksberg, where noise and the safety survey are not available. To refresh the data:
+`pip install shapely pyproj && python3 tools/build_data.py`.
 
-Importi in corone danesi (kr). I dati di esempio sono illustrativi.
+Amounts are in Danish kroner (kr). The example data is illustrative. Shortlists saved by the earlier Italian
+version still load.

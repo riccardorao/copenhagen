@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Valutatore affitti Copenaghen</title>
+<title>Copenhagen Rent Evaluator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: dati a sinistra; verdetto, mappa e due tabelle a destra; su telefono una colonna con selettore Dati/Risultati. */
+/* Layout: inputs on the left; verdict, map and two tables on the right; on a phone one column with an Inputs/Results switch. */
 :root {
   --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --bg: #f2f1ed; --surface: #fcfcfb; --surface-2: #f5f4f0; --line: #e4e2dc; --line-2: #c9c6be;
@@ -45,7 +45,7 @@ button, input, select { font: inherit; color: inherit; }
 h1, h2, h3, p { margin: 0; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
-/* barra superiore */
+/* top bar */
 .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line); }
 .topbar-in { max-width: 1240px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .brand { flex: 1 1 260px; min-width: 0; }
@@ -85,7 +85,7 @@ h1, h2, h3, p { margin: 0; }
 .card-head { margin-bottom: 14px; }
 .eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; font-weight: 600; color: var(--ink-3); }
 
-/* campi */
+/* fields */
 .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
 .fields.addr { grid-template-columns: minmax(0, 1fr) 84px; }
 .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
@@ -125,7 +125,7 @@ details.card[open] > summary h2::before { content: "▾ "; }
 .opt-body { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
 .opt-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-/* stelle */
+/* stars */
 .star-rows { display: flex; flex-direction: column; gap: 8px; }
 .star-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .star-row .sl { min-width: 0; font-size: 13px; }
@@ -148,13 +148,13 @@ details.card[open] > summary h2::before { content: "▾ "; }
 .prio-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; align-items: center; font-size: 13px; }
 .prio-row select { height: 30px; }
 
-/* stati */
+/* statuses */
 .status { --c: var(--good); display: inline-flex; align-items: center; gap: 5px; border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); background: color-mix(in srgb, var(--c) 12%, var(--surface)); color: var(--ink); border-radius: 99px; padding: 1px 9px 1px 7px; font-size: 12px; font-weight: 550; white-space: nowrap; }
 .status i { font-style: normal; color: var(--c); font-weight: 800; }
 .status.warn { --c: var(--warn); }
 .status.bad { --c: var(--crit); }
 
-/* verdetto */
+/* verdict */
 .verdict { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: center; }
 .v-name { font-size: 26px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; margin: 4px 0 6px; overflow-wrap: anywhere; }
 .v-line { color: var(--ink-2); display: flex; gap: 8px 10px; flex-wrap: wrap; align-items: center; }
@@ -164,7 +164,7 @@ details.card[open] > summary h2::before { content: "▾ "; }
 .hero .cap { margin-top: 8px; }
 @media (max-width: 560px) { .verdict { grid-template-columns: minmax(0, 1fr); } .hero { text-align: left; } }
 
-/* mappa */
+/* map */
 .map-wrap { position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: var(--map-water); }
 .map-wrap svg { display: block; width: 100%; }
 .map-wrap.placing { cursor: crosshair; outline: 2px solid var(--accent); }
@@ -177,7 +177,7 @@ details.card[open] > summary h2::before { content: "▾ "; }
 .map-key { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); margin-top: 8px; }
 .map-key i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 
-/* tabelle */
+/* tables */
 .scroll { overflow-x: auto; max-width: 100%; }
 table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .tbl th, .tbl td { padding: 9px 8px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -237,29 +237,29 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direc
 <header class="topbar">
   <div class="topbar-in">
     <div class="brand">
-      <h1>Valutatore affitti Copenaghen</h1>
+      <h1>Copenhagen Rent Evaluator</h1>
     </div>
     <div class="top-actions">
-      <button class="btn" id="btn-sample" type="button">Carica esempio</button>
-      <button class="btn" id="btn-clear" type="button">Svuota</button>
-      <button class="btn" id="btn-theme" type="button" aria-label="Passa dal tema chiaro a quello scuro" title="Cambia tema">
+      <button class="btn" id="btn-sample" type="button">Load example</button>
+      <button class="btn" id="btn-clear" type="button">Clear</button>
+      <button class="btn" id="btn-theme" type="button" aria-label="Switch between light and dark theme" title="Change theme">
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
       </button>
     </div>
-    <div class="viewtabs" role="group" aria-label="Cambia vista">
-      <button type="button" id="tab-inputs" aria-pressed="false">Dati</button>
-      <button type="button" id="tab-results" aria-pressed="true">Risultati</button>
+    <div class="viewtabs" role="group" aria-label="Change view">
+      <button type="button" id="tab-inputs" aria-pressed="false">Inputs</button>
+      <button type="button" id="tab-results" aria-pressed="true">Results</button>
     </div>
   </div>
   <div class="sample-note" id="sample-note" hidden>
-    <span class="pill">Dati di esempio</span>
-    <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Chiudi</button>
+    <span class="pill">Example data</span>
+    <button class="btn ghost sm" id="btn-dismiss-sample" type="button">Close</button>
   </div>
 </header>
 
 <div class="shell" id="shell" data-view="results">
   <div class="cols">
-    <aside class="inputs" id="inputs" aria-label="Dati"></aside>
+    <aside class="inputs" id="inputs" aria-label="Inputs"></aside>
     <main class="results stack" id="results" aria-live="polite"></main>
   </div>
 </div>
@@ -270,7 +270,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direc
 (function () {
 'use strict';
 
-/* ---------- utilità ---------- */
+/* ---------- utilities ---------- */
 const KEY = 'copenhagen-rental-evaluator-v4';
 const OLD_KEYS = ['copenhagen-rental-evaluator-v3', 'copenhagen-rental-evaluator-v2'];
 const THEME_KEY = 'copenhagen-rental-evaluator-theme';
@@ -295,31 +295,31 @@ function h(tag, attrs, ...kids) {
 const $ = s => document.querySelector(s);
 const uid = () => 'o' + Math.random().toString(36).slice(2, 8);
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
-const nf = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0 });
-const nf1 = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const nf = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 });
+const nf1 = new Intl.NumberFormat('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const kr = n => (n < 0 ? '−' : '') + nf.format(Math.abs(Math.round(n)));
 const pct = x => Math.round(x * 100) + '%';
 const metres = d => d < 1000 ? `${Math.round(d / 10) * 10} m` : `${nf1.format(d / 1000)} km`;
 const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
 const nz = (v, d) => (v !== '' && v !== null && v !== undefined && Number.isFinite(+v) ? +v : d);
 
-/* ---------- dati geografici ---------- */
+/* ---------- geographic data ---------- */
 const D = window.CPH_DATA || null;
 const E5 = 1e5;
 const LAT0 = 55.68, LON0 = 12.56, KX = Math.cos(LAT0 * Math.PI / 180) * 111320, KY = 110574;
 const toXY = (lat, lon) => [(lon - LON0) * KX, (lat - LAT0) * KY];
 const norm = s => String(s || '').toLowerCase().replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/å/g, 'a')
   .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/aa/g, 'a').replace(/[^a-z0-9]+/g, ' ').trim();
-const OUTSIDE = 'Fuori Copenaghen';
+const OUTSIDE = 'Outside Copenhagen';
 const AREAS = (D ? D.districts.map(d => d.name) : ['Amager Vest', 'Amager Øst', 'Bispebjerg', 'Brønshøj-Husum', 'Christianshavn', 'Frederiksberg', 'Indre By',
   'Indre Nørrebro', 'Kongens Enghave', 'Valby', 'Vanløse', 'Vesterbro', 'Ydre Nørrebro', 'Østerbro']).concat([OUTSIDE]);
 const SAFE = (D && D.safety) || {};
-/* Sicurezza dall'indagine del Comune: media tra "sicuri nel quartiere" e "sicuri la sera", 70% = 1 stella, 90% = 5 stelle */
+/* Safety from the municipal survey: the average of "safe in the neighbourhood" and "safe in the evening", 70% = 1 star, 90% = 5 stars */
 const safetyStars = area => { const v = SAFE[area]; return v ? clamp(1 + 4 * ((v.tryg + v.aften) / 2 - 70) / 20, 1, 5) : null; };
 const STREETS = D ? Object.keys(D.addr) : [];
 const STREET_BY_NORM = new Map(STREETS.map(s => [norm(s), s]));
 const PARKS = D ? D.parks.map(poly => poly[0].map(([x, y]) => toXY(y / E5, x / E5))) : [];
-const STATIONS = D ? D.stations.map(([name, t, la, lo]) => ({ name, type: { M: 'Metro', S: 'S-tog', T: 'Stazione' }[t], lat: la / E5, lon: lo / E5 })) : [];
+const STATIONS = D ? D.stations.map(([name, t, la, lo]) => ({ name, type: { M: 'Metro', S: 'S-train', T: 'Station' }[t], lat: la / E5, lon: lo / E5 })) : [];
 const streetCache = new Map();
 
 function streetRows(name) {
@@ -338,7 +338,7 @@ function suggestStreets(q) {
     if (pre.length >= 6) break;
   }
   if (pre.length || sub.length) return pre.concat(sub).slice(0, 6);
-  // nessuna corrispondenza: suggerisci le vie con al massimo 2 errori di battitura
+  // no match: suggest streets within 2 typos
   const scored = [];
   for (const [k, v] of STREET_BY_NORM) { const d = editDistance(n, k, 2); if (d <= 2) scored.push([d, v]); }
   return scored.sort((a, b) => a[0] - b[0]).slice(0, 6).map(x => x[1]);
@@ -395,9 +395,9 @@ function nearestStation(lat, lon) {
   }
   return best;
 }
-/* Posizione di un'opzione: punto sulla mappa, numero civico esatto, civico più vicino o centro della via. */
+/* Where an option is: a point on the map, the exact house number, the nearest house number, or the middle of the street. */
 function locate(o) {
-  if (o.pinned && o.lat && o.lon) return { lat: o.lat, lon: o.lon, db: null, label: 'Punto scelto sulla mappa', precision: 'mappa' };
+  if (o.pinned && o.lat && o.lon) return { lat: o.lat, lon: o.lon, db: null, label: 'Point chosen on the map', precision: 'mappa' };
   if (!o.street || !D) return null;
   const name = STREET_BY_NORM.get(norm(o.street));
   if (!name) return null;
@@ -427,39 +427,41 @@ function geoFor(o) {
   return geoCache.get(key);
 }
 
-/* ---------- criteri ---------- */
+/* ---------- criteria ---------- */
 const AREA_CRIT = [
-  ['sicurezza', 'Sicurezza', 'Criminalità e percezione di sicurezza, anche la sera.'],
-  ['servizi', 'Servizi', 'Supermercati, medico, palestre, negozi.'],
-  ['vita', 'Vita sociale', 'Ristoranti, bar, cultura.'],
+  ['sicurezza', 'Safety', 'Crime and how safe it feels, in the evening too.'],
+  ['servizi', 'Amenities', 'Supermarkets, doctor, gyms, shops.'],
+  ['vita', 'Social life', 'Restaurants, bars, culture.'],
 ];
 const AREA_KEYS = AREA_CRIT.map(c => c[0]);
 const ZONE_KEYS = ['sicurezza', 'trasporti', 'verde', 'quiete', 'servizi', 'vita'];
 const CRIT = [
-  ['costi', 'Affitto e costi', 3, 'calcolato'],
-  ['sicurezza', 'Sicurezza', 3, 'indagine'],
-  ['trasporti', 'Metro e treno', 2, 'dati'],
-  ['pendolarismo', 'Tragitto casa-lavoro', 2, 'calcolato'],
-  ['alloggio', "Qualità dell'alloggio", 2, 'tuo voto'],
-  ['verde', 'Verde', 1, 'dati'],
-  ['quiete', 'Tranquillità', 1, 'dati'],
-  ['servizi', 'Servizi', 1, 'tuo voto'],
-  ['vita', 'Vita sociale', 1, 'tuo voto'],
+  ['costi', 'Rent and costs', 3, 'calculated'],
+  ['sicurezza', 'Safety', 3, 'survey'],
+  ['trasporti', 'Metro and train', 2, 'data'],
+  ['pendolarismo', 'Commute', 2, 'calculated'],
+  ['alloggio', 'Quality of the flat', 2, 'your rating'],
+  ['verde', 'Green space', 1, 'data'],
+  ['quiete', 'Quiet', 1, 'data'],
+  ['servizi', 'Amenities', 1, 'your rating'],
+  ['vita', 'Social life', 1, 'your rating'],
 ];
-const WEIGHT_OPTS = [['0', 'Ignora'], ['1', 'Bassa'], ['2', 'Media'], ['3', 'Alta']];
+const WEIGHT_OPTS = [['0', 'Ignore'], ['1', 'Low'], ['2', 'Medium'], ['3', 'High']];
 const AREA_ALIASES = { 'Vesterbro-Kongens Enghave': ['Vesterbro', 'Kongens Enghave'], 'Sydhavn': ['Kongens Enghave'], 'Nørrebro': ['Indre Nørrebro', 'Ydre Nørrebro'],
-  'Amager Vest / Ørestad': ['Amager Vest'], 'Bispebjerg / Nordvest': ['Bispebjerg'] };
+  'Amager Vest / Ørestad': ['Amager Vest'], 'Bispebjerg / Nordvest': ['Bispebjerg'],
+  // the Italian version stored this name in saved shortlists
+  'Fuori Copenaghen': [OUTSIDE] };
 const aliasOf = name => AREA_ALIASES[name] || [name];
 
-/* ---------- stato ---------- */
+/* ---------- state ---------- */
 function baseProfile() { return { takeHome: 0, otherCosts: 0, stay: 12, days: 4, timePct: 50, furnCost: 18000, notice: 3 }; }
 function baseWeights() { return Object.fromEntries(CRIT.map(([k, , w]) => [k, w])); }
 function blankRatings() { return Object.fromEntries(AREA_KEYS.map(k => [k, 0])); }
 function blankOption() {
-  return { id: uid(), name: 'Nuova opzione', street: '', hn: '', lat: 0, lon: 0, pinned: false, area: AREAS[0],
+  return { id: uid(), name: 'New option', street: '', hn: '', lat: 0, lon: 0, pinned: false, area: AREAS[0],
     rent: 0, utils: 0, deposit: 0, lease: 12, furnished: true, commuteMin: 20, fare: 0, perks: 0, quality: 0 };
 }
-function blankState() { const o = blankOption(); o.name = 'Opzione 1'; return { profile: baseProfile(), weights: baseWeights(), areas: {}, options: [o], sample: false }; }
+function blankState() { const o = blankOption(); o.name = 'Option 1'; return { profile: baseProfile(), weights: baseWeights(), areas: {}, options: [o], sample: false }; }
 function sampleState() {
   const mk = o => ({ ...blankOption(), ...o });
   return {
@@ -472,9 +474,9 @@ function sampleState() {
       'Amager Vest': { sicurezza: 0, servizi: 3, vita: 2.5 },
     },
     options: [
-      mk({ name: 'Bilocale a Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3.5 }),
-      mk({ name: 'Arredato a Østerbro', street: 'Willemoesgade', hn: '20', area: 'Østerbro', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400, quality: 4 }),
-      mk({ name: 'Nuova costruzione, Ørestad', street: 'Ørestads Boulevard', hn: '55A', area: 'Amager Vest', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580, quality: 5 }),
+      mk({ name: 'One-bedroom in Nørrebro', street: 'Fælledvej', hn: '10A', area: 'Indre Nørrebro', rent: 11500, utils: 1000, deposit: 34500, lease: 0, furnished: false, commuteMin: 18, fare: 60, perks: 230, quality: 3.5 }),
+      mk({ name: 'Furnished in Østerbro', street: 'Willemoesgade', hn: '20', area: 'Østerbro', rent: 14800, utils: 0, deposit: 29600, lease: 6, furnished: true, commuteMin: 25, fare: 480, perks: 400, quality: 4 }),
+      mk({ name: 'New build, Ørestad', street: 'Ørestads Boulevard', hn: '55A', area: 'Amager Vest', rent: 12900, utils: 1100, deposit: 38700, lease: 12, furnished: false, commuteMin: 22, fare: 500, perks: 580, quality: 5 }),
     ],
   };
 }
@@ -499,7 +501,7 @@ function normalize(raw) {
     r = r || {};
     const o = blankOption();
     o.id = String(r.id || o.id).slice(0, 20);
-    o.name = String(r.name ?? 'Opzione ' + (i + 1)).slice(0, 80);
+    o.name = String(r.name ?? 'Option ' + (i + 1)).slice(0, 80);
     o.street = String(r.street || '').slice(0, 80);
     o.hn = String(r.hn || '').slice(0, 10);
     const a = aliasOf(r.area)[0];
@@ -515,12 +517,12 @@ function normalize(raw) {
 }
 function load() {
   for (const k of [KEY, ...OLD_KEYS]) {
-    try { const t = localStorage.getItem(k); if (t) return normalize(JSON.parse(t)); } catch (e) { /* ignora */ }
+    try { const t = localStorage.getItem(k); if (t) return normalize(JSON.parse(t)); } catch (e) { /* ignore */ }
   }
   return null;
 }
 let saveTimer = 0;
-function flush() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignora */ } }
+function flush() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }
 function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { saveTimer = 0; flush(); }, 250); }
 window.addEventListener('pagehide', () => { if (saveTimer) { clearTimeout(saveTimer); flush(); } });
 
@@ -529,7 +531,7 @@ const ui = { open: S.options[0] && S.options[0].id, placing: null };
 const ratingsFor = area => (S.areas[area] = S.areas[area] || blankRatings());
 const areaOf = o => { const g = geoFor(o); return g ? g.district : o.area; };
 
-/* ---------- modello ---------- */
+/* ---------- model ---------- */
 function compute(o, S) {
   const P = S.profile, income = P.takeHome;
   const stay = Math.max(1, P.stay);
@@ -548,14 +550,14 @@ function compute(o, S) {
   const left = income > 0 ? income - P.otherCosts - cash : null;
   let level = 'good', why = '';
   if (share != null) {
-    if (left < 0) { level = 'bad'; why = `i costi mensili superano il tuo netto di ${kr(-left)} kr.`; }
-    else if (share > 0.4) { level = 'bad'; why = `affitto e utenze assorbono il ${pct(share)} del netto, oltre il 40%.`; }
-    else if (share > 0.3) { level = 'warn'; why = `affitto e utenze assorbono il ${pct(share)} del netto, oltre il 30%.`; }
+    if (left < 0) { level = 'bad'; why = `monthly costs exceed your take-home pay by ${kr(-left)} kr.`; }
+    else if (share > 0.4) { level = 'bad'; why = `rent and utilities take ${pct(share)} of take-home pay, over 40%.`; }
+    else if (share > 0.3) { level = 'warn'; why = `rent and utilities take ${pct(share)} of take-home pay, over 30%.`; }
   }
   return {
     o, ready: o.rent > 0, geo: geoFor(o), area: areaOf(o), housing, allIn, cash, share, left,
     upfront: o.deposit + furn, commit, H,
-    status: { level, why, label: { good: 'Sostenibile', warn: 'Al limite', bad: 'Non sostenibile' }[level] },
+    status: { level, why, label: { good: 'Affordable', warn: 'Stretching it', bad: 'Not affordable' }[level] },
   };
 }
 function weighted(sc, keys, W) {
@@ -589,16 +591,16 @@ function evaluate(S) {
   return { list, ranked };
 }
 
-/* ---------- componenti ---------- */
+/* ---------- components ---------- */
 const half = v => Math.round(clamp(v, 0, 5) * 2) / 2;
 function stars(v, lg, tip) {
-  if (v == null) return h('span', { class: 'na', title: 'Non disponibile' }, '–');
+  if (v == null) return h('span', { class: 'na', title: 'Not available' }, '–');
   const r = half(v);
-  return h('span', { class: 'stars' + (lg ? ' lg' : ''), role: 'img', title: tip, 'aria-label': `${String(r).replace('.', ',')} stelle su 5` },
+  return h('span', { class: 'stars' + (lg ? ' lg' : ''), role: 'img', title: tip, 'aria-label': `${r} out of 5 stars` },
     h('span', { class: 'bg', 'aria-hidden': 'true' }, '★★★★★'),
     h('span', { class: 'fg', 'aria-hidden': 'true', style: `width:${r / 5 * 100}%` }, '★★★★★'));
 }
-/* voto a stelle a passi di 0,5: clic sulla metà sinistra o destra di una stella; stesso clic per azzerare */
+/* star rating in steps of 0.5: click the left or right half of a star; the same click again clears it */
 function starInput(id, label, get, set) {
   const fg = h('span', { class: 'fg', 'aria-hidden': 'true' }, '★★★★★');
   const box = h('div', { class: 'stars stars-in', id, role: 'slider', tabindex: '0', 'aria-label': label, 'aria-valuemin': 0, 'aria-valuemax': 5 },
@@ -623,7 +625,7 @@ const ICON = { good: '✓', warn: '!', bad: '✕' };
 const statusChip = st => h('span', { class: 'status ico ' + st.level, role: 'img', title: st.label, 'aria-label': st.label }, ICON[st.level]);
 const flag = (level, text) => h('span', { class: 'status ' + level }, h('i', { 'aria-hidden': 'true' }, ICON[level]), text);
 
-/* ---------- pannello dati ---------- */
+/* ---------- inputs panel ---------- */
 const inputsEl = $('#inputs');
 let rafId = 0;
 function changed() { save(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(() => { renderResults(); updateSummaries(); }); }
@@ -647,7 +649,7 @@ function selectField(id, label, get, set, options, o = {}) {
   return h('div', { class: 'field' + (o.wide ? ' wide' : '') }, h('label', { for: id }, label), sel);
 }
 
-/* riquadro posizione: aggiornato a ogni battuta senza ricostruire la scheda */
+/* location box: updated on every keystroke without rebuilding the card */
 function locBox(o) {
   const box = h('div', { class: 'loc', 'data-loc': o.id });
   fillLoc(box, o);
@@ -657,21 +659,21 @@ function fillLoc(box, o) {
   const g = geoFor(o), kids = [];
   const fact = (k, v) => h('span', { class: 'fact' }, k, h('b', null, v));
   if (!D) {
-    kids.push(h('span', { class: 'na' }, 'Dati geografici non caricati'));
+    kids.push(h('span', { class: 'na' }, 'Geographic data not loaded'));
   } else if (g) {
     kids.push(h('div', { class: 'loc-top' }, h('b', null, g.label), h('span', null, g.district)));
-    kids.push(h('div', { class: 'facts' }, fact('Metro ', metres(g.station.d)), fact('Parco ', g.park === 0 ? '0 m' : metres(g.park)), fact('Rumore ', g.db != null ? `${g.db} dB` : '–')));
+    kids.push(h('div', { class: 'facts' }, fact('Metro ', metres(g.station.d)), fact('Park ', g.park === 0 ? '0 m' : metres(g.park)), fact('Noise ', g.db != null ? `${g.db} dB` : '–')));
   } else if (o.street) {
     const sugg = suggestStreets(o.street);
-    kids.push(h('span', { class: 'na' }, sugg.length ? 'Via non trovata. Forse:' : 'Via non trovata'));
+    kids.push(h('span', { class: 'na' }, sugg.length ? 'Street not found. Did you mean:' : 'Street not found'));
     if (sugg.length) kids.push(h('div', { class: 'sugg' }, sugg.map(s => h('button', { class: 'btn sm', type: 'button', onclick: () => {
       o.street = s; o.pinned = false; const el = document.getElementById(`o-${o.id}-street`); if (el) el.value = s; changed(); fillLoc(box, o);
     } }, s))));
   } else {
-    kids.push(h('span', { class: 'na' }, 'Scrivi la via'));
+    kids.push(h('span', { class: 'na' }, 'Type the street'));
   }
-  if (D) kids.push(h('div', { class: 'loc-actions' }, h('button', { class: 'btn sm', type: 'button', onclick: () => startPlacing(o) }, o.pinned ? 'Sposta sulla mappa' : 'Sulla mappa'),
-    o.pinned ? h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { o.pinned = false; refresh(); } }, 'Usa indirizzo') : null));
+  if (D) kids.push(h('div', { class: 'loc-actions' }, h('button', { class: 'btn sm', type: 'button', onclick: () => startPlacing(o) }, o.pinned ? 'Move on the map' : 'On the map'),
+    o.pinned ? h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { o.pinned = false; refresh(); } }, 'Use the address') : null));
   box.replaceChildren(...kids);
 }
 function startPlacing(o) {
@@ -685,74 +687,74 @@ function optionCard(o) {
   const open = ui.open === o.id, f = k => `o-${o.id}-${k}`;
   const card = h('div', { class: 'opt', 'data-open': String(open) },
     h('button', { class: 'opt-head', type: 'button', 'aria-expanded': String(open), onclick: () => { ui.open = open ? null : o.id; renderInputs(); updateSummaries(); } },
-      h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Senza nome'), h('span', { 'data-sum': o.id })),
+      h('span', { class: 't' }, h('b', { 'data-name': o.id }, o.name || 'Untitled'), h('span', { 'data-sum': o.id })),
       h('span', { class: 'chev', 'aria-hidden': 'true' })));
   if (!open) return card;
   const box = locBox(o);
   const g = geoFor(o);
   card.append(h('div', { class: 'opt-body' },
-    h('div', { class: 'fields' }, textField(f('name'), 'Nome', () => o.name, v => { o.name = v; }, { wide: true })),
+    h('div', { class: 'fields' }, textField(f('name'), 'Name', () => o.name, v => { o.name = v; }, { wide: true })),
     h('div', { class: 'fields addr' },
-      textField(f('street'), 'Via', () => o.street, v => { o.street = v; o.pinned = false; fillLoc(box, o); }, { list: 'street-list' }),
-      textField(f('hn'), 'Civico', () => o.hn, v => { o.hn = v; fillLoc(box, o); }, { max: 10 })),
+      textField(f('street'), 'Street', () => o.street, v => { o.street = v; o.pinned = false; fillLoc(box, o); }, { list: 'street-list' }),
+      textField(f('hn'), 'Number', () => o.hn, v => { o.hn = v; fillLoc(box, o); }, { max: 10 })),
     box,
-    g ? null : selectField(f('area'), 'Quartiere', () => o.area, v => { o.area = v; }, AREAS.map(a => [a, a]), { wide: true, rerender: true }),
+    g ? null : selectField(f('area'), 'Neighbourhood', () => o.area, v => { o.area = v; }, AREAS.map(a => [a, a]), { wide: true, rerender: true }),
     h('div', { class: 'fields' },
-      numField(f('rent'), 'Affitto', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
-      numField(f('utils'), 'Utenze', () => o.utils, v => { o.utils = v; }, { unit: 'kr' }),
-      numField(f('deposit'), 'Deposito', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
-      numField(f('lease'), 'Contratto', () => o.lease, v => { o.lease = v; }, { unit: 'mesi' }),
-      selectField(f('furnished'), 'Arredamento', () => (o.furnished ? 'si' : 'no'), v => { o.furnished = v === 'si'; }, [['si', 'Arredato'], ['no', 'Vuoto']]),
-      numField(f('commuteMin'), 'Tragitto', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min' }),
-      numField(f('fare'), 'Trasporti', () => o.fare, v => { o.fare = v; }, { unit: 'kr' }),
-      numField(f('perks'), 'Servizi inclusi', () => o.perks, v => { o.perks = v; }, { unit: 'kr' })),
-    starInput(f('quality'), 'Alloggio', () => o.quality, v => { o.quality = v; }),
+      numField(f('rent'), 'Rent', () => o.rent, v => { o.rent = v; }, { unit: 'kr' }),
+      numField(f('utils'), 'Utilities', () => o.utils, v => { o.utils = v; }, { unit: 'kr' }),
+      numField(f('deposit'), 'Deposit', () => o.deposit, v => { o.deposit = v; }, { unit: 'kr' }),
+      numField(f('lease'), 'Lease', () => o.lease, v => { o.lease = v; }, { unit: 'months' }),
+      selectField(f('furnished'), 'Furnishing', () => (o.furnished ? 'si' : 'no'), v => { o.furnished = v === 'si'; }, [['si', 'Furnished'], ['no', 'Unfurnished']]),
+      numField(f('commuteMin'), 'Commute', () => o.commuteMin, v => { o.commuteMin = v; }, { unit: 'min' }),
+      numField(f('fare'), 'Transport', () => o.fare, v => { o.fare = v; }, { unit: 'kr' }),
+      numField(f('perks'), 'Included services', () => o.perks, v => { o.perks = v; }, { unit: 'kr' })),
+    starInput(f('quality'), 'Flat', () => o.quality, v => { o.quality = v; }),
     h('div', { class: 'opt-actions' },
-      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copia)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplica'),
-      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Elimina'))));
+      h('button', { class: 'btn sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const c = { ...o, id: uid(), name: o.name + ' (copy)' }; S.options.splice(S.options.indexOf(o) + 1, 0, c); ui.open = c.id; refresh(); } }, 'Duplicate'),
+      h('button', { class: 'btn sm danger', type: 'button', disabled: S.options.length <= 1, onclick: () => { S.options = S.options.filter(x => x !== o); if (ui.open === o.id) ui.open = null; refresh(); } }, 'Delete'))));
   return card;
 }
 
 function renderInputs() {
   const keep = inputsEl.scrollTop, P = S.profile;
   const you = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('h2', null, 'Tu')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'You')),
     h('div', { class: 'fields' },
-      numField('p-takeHome', 'Netto mensile', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true }),
-      numField('p-other', 'Altre spese', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr' }),
-      numField('p-stay', 'Permanenza', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'mesi' })),
-    h('details', { class: 'fine' }, h('summary', null, 'Altro'),
+      numField('p-takeHome', 'Monthly take-home pay', () => P.takeHome, v => { P.takeHome = v; }, { unit: 'kr', wide: true }),
+      numField('p-other', 'Other costs', () => P.otherCosts, v => { P.otherCosts = v; }, { unit: 'kr' }),
+      numField('p-stay', 'Length of stay', () => P.stay, v => { P.stay = Math.max(1, v); }, { unit: 'months' })),
+    h('details', { class: 'fine' }, h('summary', null, 'More'),
       h('div', { class: 'fields' },
-        numField('p-days', 'Giorni in ufficio', () => P.days, v => { P.days = clamp(v, 0, 7); }, { unit: '/sett.' }),
-        numField('p-time', 'Valore del tempo', () => P.timePct, v => { P.timePct = v; }, { unit: '%' }),
-        numField('p-furn', 'Costo arredi', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr' }),
-        numField('p-notice', 'Preavviso', () => P.notice, v => { P.notice = v; }, { unit: 'mesi' }))));
+        numField('p-days', 'Days in the office', () => P.days, v => { P.days = clamp(v, 0, 7); }, { unit: '/week' }),
+        numField('p-time', 'Value of your time', () => P.timePct, v => { P.timePct = v; }, { unit: '%' }),
+        numField('p-furn', 'Furnishing cost', () => P.furnCost, v => { P.furnCost = v; }, { unit: 'kr' }),
+        numField('p-notice', 'Notice period', () => P.notice, v => { P.notice = v; }, { unit: 'months' }))));
 
   const opts = h('section', { class: 'card' },
     h('div', { class: 'sec-title' }, h('h2', null, 'Shortlist'),
-      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Opzione ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Aggiungi')),
+      h('button', { class: 'btn primary sm', type: 'button', disabled: S.options.length >= MAX_OPTIONS, onclick: () => { const o = blankOption(); o.name = 'Option ' + (S.options.length + 1); S.options.push(o); ui.open = o.id; refresh(); } }, '+ Add')),
     h('div', { class: 'opt-list' }, S.options.map(optionCard)));
 
   const used = AREAS.filter(a => S.options.some(o => areaOf(o) === a));
   const areas = h('section', { class: 'card' },
-    h('div', { class: 'sec-title' }, h('h2', null, 'Quartieri')),
+    h('div', { class: 'sec-title' }, h('h2', null, 'Neighbourhoods')),
     used.map(a => {
       const r = ratingsFor(a);
       const sv = SAFE[a];
       return h('div', { class: 'area-block' },
         h('h3', null, a),
         h('div', { class: 'star-rows' },
-          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Sicurezza'), stars(safetyStars(a), false, `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.`)) : null,
+          sv ? h('div', { class: 'star-row' }, h('span', { class: 'sl' }, 'Safety'), stars(safetyStars(a), false, `${sv.tryg}% feel safe · ${sv.aften}% in the evening · ${sv.krim} crimes per 1,000 residents`)) : null,
           AREA_CRIT.filter(([k]) => !(sv && k === 'sicurezza')).map(([k, l]) => starInput(`a-${AREAS.indexOf(a)}-${k}`, l, () => r[k], v => { r[k] = v; }))));
     }));
 
   const prio = h('details', { class: 'card' },
-    h('summary', null, h('h2', null, 'Priorità')),
+    h('summary', null, h('h2', null, 'Priorities')),
     h('div', { class: 'prio', style: 'margin-top:12px' },
       CRIT.map(([k, l]) => {
-        const sel = h('select', { id: `w-${k}`, 'aria-label': `Peso di ${l}` }, WEIGHT_OPTS.map(([v, t]) => h('option', { value: v, selected: +v === S.weights[k] }, t)));
+        const sel = h('select', { id: `w-${k}`, 'aria-label': `Weight of ${l}` }, WEIGHT_OPTS.map(([v, t]) => h('option', { value: v, selected: +v === S.weights[k] }, t)));
         sel.addEventListener('change', () => { S.weights[k] = +sel.value; changed(); });
-        return h('div', { class: 'prio-row' }, h('span', null, l, k === 'costi' ? h('span', { class: 'key-tag' }, 'chiave') : null), sel);
+        return h('div', { class: 'prio-row' }, h('span', null, l, k === 'costi' ? h('span', { class: 'key-tag' }, 'key') : null), sel);
       })));
 
   inputsEl.replaceChildren(h('div', { class: 'stack' }, you, opts, areas, prio));
@@ -763,11 +765,11 @@ function updateSummaries() {
   const E = evaluate(S);
   for (const m of E.list) {
     const a = inputsEl.querySelector(`[data-sum="${m.o.id}"]`);
-    if (a) a.replaceChildren(...(m.ready ? [`${m.area} · ${kr(m.allIn)} kr `, stars(m.overall)] : [`${m.area} · manca l’affitto`]));
+    if (a) a.replaceChildren(...(m.ready ? [`${m.area} · ${kr(m.allIn)} kr `, stars(m.overall)] : [`${m.area} · rent missing`]));
     const n = inputsEl.querySelector(`[data-name="${m.o.id}"]`);
-    if (n) n.textContent = m.o.name || 'Senza nome';
+    if (n) n.textContent = m.o.name || 'Untitled';
   }
-  // se cambia l'insieme dei quartieri (nuova via), aggiorna il riquadro dei voti
+  // if the set of neighbourhoods changes (a new street), refresh the ratings box
   const areasNow = S.options.map(areaOf).join('|') + '|' + S.options.map(o => !!geoFor(o)).join('');
   if (lastAreas && areasNow !== lastAreas) {
     const focused = document.activeElement && document.activeElement.id;
@@ -777,19 +779,19 @@ function updateSummaries() {
   lastAreas = areasNow;
 }
 
-/* ---------- risultati ---------- */
+/* ---------- results ---------- */
 const resultsEl = $('#results');
 
 function verdictCard(E) {
   const best = E.ranked[0];
   return h('section', { class: 'card verdict' },
     h('div', null,
-      h('div', { class: 'eyebrow' }, 'Migliore'),
-      h('div', { class: 'v-name' }, best.o.name || 'Senza nome'),
+      h('div', { class: 'eyebrow' }, 'Best'),
+      h('div', { class: 'v-name' }, best.o.name || 'Untitled'),
       h('div', { class: 'v-line' }, best.share != null ? [statusChip(best.status), h('b', { class: 'num' }, pct(best.share))] : null, h('span', null, best.area))),
     h('div', { class: 'hero' },
       h('div', { class: 'cap' }, stars(best.overall, true)),
-      h('div', null, h('span', { class: 'n' }, kr(best.allIn)), h('span', { class: 'of' }, 'kr/mese'))));
+      h('div', null, h('span', { class: 'n' }, kr(best.allIn)), h('span', { class: 'of' }, 'kr/month'))));
 }
 
 function mapCard(E) {
@@ -798,9 +800,9 @@ function mapCard(E) {
   const host = h('div', { class: 'map-wrap' + (placingOpt ? ' placing' : ''), id: 'map-host' });
   const pinned = E.ranked.filter(m => m.geo);
   return h('section', { class: 'card', id: 'map-card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Mappa')),
-    placingOpt ? h('div', { class: 'map-banner' }, h('span', null, `Clicca sulla mappa: ${placingOpt.name}`),
-      h('button', { class: 'btn sm', type: 'button', onclick: () => { ui.placing = null; renderResults(); } }, 'Annulla')) : null,
+    h('div', { class: 'card-head' }, h('h2', null, 'Map')),
+    placingOpt ? h('div', { class: 'map-banner' }, h('span', null, `Click on the map: ${placingOpt.name}`),
+      h('button', { class: 'btn sm', type: 'button', onclick: () => { ui.placing = null; renderResults(); } }, 'Cancel')) : null,
     host,
     pinned.length ? h('ul', { class: 'map-legend' }, pinned.map(m => h('li', null, h('span', { class: 'pin' }, m.rank), h('span', { class: 't' }, m.o.name)))) : null);
 }
@@ -819,7 +821,7 @@ function drawMap(host, E) {
   const ox = (W - (maxX - minX) * s) / 2;
   const P = (lat, lon) => { const [x, y] = toXY(lat, lon); return [ox + (x - minX) * s, (maxY - y) * s]; };
   const path = ring => ring.map(([x, y], i) => { const [a, b] = P(y / E5, x / E5); return (i ? 'L' : 'M') + a.toFixed(1) + ',' + b.toFixed(1); }).join('') + 'Z';
-  const svg = el('svg', { viewBox: `0 0 ${W} ${Hh}`, height: Hh, role: 'img', 'aria-label': 'Mappa dei quartieri di Copenaghen e Frederiksberg con le case della shortlist' });
+  const svg = el('svg', { viewBox: `0 0 ${W} ${Hh}`, height: Hh, role: 'img', 'aria-label': 'Map of the neighbourhoods of Copenhagen and Frederiksberg with the shortlisted homes' });
   const gLand = el('g'), gPark = el('g'), gLbl = el('g'), gSt = el('g'), gPin = el('g');
   for (const d of D.districts) {
     let cx = 0, cy = 0, n = 0, big = null;
@@ -858,13 +860,13 @@ function drawMap(host, E) {
 }
 
 function starsCard(E) {
-  const cols = [['Totale', m => m.overall], ['Costi', m => m.sc.costi], ['Zona', m => m.zona], ['Tragitto', m => m.sc.pendolarismo], ['Alloggio', m => m.sc.alloggio]];
+  const cols = [['Overall', m => m.overall], ['Costs', m => m.sc.costi], ['Area', m => m.zona], ['Commute', m => m.sc.pendolarismo], ['Flat', m => m.sc.alloggio]];
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Stelle')),
+    h('div', { class: 'card-head' }, h('h2', null, 'Stars')),
     h('div', { class: 'scroll' }, h('table', { class: 'tbl stars-tbl' },
       h('thead', null, h('tr', null, h('th', { scope: 'col' }, ''), cols.map(([l]) => h('th', { scope: 'col' }, l)))),
       h('tbody', null, E.ranked.map(m => h('tr', null,
-        h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Senza nome'),
+        h('th', { scope: 'row' }, h('span', { class: 'rank' }, '#' + m.rank), m.o.name || 'Untitled'),
         cols.map(([, f]) => h('td', null, stars(f(m))))))))),
     zoneDetail(E));
 }
@@ -873,26 +875,26 @@ function zoneDetail(E) {
   const cells = m => {
     const g = m.geo, sv = m.safety;
     return [
-      stars(m.sc.sicurezza, false, sv ? `${sv.tryg}% sicuri · ${sv.aften}% la sera · ${sv.krim} reati/1.000 ab.` : 'Tuo voto'),
+      stars(m.sc.sicurezza, false, sv ? `${sv.tryg}% feel safe · ${sv.aften}% in the evening · ${sv.krim} crimes per 1,000 residents` : 'Your rating'),
       stars(m.sc.trasporti, false, g ? `${g.station.name} · ${metres(g.station.d)}` : null),
-      stars(m.sc.verde, false, g ? (g.park === 0 ? 'Dentro un parco' : `Parco a ${metres(g.park)}`) : null),
+      stars(m.sc.verde, false, g ? (g.park === 0 ? 'Inside a park' : `Park ${metres(g.park)} away`) : null),
       stars(m.sc.quiete, false, g && g.db != null ? `${g.db} dB` : null),
       stars(m.sc.servizi), stars(m.sc.vita)];
   };
-  return h('details', { class: 'fine' }, h('summary', null, 'Dettaglio'),
+  return h('details', { class: 'fine' }, h('summary', null, 'Detail'),
     h('div', { class: 'scroll', style: 'margin-top:10px' }, h('table', { class: 'tbl stars-tbl' },
-      h('thead', null, h('tr', null, ['', 'Sicurezza', 'Metro', 'Verde', 'Quiete', 'Servizi', 'Vita'].map(x => h('th', { scope: 'col' }, x)))),
-      h('tbody', null, E.ranked.map(m => h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Senza nome'), cells(m).map(c => h('td', null, c))))))));
+      h('thead', null, h('tr', null, ['', 'Safety', 'Metro', 'Green', 'Quiet', 'Amenities', 'Social'].map(x => h('th', { scope: 'col' }, x)))),
+      h('tbody', null, E.ranked.map(m => h('tr', null, h('th', { scope: 'row' }, m.o.name || 'Untitled'), cells(m).map(c => h('td', null, c))))))));
 }
 
 function costCard(E) {
   const bestCost = E.ranked.length > 1 ? Math.min(...E.ranked.map(m => m.allIn)) : null;
   return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, h('h2', null, 'Costi')),
+    h('div', { class: 'card-head' }, h('h2', null, 'Costs')),
     h('div', { class: 'scroll' }, h('table', { class: 'tbl' },
-      h('thead', null, h('tr', null, ['', 'Kr/mese', 'Affitto/netto', 'Restano', 'Ingresso', 'Contratto'].map(x => h('th', { scope: 'col' }, x)))),
+      h('thead', null, h('tr', null, ['', 'Kr/month', 'Rent/pay', 'Left over', 'Move-in', 'Lease'].map(x => h('th', { scope: 'col' }, x)))),
       h('tbody', null, E.ranked.map(m => h('tr', null,
-        h('th', { scope: 'row' }, m.o.name || 'Senza nome'),
+        h('th', { scope: 'row' }, m.o.name || 'Untitled'),
         h('td', { class: m.allIn === bestCost ? 'best' : '' }, kr(m.allIn)),
         h('td', null, m.share != null ? [pct(m.share), h('span', { class: 'chipcell' }, statusChip(m.status))] : '–'),
         h('td', { class: m.left != null && m.left < 0 ? 'neg' : '' }, m.left != null ? kr(m.left) : '–'),
@@ -904,52 +906,52 @@ function watchCard(E) {
   const rows = [];
   for (const m of E.ranked) {
     const g = m.geo, f = [];
-    if (m.status.level === 'bad') f.push(['bad', m.left != null && m.left < 0 ? 'Costi oltre il netto' : `Affitto ${pct(m.share)}`]);
-    if (g && g.db != null && g.db >= 65) f.push(['warn', `Rumore ${g.db} dB`]);
-    if (m.safety && m.safety.aften < 75) f.push(['warn', `Sera ${m.safety.aften}% sicuri`]);
-    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) f.push(['warn', 'Deposito > 3 mesi']);
-    if (m.commit > S.profile.stay) f.push(['warn', `Vincolo ${m.commit} mesi`]);
-    if (!g && D) f.push(['warn', 'Senza indirizzo']);
-    if (['servizi', 'vita'].every(k => m.sc[k] == null)) f.push(['warn', 'Voti mancanti']);
-    if (f.length) rows.push(h('div', { class: 'flag-row' }, h('b', null, m.o.name || 'Senza nome'), h('span', { class: 'flags' }, f.map(([l, t]) => flag(l, t)))));
+    if (m.status.level === 'bad') f.push(['bad', m.left != null && m.left < 0 ? 'Costs above take-home pay' : `Rent ${pct(m.share)}`]);
+    if (g && g.db != null && g.db >= 65) f.push(['warn', `Noise ${g.db} dB`]);
+    if (m.safety && m.safety.aften < 75) f.push(['warn', `Evening: ${m.safety.aften}% feel safe`]);
+    if (m.o.rent > 0 && m.o.deposit > m.o.rent * 3 + 1) f.push(['warn', 'Deposit > 3 months']);
+    if (m.commit > S.profile.stay) f.push(['warn', `Tied in for ${m.commit} months`]);
+    if (!g && D) f.push(['warn', 'No address']);
+    if (['servizi', 'vita'].every(k => m.sc[k] == null)) f.push(['warn', 'Ratings missing']);
+    if (f.length) rows.push(h('div', { class: 'flag-row' }, h('b', null, m.o.name || 'Untitled'), h('span', { class: 'flags' }, f.map(([l, t]) => flag(l, t)))));
   }
   if (!rows.length) return null;
-  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Attenzione')), h('div', { class: 'flag-list' }, rows));
+  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', null, 'Watch out')), h('div', { class: 'flag-list' }, rows));
 }
 
 function howCard() {
   const P = S.profile;
-  return h('details', { class: 'card how' }, h('summary', null, 'Come funziona'),
+  return h('details', { class: 'card how' }, h('summary', null, 'How it works'),
     h('ul', null,
-      h('li', null, 'Costi: 5 stelle fino al 25% del netto, 0 dal 55%.'),
-      h('li', null, 'Metro: 5 stelle entro 300 m, −1 ogni 300 m. Verde: 5 entro 200 m, −1 ogni 250 m. Quiete: 5 a 50 dB, −1 ogni 5 dB.'),
-      h('li', null, 'Sicurezza: indagine 2025 del Comune, media tra sicuri di giorno e di sera. 70% = 1 stella, 90% = 5.'),
-      h('li', null, 'Tragitto: 5 stelle a 10 min, 0 a 60 min. Totale: media pesata (Priorità).'),
-      h('li', null, `Kr/mese = affitto + utenze − servizi inclusi + trasporti + tempo di viaggio (${P.timePct}% del netto orario) + arredi sul vincolo.`),
-      h('li', null, 'Affitto/netto: ✓ fino al 30%, ! fino al 40%, ✕ oltre o con costi sopra il netto.'),
-      h('li', null, `Fonti: Københavns Kommune (rumore 2022, quartieri, stazioni, parchi, Tryghedsundersøgelse 2025), © OpenStreetMap contributors (Frederiksberg). ${D ? `Dati del ${D.meta.built}.` : ''}`)));
+      h('li', null, 'Costs: 5 stars up to 25% of take-home pay, 0 from 55%.'),
+      h('li', null, 'Metro: 5 stars within 300 m, −1 every 300 m. Green space: 5 within 200 m, −1 every 250 m. Quiet: 5 at 50 dB, −1 every 5 dB.'),
+      h('li', null, 'Safety: the municipality\'s 2025 survey, the average of feeling safe by day and in the evening. 70% = 1 star, 90% = 5.'),
+      h('li', null, 'Commute: 5 stars at 10 min, 0 at 60 min. Overall: a weighted average (Priorities).'),
+      h('li', null, `Kr/month = rent + utilities − included services + transport + travel time (${P.timePct}% of hourly take-home pay) + furnishing spread over the lease.`),
+      h('li', null, 'Rent/pay: ✓ up to 30%, ! up to 40%, ✕ above that or with costs above take-home pay.'),
+      h('li', null, `Sources: Københavns Kommune (noise 2022, neighbourhoods, stations, parks, Tryghedsundersøgelse 2025), © OpenStreetMap contributors (Frederiksberg). ${D ? `Data from ${D.meta.built}.` : ''}`)));
 }
 
 function renderResults() {
   const E = evaluate(S);
   if (!E.ranked.length) {
-    resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Inserisci l’affitto di almeno un’opzione per vedere il confronto.'));
+    resultsEl.replaceChildren(h('div', { class: 'card empty' }, 'Enter the rent for at least one option to see the comparison.'));
     return;
   }
-  const note = S.profile.takeHome > 0 ? null : h('div', { class: 'card empty' }, 'Aggiungi il tuo stipendio netto per verificare la sostenibilità di ogni opzione.');
+  const note = S.profile.takeHome > 0 ? null : h('div', { class: 'card empty' }, 'Add your take-home pay to check whether each option is affordable.');
   resultsEl.replaceChildren(...[verdictCard(E), note, mapCard(E), starsCard(E), costCard(E), watchCard(E), howCard()].filter(Boolean));
   const host = $('#map-host');
   if (host) drawMap(host, E);
 }
 
-/* ---------- interfaccia ---------- */
+/* ---------- interface ---------- */
 function applyTheme(t) { if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
-try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') applyTheme(t); } catch (e) { /* ignora */ }
+try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') applyTheme(t); } catch (e) { /* ignore */ }
 $('#btn-theme').addEventListener('click', () => {
   const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const next = cur === 'dark' ? 'light' : 'dark';
   applyTheme(next);
-  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignora */ }
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
 });
 const shell = $('#shell');
 function setView(v) {
@@ -967,8 +969,8 @@ $('#btn-sample').addEventListener('click', () => replaceState(sampleState()));
 (function () {
   const b = $('#btn-clear'); let armed = false, t = 0;
   b.addEventListener('click', () => {
-    if (!armed) { armed = true; b.textContent = 'Clicca di nuovo per svuotare'; t = setTimeout(() => { armed = false; b.textContent = 'Svuota'; }, 3500); return; }
-    clearTimeout(t); armed = false; b.textContent = 'Svuota'; replaceState(blankState());
+    if (!armed) { armed = true; b.textContent = 'Click again to clear'; t = setTimeout(() => { armed = false; b.textContent = 'Clear'; }, 3500); return; }
+    clearTimeout(t); armed = false; b.textContent = 'Clear'; replaceState(blankState());
   });
 })();
 let rt = 0, lastW = innerWidth;
